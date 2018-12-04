@@ -1,5 +1,6 @@
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
+import ExampleScreen from './Example';
 import WalkthroughScreen from './screens/Walkthrough';
 import ChallengesListScreen from './screens/Challenges/ChallengesList';
 import ChallengesMapScreen from './screens/Challenges/ChallengesMap';
@@ -14,6 +15,12 @@ import ProfileScreen from './screens/Profile';
 import SettingsScreen from './screens/Settings';
 
 const AppNavigator = createStackNavigator({
+	Example: {
+		screen: ExampleScreen,
+		navigationOptions: {
+			title: 'Example Styles'
+		}
+	},
 	Walkthrough: {
 		screen: WalkthroughScreen,
 		navigationOptions: {

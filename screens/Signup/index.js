@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import styles from '../../Styles';
 
 class Signup extends React.Component {
 	render() {
@@ -11,12 +12,10 @@ class Signup extends React.Component {
 	}
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
-	}
+/*
+const customStyles = StyleSheet.create({
+	customCSS: {}
 });
+*/
 
 export default Signup;
