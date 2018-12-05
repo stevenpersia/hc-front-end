@@ -1,17 +1,20 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const primaryColor = 'red';
-const secondaryColor = 'blue';
+const primaryColor = 'black';
+const secondaryColor = 'gray';
 
-const animauxColor = 'orange';
-const environnementColor = 'green';
-const socialColor = 'blue';
-const cultureColor = 'purple';
+const animauxColor = '#7D1AFF';
+const environnementColor = '#FFBE1A';
+const socialColor = '#18DE22';
+const cultureColor = '#DF4FFF';
 
 const blackColor = '#000';
 const grayColor = '#DDD';
 const whiteColor = '#FFF';
 const redColor = '#b71c1c';
+
+const fullW = Dimensions.get('window').width;
+const fullH = Dimensions.get('window').height;
 
 export default StyleSheet.create({
 	/* GLOBAL */
@@ -72,12 +75,12 @@ export default StyleSheet.create({
 		paddingVertical: 15,
 		paddingHorizontal: 30,
 		borderRadius: 3,
-		width: 150
+		width: fullW / 2 - 40
 	},
 
 	/* SCREEN RESOLUTIONS */
-	fullHeight: Dimensions.get('window').height,
-	fullWidth: Dimensions.get('window').width,
+	fullHeight: fullH,
+	fullWidth: fullW,
 
 	/* BORDER RADIUS SISILAFAMILLE TOVO */
 	rounded: { borderRadius: 5 },

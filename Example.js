@@ -61,36 +61,35 @@ class Example extends React.Component {
 				<View style={[styles.marginV10]}>
 					<Text style={styles.h4}>Boutons</Text>
 				</View>
-
-				<TouchableOpacity
-					style={[styles.button, styles.margin10, styles.bgEnvironnementColor]}
-				>
-					<Text
+				<View style={{ flexDirection: 'row' }}>
+					<TouchableOpacity
 						style={[
-							styles.textCenter,
-							styles.uppercase,
-							styles.bold,
-							styles.textWhite
+							styles.button,
+							styles.marginV10,
+							styles.bgEnvironnementColor,
+							styles.marginRight10
 						]}
 					>
-						Button
-					</Text>
-				</TouchableOpacity>
+						<Text style={[styles.textCenter, styles.uppercase, styles.bold]}>
+							Button
+						</Text>
+					</TouchableOpacity>
 
-				<TouchableOpacity
-					style={[styles.button, styles.margin10, styles.bgAnimauxColor]}
-				>
-					<Text style={[styles.textCenter, styles.uppercase, styles.bold]}>
-						Button
-					</Text>
-				</TouchableOpacity>
-
-				<TouchableOpacity style={[styles.button, styles.margin10]}>
-					<Text style={[styles.textCenter, styles.uppercase, styles.bold]}>
-						Button
-					</Text>
-				</TouchableOpacity>
-
+					<TouchableOpacity
+						style={[styles.button, styles.marginV10, styles.bgAnimauxColor]}
+					>
+						<Text
+							style={[
+								styles.textCenter,
+								styles.uppercase,
+								styles.bold,
+								styles.textWhite
+							]}
+						>
+							Button
+						</Text>
+					</TouchableOpacity>
+				</View>
 				<View style={[styles.marginV10]}>
 					<Text style={styles.h4}>Autres</Text>
 				</View>
