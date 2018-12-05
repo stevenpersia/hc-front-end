@@ -12,7 +12,87 @@ class Example extends React.Component {
 	render() {
 		return (
 			<ScrollView style={customStyles.content}>
-				<View style={[styles.marginBottom10]}>
+				<View />
+				<Text style={[styles.h5]}>Accès aux pages / screens</Text>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('About')}
+				>
+					<Text>A propos</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Authentication')}
+				>
+					<Text>Inscription / Connexion</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Challenge')}
+				>
+					<Text>Page d'un défi</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('ChallengesMap')}
+				>
+					<Text>Liste des défis (Map)</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('ChallengesList')}
+				>
+					<Text>Liste des défis (Liste)</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('CreateChallenge')}
+				>
+					<Text>Créer un défi</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('UpdateChallenge')}
+				>
+					<Text>Mettre à jour un défi</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Login')}
+				>
+					<Text>Connexion</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('ForgotPassword')}
+				>
+					<Text>Mot de passe oublié</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Profile')}
+				>
+					<Text>Mon profil</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Settings')}
+				>
+					<Text>Mes réglages</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Signup')}
+				>
+					<Text>Inscription</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.paddingTop10}
+					onPress={() => this.props.navigation.navigate('Walkthrough')}
+				>
+					<Text>Walkthrough</Text>
+				</TouchableOpacity>
+				<View style={[styles.marginBottom10, styles.marginTop30]}>
 					<Text style={styles.h4}>Titre et texte</Text>
 				</View>
 
@@ -29,7 +109,7 @@ class Example extends React.Component {
 					<Text style={styles.uppercase}>uppercase</Text>
 				</View>
 
-				<View style={[styles.marginV10]}>
+				<View style={[styles.marginBottom10, styles.marginTop30]}>
 					<Text style={styles.h4}>Couleurs</Text>
 				</View>
 
@@ -58,7 +138,7 @@ class Example extends React.Component {
 					</View>
 				</View>
 
-				<View style={[styles.marginV10]}>
+				<View style={[styles.marginBottom10, styles.marginTop30]}>
 					<Text style={styles.h4}>Boutons</Text>
 				</View>
 				<View style={{ flexDirection: 'row' }}>
@@ -90,7 +170,7 @@ class Example extends React.Component {
 						</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={[styles.marginV10]}>
+				<View style={[styles.marginBottom10, styles.marginTop30]}>
 					<Text style={styles.h4}>Autres</Text>
 				</View>
 

@@ -13,6 +13,7 @@ import LoginScreen from './screens/Login/Login';
 import ForgotPasswordScreen from './screens/Login/ForgotPassword';
 import ProfileScreen from './screens/Profile';
 import SettingsScreen from './screens/Settings';
+import AboutScreen from './screens/About';
 
 const AppNavigator = createStackNavigator({
 	Example: {
@@ -24,25 +25,25 @@ const AppNavigator = createStackNavigator({
 	Walkthrough: {
 		screen: WalkthroughScreen,
 		navigationOptions: {
-			header: null
+			title: 'Walkthrough'
 		}
 	},
 	ChallengesList: {
 		screen: ChallengesListScreen,
 		navigationOptions: {
-			header: null
+			title: 'Liste Défis'
 		}
 	},
 	ChallengesMap: {
 		screen: ChallengesMapScreen,
 		navigationOptions: {
-			header: null
+			title: 'Map Défis'
 		}
 	},
 	Challenge: {
 		screen: ChallengeScreen,
 		navigationOptions: {
-			header: null
+			title: 'Page défi'
 		}
 	},
 	CreateChallenge: {
@@ -91,6 +92,12 @@ const AppNavigator = createStackNavigator({
 		screen: SettingsScreen,
 		navigationOptions: {
 			title: 'Mes réglages'
+		}
+	},
+	About: {
+		screen: AboutScreen,
+		navigationOptions: {
+			title: 'A propos'
 		}
 	}
 });
