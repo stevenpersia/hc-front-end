@@ -14,11 +14,12 @@ class SmsActivation extends React.Component {
 		this.props.prevStep();
 	};
 
-	saveAndContinue = e => {
+	next = e => {
 		e.preventDefault();
 		this.props.nextStep();
 	};
 	render() {
+		const { smsCode } = this.props;
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text style={styles.h4}>Confirmer votre numéro</Text>
@@ -32,6 +33,10 @@ class SmsActivation extends React.Component {
 					keyboardType="numeric"
 					maxLength={4}
 					autoFocus={true}
+					onChangeText={value => {
+						this.props.handleChange('smsCode', value);
+					}}
+					value={smsCode}
 				/>
 				<View style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
@@ -45,7 +50,7 @@ class SmsActivation extends React.Component {
 						<Text style={[styles.textCenter, styles.textWhite]}>Précédent</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={this.saveAndContinue}
+						onPress={this.next}
 						style={[styles.button, styles.primaryButtonColor, styles.marginV10]}
 					>
 						<Text style={[styles.textCenter, styles.textWhite]}>Suivant</Text>

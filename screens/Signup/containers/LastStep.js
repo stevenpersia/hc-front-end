@@ -2,7 +2,6 @@ import React from 'react';
 import {
 	TextInput,
 	Text,
-	View,
 	TouchableOpacity,
 	Switch,
 	KeyboardAvoidingView
@@ -16,6 +15,7 @@ class LastStep extends React.Component {
 	};
 
 	render() {
+		const { email, avatar, interests } = this.props;
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text style={styles.h4}>Dernière étape</Text>
@@ -26,6 +26,10 @@ class LastStep extends React.Component {
 					style={styles.input}
 					placeholder="Adresse email"
 					keyboardType="email-address"
+					onChangeText={value => {
+						this.props.handleChange('email', value);
+					}}
+					value={email}
 				/>
 				<Switch />
 				<TouchableOpacity
@@ -33,6 +37,12 @@ class LastStep extends React.Component {
 					style={[styles.button, styles.secondaryButtonColor, styles.marginV10]}
 				>
 					<Text style={[styles.textCenter, styles.textWhite]}>Précédent</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={this.props.register}
+					style={[styles.button, styles.primaryButtonColor, styles.marginV10]}
+				>
+					<Text style={[styles.textCenter, styles.textWhite]}>Inscription</Text>
 				</TouchableOpacity>
 			</KeyboardAvoidingView>
 		);

@@ -8,22 +8,22 @@ import {
 import styles from '../../../Styles';
 
 class UserDetails extends React.Component {
-	saveAndContinue = e => {
+	next = e => {
 		e.preventDefault();
 		this.props.nextStep();
 	};
 
 	render() {
-		const { values } = this.props;
+		const { username, phoneNumber, password } = this.props;
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<TextInput
 					style={styles.input}
 					placeholder="Pseudo"
-					onChangeText={() => {
-						this.props.handleChange('username');
+					onChangeText={value => {
+						this.props.handleChange('username', value);
 					}}
-					value={values.username}
+					value={username}
 					autoFocus={true}
 				/>
 				<TextInput
@@ -31,16 +31,22 @@ class UserDetails extends React.Component {
 					placeholder="Téléphone"
 					keyboardType="numeric"
 					maxLength={10}
-					value={values.phoneNumber}
+					onChangeText={value => {
+						this.props.handleChange('phoneNumber', value);
+					}}
+					value={phoneNumber}
 				/>
 				<TextInput
 					style={styles.input}
 					placeholder="Mot de passe"
 					secureTextEntry={true}
-					value={values.password}
+					onChangeText={value => {
+						this.props.handleChange('password', value);
+					}}
+					value={password}
 				/>
 				<TouchableOpacity
-					onPress={this.saveAndContinue}
+					onPress={this.next}
 					style={[styles.button, styles.primaryButtonColor, styles.marginV10]}
 				>
 					<Text style={[styles.textCenter, styles.textWhite]}>Suivant</Text>
