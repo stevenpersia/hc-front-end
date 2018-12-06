@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import styles from "../../Styles";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
+var frLocale = require("date-fns/locale/fr");
 import ChallengeCardItem from "../ChallengeCardItem";
 import ChallengeCardCategory from "../ChallengeCardCategory";
 import AvatarList from "../AvatarList";
@@ -46,7 +47,9 @@ class ChallengeCard extends React.Component {
 				<View style={{ position: "absolute", top: 8, left: 8, zIndex: 2 }}>
 					<ChallengeCardItem
 						icon="calendar"
-						text={format(challenge.date.beginDate, "dddd DD MMMM")}
+						text={format(challenge.date.beginDate, "dddd DD MMMM", {
+							locale: frLocale
+						})}
 					/>
 					<ChallengeCardItem icon="pin" text={challenge.adress.city} />
 				</View>
@@ -60,8 +63,8 @@ class ChallengeCard extends React.Component {
 						position: "absolute",
 						top: 0,
 						left: 0,
-						height: 250,
-						width: fullW,
+						height: "100%",
+						width: "100%",
 						zIndex: 0,
 						opacity: 0.7
 					}}
