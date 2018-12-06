@@ -12,7 +12,7 @@ class ChallengesList extends React.Component {
 	getChallenges() {
 		axios
 			.get(
-				"https://human-challenge-back-end.herokuapp.com/api/challenge?distance=300000000&category=environnement"
+				"https://human-challenge-back-end.herokuapp.com/api/challenge?distance=300000000"
 			)
 			.then(response => {
 				this.setState(response.data, () => {
@@ -28,12 +28,13 @@ class ChallengesList extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>This is the ChallengesList screen</Text>
 				<FlatList
 					data={this.state.Challenges}
 					keyExtractor={this._keyExtractor}
 					renderItem={({ item }) => (
-						<ChallengeCard id={item._id} challenge={item} />
+						<View style={{ marginBottom: 1 }}>
+							<ChallengeCard id={item._id} challenge={item} />
+						</View>
 					)}
 				/>
 			</View>

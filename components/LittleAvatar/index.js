@@ -4,18 +4,20 @@ import styles from "../../Styles";
 import { Entypo } from "@expo/vector-icons";
 
 class LittleAvatar extends React.Component {
+	paddingNumber = this.props.number;
 	renderImage() {
 		if (this.props.photo === undefined && this.props.name) {
 			let letter = this.props.name;
 			letter = letter.split("");
-			return <Text style={[styles.textWhite, styles.small]}>{letter[0]}</Text>;
+			return <Text style={[styles.textWhite, styles.h3]}>{letter[0]}</Text>;
 		} else
 			return (
 				<Image
 					style={{
 						width: 40,
 						height: 40,
-						borderRadius: 20
+						borderRadius: 20,
+						opacity: 1
 					}}
 					source={{
 						uri: this.props.photo.url
@@ -35,7 +37,9 @@ class LittleAvatar extends React.Component {
 					overflow: "hidden",
 					borderRadius: 20,
 					alignItems: "center",
-					justifyContent: "center"
+					justifyContent: "center",
+					position: "absolute",
+					left: this.paddingNumber
 				}}
 			>
 				{this.renderImage()}
