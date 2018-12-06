@@ -4,6 +4,7 @@ import styles from "../../Styles";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import ChallengeCardItem from "../ChallengeCardItem";
 import ChallengeCardCategory from "../ChallengeCardCategory";
+import AvatarList from "../AvatarList";
 
 const fullW = Dimensions.get("window").width;
 class ChallengeCard extends React.Component {
@@ -33,6 +34,7 @@ class ChallengeCard extends React.Component {
 					/>
 					<ChallengeCardItem icon="pin" text={challenge.adress.city} />
 				</View>
+				<AvatarList challengers={challenge.challengers} />
 				{/* <Image
 					resizeMode="cover"
 					style={{

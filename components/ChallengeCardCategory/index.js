@@ -14,7 +14,7 @@ class ChallengeCardItem extends React.Component {
 		if (this.props.type === "Animaux") {
 			return "feather";
 		}
-		if (this.props.type === "Environnement") {
+		if (this.props.type === "Culture") {
 			return "palette";
 		}
 		return null;
