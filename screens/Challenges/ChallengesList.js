@@ -33,12 +33,6 @@ class ChallengesList extends React.Component {
 					data={this.state.Challenges}
 					keyExtractor={this._keyExtractor}
 					renderItem={({ item }) => (
-						// <Image
-						// 	style={{ height: 200, width: 200 }}
-						// 	source={{
-						// 		uri: item.photos[0]
-						// 	}}
-						// />
 						<ChallengeCard id={item._id} challenge={item} />
 					)}
 				/>
