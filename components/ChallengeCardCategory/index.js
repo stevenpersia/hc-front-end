@@ -9,15 +9,15 @@ class ChallengeCardItem extends React.Component {
 			return "tree";
 		}
 		if (this.props.type === "Social") {
-			return "hand-grab-o";
+			return "hand";
 		}
 		if (this.props.type === "Animaux") {
 			return "feather";
 		}
-		if (this.props.type === "Environnement") {
+		if (this.props.type === "Culture") {
 			return "palette";
 		}
-		return null;
+		return "emoji-sad";
 	}
 
 	render() {
