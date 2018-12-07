@@ -73,7 +73,7 @@ class Signup extends React.Component {
 		console.log(username, phoneNumber, password, email, avatar);
 
 		axios
-			.post('http://192.168.86.62:3000/api/signup/', {
+			.post('https://human-challenge-back-end.herokuapp.com/api/signup/', {
 				account: {
 					username: username,
 					phoneNumber: phoneNumber,
