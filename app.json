@@ -17,6 +17,10 @@
 			"fallbackToCacheTimeout": 0
 		},
 		"assetBundlePatterns": ["**/*"],
+		"androidStatusBar": {
+			"barStyle": "dark-content",
+			"backgroundColor": "#ffffff"
+		},
 		"ios": {
 			"supportsTablet": true
 		}
