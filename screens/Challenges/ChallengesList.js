@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import {
 	StyleSheet,
@@ -171,3 +172,56 @@ const customStyles = StyleSheet.create({
 	w100: { width: Dimensions.get("window").width - 60 }
 });
 export default ChallengesList;
+=======
+import React from "react";
+import { StyleSheet, Text, View, FlatList, StatusBar } from "react-native";
+import styles from "../../Styles";
+import ChallengeCard from "../../components/ChallengeCard";
+import axios from "axios";
+
+class ChallengesList extends React.Component {
+	_keyExtractor = (item, index) => item._id;
+
+	state = {};
+
+	getChallenges() {
+		axios
+			.get(
+				"https://human-challenge-back-end.herokuapp.com/api/challenge?distance=300000000"
+			)
+			.then(response => {
+				this.setState(response.data, () => {
+					// console.log(this.state);
+				});
+			});
+	}
+
+	componentDidMount() {
+		this.getChallenges();
+	}
+
+	render() {
+		return (
+			<View style={styles.container}>
+				<FlatList
+					data={this.state.Challenges}
+					keyExtractor={this._keyExtractor}
+					renderItem={({ item }) => (
+						<View style={{ marginBottom: 1 }}>
+							<ChallengeCard id={item._id} challenge={item} />
+						</View>
+					)}
+				/>
+			</View>
+		);
+	}
+}
+
+/*
+const customStyles = StyleSheet.create({
+	customCSS: {}
+});
+*/
+
+export default ChallengesList;
+>>>>>>> 75937046d6f40f93e3d865ea8d1ca50ad421d678
