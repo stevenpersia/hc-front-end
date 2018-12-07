@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, StatusBar } from "react-native";
 import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
 import axios from "axios";

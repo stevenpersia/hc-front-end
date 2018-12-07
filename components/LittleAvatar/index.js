@@ -5,6 +5,15 @@ import { Entypo } from "@expo/vector-icons";
 
 class LittleAvatar extends React.Component {
 	paddingNumber = this.props.number;
+	randomColor() {
+		var letters = "0123456789ABCDEF";
+		var color = "#";
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
 	renderImage() {
 		if (this.props.photo === undefined && this.props.name) {
 			let letter = this.props.name;
@@ -33,7 +42,7 @@ class LittleAvatar extends React.Component {
 				style={{
 					width: 40,
 					height: 40,
-					backgroundColor: "gray",
+					backgroundColor: this.randomColor(),
 					overflow: "hidden",
 					borderRadius: 20,
 					alignItems: "center",
