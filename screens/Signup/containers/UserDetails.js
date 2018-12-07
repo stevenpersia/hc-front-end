@@ -3,14 +3,47 @@ import {
 	Text,
 	TouchableOpacity,
 	TextInput,
-	KeyboardAvoidingView
+	KeyboardAvoidingView,
+	StyleSheet,
+	Dimensions
 } from 'react-native';
 import styles from '../../../Styles';
 
 class UserDetails extends React.Component {
+	state = {
+		errors: {
+			username: false,
+			phoneNumber: false,
+			password: false
+		}
+	};
 	next = e => {
+		const { password, phoneNumber, username } = this.props;
 		e.preventDefault();
-		this.props.nextStep();
+
+		// Check all validations before to go to next step
+		if (
+			username &&
+			username.length > 0 &&
+			phoneNumber &&
+			phoneNumber.length === 10 &&
+			password &&
+			password.length >= 8
+		) {
+			this.props.nextStep();
+		} else {
+			const usernameValidation = username.length === 0 ? true : false;
+			const phoneNumberValidation = phoneNumber.length < 10 ? true : false;
+			const passwordValidation = password.length < 8 ? true : false;
+
+			this.setState({
+				errors: {
+					username: usernameValidation,
+					phoneNumber: phoneNumberValidation,
+					password: passwordValidation
+				}
+			});
+		}
 	};
 
 	render() {
@@ -24,8 +57,10 @@ class UserDetails extends React.Component {
 						this.props.handleChange('username', value);
 					}}
 					value={username}
-					autoFocus={true}
 				/>
+				<Text style={[styles.error]}>
+					{this.state.errors.username === true ? 'Pseudo requis' : ''}
+				</Text>
 				<TextInput
 					style={styles.input}
 					placeholder="Téléphone"
@@ -36,6 +71,9 @@ class UserDetails extends React.Component {
 					}}
 					value={phoneNumber}
 				/>
+				<Text style={[styles.error]}>
+					{this.state.errors.phoneNumber === true ? 'Numéro valide requis' : ''}
+				</Text>
 				<TextInput
 					style={styles.input}
 					placeholder="Mot de passe"
@@ -45,9 +83,19 @@ class UserDetails extends React.Component {
 					}}
 					value={password}
 				/>
+				<Text style={[styles.error]}>
+					{this.state.errors.password === true
+						? "Mot de passe d'au moins 8 caractères requis"
+						: ''}
+				</Text>
 				<TouchableOpacity
 					onPress={this.next}
-					style={[styles.button, styles.primaryButtonColor, styles.marginV10]}
+					style={[
+						styles.button,
+						styles.primaryButtonColor,
+						styles.marginV10,
+						customStyles.w100
+					]}
 				>
 					<Text style={[styles.textCenter, styles.textWhite]}>Suivant</Text>
 				</TouchableOpacity>
@@ -56,10 +104,8 @@ class UserDetails extends React.Component {
 	}
 }
 
-/*
 const customStyles = StyleSheet.create({
-	customCSS: {}
+	w100: { width: Dimensions.get('window').width - 60 }
 });
-*/
 
 export default UserDetails;
