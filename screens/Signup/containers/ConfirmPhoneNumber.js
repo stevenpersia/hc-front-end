@@ -23,7 +23,7 @@ class ConfirmPhoneNumber extends React.Component {
 	render() {
 		const { phoneNumber } = this.props;
 		return (
-			<View style={styles.container}>
+			<View style={[styles.container, { justifyContent: 'center' }]}>
 				<Text style={[styles.h4, styles.textCenter, styles.paddingH30]}>
 					Confirmez votre numéro de téléphone
 				</Text>

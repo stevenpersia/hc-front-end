@@ -11,7 +11,7 @@ class Signup extends React.Component {
 	};
 
 	state = {
-		step: 3,
+		step: 1,
 		username: '',
 		phoneNumber: '',
 		password: '',

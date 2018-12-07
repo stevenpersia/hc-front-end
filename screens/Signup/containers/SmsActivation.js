@@ -52,7 +52,11 @@ class SmsActivation extends React.Component {
 	render() {
 		const { smsCodeUser } = this.props;
 		return (
-			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+			<KeyboardAvoidingView
+				style={[styles.container, { justifyContent: 'center' }]}
+				behavior="padding"
+				enabled
+			>
 				<Text style={styles.h4}>Renseignez le code</Text>
 				<Text
 					style={[

@@ -68,7 +68,11 @@ class LastStep extends React.Component {
 	render() {
 		const { email, avatar, interests } = this.props;
 		return (
-			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+			<KeyboardAvoidingView
+				style={[styles.container, { justifyContent: 'center' }]}
+				behavior="padding"
+				enabled
+			>
 				{this.renderPicture()}
 				<View
 					style={{
