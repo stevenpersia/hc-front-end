@@ -56,6 +56,7 @@ class Challenge extends React.Component {
         <Text style={[styles.h4, styles.bold, styles.textBlack]}>
           Description
         </Text>
+        <Text>{this.state.ref.description}</Text>
         <Text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}

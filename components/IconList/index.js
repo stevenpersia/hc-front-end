@@ -19,11 +19,13 @@ class IconList extends React.Component {
 
   render() {
     const result = [];
+
     for (let i = 0; i < this.test.length; i++) {
       result.push(
         <IconPrerequisites
           //   icon={icons[i].icon.url[0]}
           icon={this.test[i].icon.url}
+          key={i}
         />
       );
     }
