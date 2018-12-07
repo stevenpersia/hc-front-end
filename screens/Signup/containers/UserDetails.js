@@ -50,6 +50,7 @@ class UserDetails extends React.Component {
 		const { username, phoneNumber, password } = this.props;
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+				<Text style={styles.h4}>Inscription</Text>
 				<TextInput
 					style={styles.input}
 					placeholder="Pseudo"

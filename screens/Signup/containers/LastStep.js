@@ -7,7 +7,8 @@ import {
 	Dimensions,
 	Image,
 	StyleSheet,
-	View
+	View,
+	ScrollView
 } from 'react-native';
 import styles from '../../../Styles';
 import { ImagePicker, Camera, Permissions } from 'expo';
@@ -36,16 +37,9 @@ class LastStep extends React.Component {
 		if (showCamera === true) {
 			return (
 				<View>
-					<View
-						style={{
-							width: 150,
-							overflow: 'hidden',
-							height: 150,
-							borderRadius: 150
-						}}
-					>
+					<View style={customStyles.viewCamera}>
 						<Camera
-							style={{ width: 150, height: 150 }}
+							style={customStyles.camera}
 							type={Camera.Constants.Type.front}
 							ref={ref => {
 								this.camera = ref;
@@ -53,19 +47,8 @@ class LastStep extends React.Component {
 						/>
 					</View>
 
-					<TouchableOpacity onPress={this.snap}>
-						<Entypo
-							name="controller-record"
-							size={36}
-							color="red"
-							style={{
-								borderWidth: 4,
-								borderColor: 'black',
-								borderRadius: 35,
-								width: 36,
-								height: 36
-							}}
-						/>
+					<TouchableOpacity onPress={this.snap} style={customStyles.snap}>
+						<Entypo name="fingerprint" size={34} color="#FFFFFF" />
 					</TouchableOpacity>
 				</View>
 			);
@@ -73,12 +56,9 @@ class LastStep extends React.Component {
 			return (
 				<View>
 					<Image
+						// Add component of Tovo (inital name) if there is no image
 						source={{ uri: image || image }}
-						style={{
-							width: 150,
-							height: 150,
-							borderRadius: 150
-						}}
+						style={customStyles.image}
 					/>
 				</View>
 			);
@@ -89,14 +69,11 @@ class LastStep extends React.Component {
 		const { email, avatar, interests } = this.props;
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-				<Text style={styles.h4}>Dernière étape</Text>
-				<Text style={[styles.text, styles.paddingV10]}>
-					Veuillez compléter votre profil.
-				</Text>
 				{this.renderPicture()}
 				<View
 					style={{
-						flexDirection: 'row'
+						flexDirection: 'row',
+						paddingTop: 30
 					}}
 				>
 					<TouchableOpacity
@@ -188,7 +165,31 @@ class LastStep extends React.Component {
 }
 
 const customStyles = StyleSheet.create({
-	w100: { width: Dimensions.get('window').width - 60 }
+	w100: { width: Dimensions.get('window').width - 60 },
+	snap: {
+		backgroundColor: '#000',
+		width: 55,
+		height: 55,
+		borderRadius: 55,
+		borderColor: '#FFF',
+		borderWidth: 5,
+		position: 'absolute',
+		padding: 5,
+		top: 120,
+		left: 48
+	},
+	camera: { width: 150, height: 190 },
+	viewCamera: {
+		width: 150,
+		overflow: 'hidden',
+		height: 150,
+		borderRadius: 150
+	},
+	image: {
+		width: 150,
+		height: 150,
+		borderRadius: 150
+	}
 });
 
 export default LastStep;

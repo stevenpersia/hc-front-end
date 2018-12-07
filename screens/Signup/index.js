@@ -6,8 +6,12 @@ import SmsActivation from './containers/SmsActivation';
 import LastStep from './containers/LastStep';
 
 class Signup extends React.Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
-		step: 1,
+		step: 3,
 		username: '',
 		phoneNumber: '',
 		password: '',
