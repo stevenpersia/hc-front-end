@@ -1,9 +1,18 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, Image, Text, View } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  ScrollView,
+  FlatList
+} from "react-native";
 import axios from "axios";
 import styles from "../../Styles";
 
 import ChallengeCardRegister from "../../components/ChallengeCardRegister";
+import ChallengeCard from "../../components/ChallengeCard";
 
 class Challenge extends React.Component {
   state = {
@@ -20,14 +29,17 @@ class Challenge extends React.Component {
         });
       });
   }
+
   // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27//
   //on a importer style, et on va chercher dedans ce dont on besoin//
   render() {
     return (
-      <View>
-        <View>
-          <ChallengeCardRegister type="Environnement" />
-        </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <ChallengeCard
+          id="5c07ab4fa5d7c100890b9877"
+          challenge={this.state}
+          variant
+        />
         <Text style={styles.textAnimauxColor}>Description</Text>
         <Text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -43,7 +55,7 @@ class Challenge extends React.Component {
         <Text style={styles.textAnimauxColor}>Organisateur</Text>
         <Text style={styles.textAnimauxColor}>Participants</Text>
         <Text style={styles.textAnimauxColor}>Mots-Clés</Text>
-      </View>
+      </ScrollView>
     );
   }
 }

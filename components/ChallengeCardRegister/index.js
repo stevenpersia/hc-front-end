@@ -6,11 +6,14 @@ import { Entypo } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
 //on importe toute la librairie de vector-icons
 import VectorIcons from "@expo/vector-icons";
+import AvatarList from "../AvatarList";
+import ChallengeCardItem from "../ChallengeCardItem";
+import ChallengeCardCategory from "../ChallengeCardCategory";
 
 // console.log(VectorIcons);
 
 class ChallengeCardRegister extends React.Component {
-  renderIcon() {
+  renderIconRegister() {
     if (this.props.type === "Environnement") {
       return "tree";
     }
@@ -28,17 +31,30 @@ class ChallengeCardRegister extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          marginTop: 50,
-          backgroundColor: "grey",
-          borderWidth: 0.5,
-          weight: 1500,
-          height: 40
-        }}
-      >
-        <Foundation name={this.renderIcon()} size={35} color="blue" />
-      </View>
+      <onScroll>
+        <View
+          style={{
+            backgroundColor: "grey",
+            borderWidth: 0.5,
+            weight: 100,
+            height: 20
+          }}
+        >
+          <Foundation name={this.renderIconRegister()} size={35} color="blue" />
+          <View style={[{ position: "absolute", bottom: 200, zIndex: 1 }]}>
+            <AvatarList challengers={challenge.challengers} />
+          </View>
+
+          <View
+            style={{ position: "absolute", bottom: 200, left: 8, zIndex: 1 }}
+          >
+            <ChallengeCardItem
+              icon="calendar"
+              text={format(challenge.date.beginDate, "dddd DD MMMM")}
+            />
+          </View>
+        </View>
+      </onScroll>
     );
   }
 }
