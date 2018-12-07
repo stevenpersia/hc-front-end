@@ -33,6 +33,9 @@ export default StyleSheet.create({
   flexRow: {
     flexDirection: "row"
   },
+  flexRowReverse: {
+    flexDirection: "row-reverse"
+  },
 
   /* TEXT COLORS */
   textAnimauxColor: {
