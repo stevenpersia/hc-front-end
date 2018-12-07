@@ -142,6 +142,9 @@ export default StyleSheet.create({
 	italic: {
 		fontStyle: 'italic'
 	},
+	error: {
+		color: 'red'
+	},
 
 	/* BUTTONS & LINKS */
 	primaryButtonColor: {
@@ -158,9 +161,10 @@ export default StyleSheet.create({
 		width: fullW / 2 - 40
 	},
 
-	/* SCREEN RESOLUTIONS */
-	fullHeight: fullH,
-	fullWidth: fullW,
+	/* SCREEN RESOLUTIONS & DIMENSIONS */
+	fullHeight: { height: fullH },
+	fullWidth: { width: fullW },
+	w100: { width: Dimensions.get('window').width - 60 },
 
 	/* BORDER RADIUS SISILAFAMILLE TOVO */
 	rounded: {
@@ -273,6 +277,16 @@ export default StyleSheet.create({
 	},
 	marginRight30: {
 		marginRight: 30
+	},
+
+	/* FORM */
+	input: {
+		borderWidth: 1,
+		borderColor: grayColor,
+		borderRadius: 3,
+		padding: 15,
+		width: fullW - 60,
+		margin: 10
 	},
 
 	/* BOX SHADOW NONOLAFAMILLE TOVO */
