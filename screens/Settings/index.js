@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
 	Text,
 	TouchableOpacity,
@@ -27,6 +28,46 @@ class Settings extends React.Component {
 		this.setState({ [key]: value });
 	};
 
+	// Update my settings
+	update = () => {
+		const { username, phoneNumber, email, password } = this.state;
+		axios
+			.put(
+				'https://human-challenge-back-end.herokuapp.com/api/settings/update/ID',
+				{
+					account: {
+						username: username,
+						phoneNumber: phoneNumber,
+						email: email,
+						password: password
+					}
+				}
+			)
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
+	// Log out
+	logout = () => {};
+
+	// Delete my account
+	delete = () => {
+		axios
+			.delete(
+				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/ID'
+			)
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
 	render() {
 		const {
 			email,
@@ -51,7 +92,7 @@ class Settings extends React.Component {
 					keyboardType="numeric"
 					maxLength={10}
 					onChangeText={value => {
-						this.props.handleChange('phoneNumber', value);
+						this.handleChange('phoneNumber', value);
 					}}
 					value={phoneNumber}
 				/>
@@ -71,12 +112,12 @@ class Settings extends React.Component {
 					placeholder="Mot de passe"
 					secureTextEntry={true}
 					onChangeText={value => {
-						this.props.handleChange('password', value);
+						this.handleChange('password', value);
 					}}
 					value={password}
 				/>
 
-				<Text style={styles.h4}>Mon profil</Text>
+				<Text style={[styles.h4, styles.marginTop30]}>Mon profil</Text>
 
 				<TextInput
 					style={styles.input}
@@ -106,6 +147,7 @@ class Settings extends React.Component {
 				/>
 
 				<TouchableOpacity
+					onPress={() => this.update()}
 					style={[
 						styles.button,
 						styles.primaryButtonColor,
@@ -117,6 +159,7 @@ class Settings extends React.Component {
 				</TouchableOpacity>
 				<View style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
+						onPress={() => this.logout()}
 						style={[
 							styles.button,
 							styles.secondaryButtonColor,
@@ -130,6 +173,7 @@ class Settings extends React.Component {
 					</TouchableOpacity>
 
 					<TouchableOpacity
+						onPress={() => this.delete()}
 						style={[
 							styles.button,
 							styles.secondaryButtonColor,
@@ -144,6 +188,23 @@ class Settings extends React.Component {
 				</View>
 			</KeyboardAvoidingView>
 		);
+	}
+
+	componentDidMount() {
+		axios
+			.get('https://human-challenge-back-end.herokuapp.com/api/settings/ID')
+			.then(response => {
+				console.log(response);
+				this.setState({
+					phoneNumber: response.account.phoneNumber,
+					email: response.account.email,
+					password: response.account.password,
+					username: response.account.username
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	}
 }
 
