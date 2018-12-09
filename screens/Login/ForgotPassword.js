@@ -1,17 +1,33 @@
 import React from 'react';
-import {
-	TouchableOpacity,
-	Text,
-	View,
-	TextInput,
-	KeyboardAvoidingView
-} from 'react-native';
-import styles from '../../Styles';
+import axios from 'axios';
+import PhoneNumber from './containers/PhoneNumber';
+import ChangePassword from './containers/ChangePassword';
+import LastStep from './containers/LastStep';
 
 class ForgotPassword extends React.Component {
 	state = {
+		step: 1,
 		phoneNumber: '',
+		smsCodeUser: '',
+		newPassword: '',
 		error: false
+	};
+
+	// Verification SMS code
+	handleSmsCodeSend = () => {
+		axios
+			.post('https://api.authy.com/protected/json/phones/verification/start', {
+				api_key: '9bhtmpYqL2r7zcn4HRHiSIm3fGOVGHoP',
+				via: 'sms',
+				phone_number: this.state.phoneNumber,
+				country_code: 33
+			})
+			.then(response => {
+				console.log('SMS sended', response);
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	};
 
 	// Add input changes to state
@@ -19,62 +35,55 @@ class ForgotPassword extends React.Component {
 		this.setState({ [key]: value });
 	};
 
-	askPassword = () => {};
+	// Previous buttons
+	prevStep = () => {
+		const { step } = this.state;
+		this.setState({
+			step: step - 1
+		});
+	};
+
+	// Next buttons
+	nextStep = () => {
+		const { step } = this.state;
+		this.setState({
+			step: step + 1
+		});
+	};
+
+	// Change password of account
+	changePassword = () => {};
+
+	// Return to login page
+	goToLoginPage = () => {
+		this.props.navigation.navigate('Login');
+	};
 
 	render() {
-		return (
-			<KeyboardAvoidingView
-				style={[styles.container, { justifyContent: 'center' }]}
-				behavior="padding"
-				enabled
-			>
-				<Text style={styles.h4}>Mot de passe oublié ?</Text>
-				<Text
-					style={[
-						styles.text,
-						styles.paddingV10,
-						styles.w100,
-						styles.textCenter
-					]}
-				>
-					Veuillez entrer votre numéro de téléphone pour recevoir votre mot de
-					passe.
-				</Text>
-				<TextInput
-					style={styles.input}
-					placeholder="Téléphone"
-					keyboardType="numeric"
-					maxLength={10}
-					onChangeText={value => {
-						this.handleChange('phoneNumber', value);
-					}}
-					value={this.state.phoneNumber}
-				/>
-				<Text style={[styles.error]}>
-					{this.state.error === true ? 'Téléphone invalide' : ''}
-				</Text>
-				<TouchableOpacity
-					onPress={this.askPassword}
-					style={[
-						styles.button,
-						styles.primaryButtonColor,
-						styles.marginV10,
-						styles.w100
-					]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
-						Recevoir le mot de passe
-					</Text>
-				</TouchableOpacity>
-			</KeyboardAvoidingView>
-		);
+		switch (this.state.step) {
+			case 1:
+				return (
+					<PhoneNumber
+						nextStep={this.nextStep}
+						handleChange={this.handleChange}
+						handleSmsCodeSend={this.handleSmsCodeSend}
+						{...this.state}
+					/>
+				);
+			case 2:
+				return (
+					<ChangePassword
+						prevStep={this.prevStep}
+						nextStep={this.nextStep}
+						handleChange={this.handleChange}
+						changePassword={this.changePassword}
+						{...this.state}
+					/>
+				);
+			case 3:
+				return <LastStep goToLoginPage={this.goToLoginPage} />;
+		}
 	}
 }
-
-/*
-const customStyles = StyleSheet.create({
-	customCSS: {}
-});
-*/
 
 export default ForgotPassword;
