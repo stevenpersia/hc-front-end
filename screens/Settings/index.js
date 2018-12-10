@@ -7,7 +7,8 @@ import {
 	KeyboardAvoidingView,
 	StyleSheet,
 	Dimensions,
-	View
+	View,
+	ScrollView
 } from 'react-native';
 import styles from '../../Styles';
 
@@ -79,113 +80,120 @@ class Settings extends React.Component {
 		} = this.props;
 
 		return (
-			<KeyboardAvoidingView
-				style={[styles.container, { justifyContent: 'center' }]}
-				behavior="padding"
-				enabled
-			>
-				<Text style={styles.h4}>Mon compte</Text>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Téléphone"
-					keyboardType="numeric"
-					maxLength={10}
-					onChangeText={value => {
-						this.handleChange('phoneNumber', value);
-					}}
-					value={phoneNumber}
-				/>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Adresse email"
-					keyboardType="email-address"
-					onChangeText={value => {
-						this.handleChange('email', value);
-					}}
-					value={email}
-				/>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Mot de passe"
-					secureTextEntry={true}
-					onChangeText={value => {
-						this.handleChange('password', value);
-					}}
-					value={password}
-				/>
-
-				<Text style={[styles.h4, styles.marginTop30]}>Mon profil</Text>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Prénom"
-					onChangeText={value => {
-						this.handleChange('firstName', value);
-					}}
-					value={firstName}
-				/>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Nom"
-					onChangeText={value => {
-						this.handleChange('lastName', value);
-					}}
-					value={lastName}
-				/>
-
-				<TextInput
-					style={styles.input}
-					placeholder="Pseudo"
-					onChangeText={value => {
-						this.handleChange('username', value);
-					}}
-					value={username}
-				/>
-
-				<TouchableOpacity
-					onPress={() => this.update()}
-					style={[
-						styles.button,
-						styles.primaryButtonColor,
-						styles.marginV10,
-						styles.w100
-					]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>Enregistrer</Text>
-				</TouchableOpacity>
-				<View style={{ flexDirection: 'row' }}>
-					<TouchableOpacity
-						onPress={() => this.logout()}
+			<KeyboardAvoidingView behavior="padding" enabled>
+				<ScrollView>
+					<View
 						style={[
-							styles.button,
-							styles.secondaryButtonColor,
-							styles.margin10,
-							customStyles.custom
+							styles.container,
+							{ justifyContent: 'center', marginTop: 20 }
 						]}
 					>
-						<Text style={[styles.textCenter, styles.textWhite]}>
-							Se déconnecter
-						</Text>
-					</TouchableOpacity>
+						<Text style={styles.h4}>Mon compte</Text>
 
-					<TouchableOpacity
-						onPress={() => this.delete()}
-						style={[
-							styles.button,
-							styles.secondaryButtonColor,
-							styles.margin10,
-							customStyles.custom
-						]}
-					>
-						<Text style={[styles.textCenter, styles.textWhite]}>
-							Supprimer son compte
-						</Text>
-					</TouchableOpacity>
-				</View>
+						<TextInput
+							style={styles.input}
+							placeholder="Téléphone"
+							keyboardType="numeric"
+							maxLength={10}
+							onChangeText={value => {
+								this.handleChange('phoneNumber', value);
+							}}
+							value={phoneNumber}
+						/>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Adresse email"
+							keyboardType="email-address"
+							onChangeText={value => {
+								this.handleChange('email', value);
+							}}
+							value={email}
+						/>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Mot de passe"
+							secureTextEntry={true}
+							onChangeText={value => {
+								this.handleChange('password', value);
+							}}
+							value={password}
+						/>
+
+						<Text style={[styles.h4, styles.marginTop30]}>Mon profil</Text>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Prénom"
+							onChangeText={value => {
+								this.handleChange('firstName', value);
+							}}
+							value={firstName}
+						/>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Nom"
+							onChangeText={value => {
+								this.handleChange('lastName', value);
+							}}
+							value={lastName}
+						/>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Pseudo"
+							onChangeText={value => {
+								this.handleChange('username', value);
+							}}
+							value={username}
+						/>
+
+						<TouchableOpacity
+							onPress={() => this.update()}
+							style={[
+								styles.button,
+								styles.primaryButtonColor,
+								styles.marginV10,
+								styles.w100
+							]}
+						>
+							<Text style={[styles.textCenter, styles.textWhite]}>
+								Enregistrer
+							</Text>
+						</TouchableOpacity>
+						<View style={{ flexDirection: 'row' }}>
+							<TouchableOpacity
+								onPress={() => this.logout()}
+								style={[
+									styles.button,
+									styles.secondaryButtonColor,
+									styles.margin10,
+									customStyles.custom
+								]}
+							>
+								<Text style={[styles.textCenter, styles.textWhite]}>
+									Se déconnecter
+								</Text>
+							</TouchableOpacity>
+
+							<TouchableOpacity
+								onPress={() => this.delete()}
+								style={[
+									styles.button,
+									styles.secondaryButtonColor,
+									styles.margin10,
+									customStyles.custom
+								]}
+							>
+								<Text style={[styles.textCenter, styles.textWhite]}>
+									Supprimer son compte
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</ScrollView>
 			</KeyboardAvoidingView>
 		);
 	}
