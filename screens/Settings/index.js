@@ -17,11 +17,13 @@ class Settings extends React.Component {
 		phoneNumber: '',
 		email: '',
 		password: '',
-		firstName: '',
-		lastName: '',
 		username: '',
 		interest: [],
-		categories: []
+		categories: [],
+		message: {
+			error: false,
+			success: false
+		}
 	};
 
 	// Add input changes to state
@@ -34,7 +36,13 @@ class Settings extends React.Component {
 		const { username, phoneNumber, email, password } = this.state;
 		axios
 			.put(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/update/ID',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c0412b7a380ae141cba4919',
+				{
+					headers: {
+						Authorization:
+							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+					}
+				},
 				{
 					account: {
 						username: username,
@@ -46,9 +54,21 @@ class Settings extends React.Component {
 			)
 			.then(response => {
 				console.log(response);
+				this.setState({
+					message: {
+						error: false,
+						success: true
+					}
+				});
 			})
 			.catch(error => {
 				console.log(error);
+				this.setState({
+					message: {
+						error: true,
+						success: false
+					}
+				});
 			});
 	};
 
@@ -59,7 +79,13 @@ class Settings extends React.Component {
 	delete = () => {
 		axios
 			.delete(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/ID'
+				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c0412b7a380ae141cba4919',
+				{
+					headers: {
+						Authorization:
+							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+					}
+				}
 			)
 			.then(response => {
 				console.log(response);
@@ -70,25 +96,36 @@ class Settings extends React.Component {
 	};
 
 	render() {
-		const {
-			email,
-			phoneNumber,
-			password,
-			firstName,
-			lastName,
-			username
-		} = this.props;
+		const { email, phoneNumber, password, username } = this.state;
 
 		return (
-			<KeyboardAvoidingView behavior="padding" enabled>
+			<KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
 				<ScrollView>
 					<View
 						style={[
 							styles.container,
-							{ justifyContent: 'center', marginTop: 20 }
+							{ justifyContent: 'center', marginTop: 30 }
 						]}
 					>
 						<Text style={styles.h4}>Mon compte</Text>
+
+						<Text style={styles.paddingTop10}>
+							{this.state.message.error === true
+								? 'Une erreur est survenue.'
+								: ''}
+						</Text>
+						<Text>
+							{this.state.message.success === true ? 'Compte mis à jour.' : ''}
+						</Text>
+
+						<TextInput
+							style={styles.input}
+							placeholder="Pseudo"
+							onChangeText={value => {
+								this.handleChange('username', value);
+							}}
+							value={username}
+						/>
 
 						<TextInput
 							style={styles.input}
@@ -121,35 +158,6 @@ class Settings extends React.Component {
 							value={password}
 						/>
 
-						<Text style={[styles.h4, styles.marginTop30]}>Mon profil</Text>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Prénom"
-							onChangeText={value => {
-								this.handleChange('firstName', value);
-							}}
-							value={firstName}
-						/>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Nom"
-							onChangeText={value => {
-								this.handleChange('lastName', value);
-							}}
-							value={lastName}
-						/>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Pseudo"
-							onChangeText={value => {
-								this.handleChange('username', value);
-							}}
-							value={username}
-						/>
-
 						<TouchableOpacity
 							onPress={() => this.update()}
 							style={[
@@ -163,35 +171,33 @@ class Settings extends React.Component {
 								Enregistrer
 							</Text>
 						</TouchableOpacity>
-						<View style={{ flexDirection: 'row' }}>
-							<TouchableOpacity
-								onPress={() => this.logout()}
-								style={[
-									styles.button,
-									styles.secondaryButtonColor,
-									styles.margin10,
-									customStyles.custom
-								]}
-							>
-								<Text style={[styles.textCenter, styles.textWhite]}>
-									Se déconnecter
-								</Text>
-							</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => this.logout()}
+							style={[
+								styles.button,
+								styles.secondaryButtonColor,
+								styles.margin10,
+								styles.w100
+							]}
+						>
+							<Text style={[styles.textCenter, styles.textWhite]}>
+								Se déconnecter
+							</Text>
+						</TouchableOpacity>
 
-							<TouchableOpacity
-								onPress={() => this.delete()}
-								style={[
-									styles.button,
-									styles.secondaryButtonColor,
-									styles.margin10,
-									customStyles.custom
-								]}
-							>
-								<Text style={[styles.textCenter, styles.textWhite]}>
-									Supprimer son compte
-								</Text>
-							</TouchableOpacity>
-						</View>
+						<TouchableOpacity
+							onPress={() => this.delete()}
+							style={[
+								styles.button,
+								styles.secondaryButtonColor,
+								styles.margin10,
+								styles.w100
+							]}
+						>
+							<Text style={[styles.textCenter, styles.textWhite]}>
+								Supprimer son compte
+							</Text>
+						</TouchableOpacity>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
@@ -200,14 +206,22 @@ class Settings extends React.Component {
 
 	componentDidMount() {
 		axios
-			.get('https://human-challenge-back-end.herokuapp.com/api/settings/ID')
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/settings/5c0412b7a380ae141cba4919',
+				{
+					headers: {
+						Authorization:
+							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+					}
+				}
+			)
 			.then(response => {
 				console.log(response);
 				this.setState({
-					phoneNumber: response.account.phoneNumber,
-					email: response.account.email,
-					password: response.account.password,
-					username: response.account.username
+					phoneNumber: response.data.user.account.phoneNumber,
+					email: response.data.user.account.email,
+					password: response.data.user.account.password,
+					username: response.data.user.account.username
 				});
 			})
 			.catch(error => {
@@ -216,11 +230,13 @@ class Settings extends React.Component {
 	}
 }
 
+/*
 const customStyles = StyleSheet.create({
 	custom: {
 		width: Dimensions.get('window').width / 2 - 40,
 		alignItems: 'center'
 	}
 });
+*/
 
 export default Settings;
