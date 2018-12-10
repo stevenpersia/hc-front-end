@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import {
 	StyleSheet,
@@ -21,7 +20,9 @@ class ChallengesList extends React.Component {
 	};
 	_keyExtractor = (item, index) => item._id;
 
-	state = { params: {} };
+	state = {
+		params: {}
+	};
 
 	getChallenges() {
 		axios
@@ -80,8 +81,13 @@ class ChallengesList extends React.Component {
 					</Text>
 					<TouchableOpacity
 						onPress={() =>
-							this.setState({ params: { distance: 3000000 } }, () =>
-								this.getChallenges()
+							this.setState(
+								{
+									params: {
+										distance: 3000000
+									}
+								},
+								() => this.getChallenges()
 							)
 						}
 						style={[
@@ -123,7 +129,12 @@ class ChallengesList extends React.Component {
 						renderItem={({ item, index }) => {
 							if (index === 0) {
 								return (
-									<View style={{ marginBottom: 1, paddingTop: 40 }}>
+									<View
+										style={{
+											marginBottom: 1,
+											paddingTop: 48
+										}}
+									>
 										<TouchableOpacity
 											// Ajouter les props pour Anne et enlever le truc moche quand tu click
 											onPress={() =>
@@ -136,7 +147,11 @@ class ChallengesList extends React.Component {
 								);
 							} else {
 								return (
-									<View style={{ marginBottom: 1 }}>
+									<View
+										style={{
+											marginBottom: 1
+										}}
+									>
 										<TouchableOpacity
 											// Ajouter les props pour Anne et enlever le truc moche quand tu click
 											onPress={() =>
@@ -157,7 +172,15 @@ class ChallengesList extends React.Component {
 
 	render() {
 		return this.state.counter === undefined ? (
-			<View style={([styles.container], { flex: 1, justifyContent: "center" })}>
+			<View
+				style={
+					([styles.container],
+					{
+						flex: 1,
+						justifyContent: "center"
+					})
+				}
+			>
 				<ActivityIndicator size="large" color="black" />
 			</View>
 		) : this.state.counter === 0 ? (
@@ -169,59 +192,8 @@ class ChallengesList extends React.Component {
 }
 
 const customStyles = StyleSheet.create({
-	w100: { width: Dimensions.get("window").width - 60 }
+	w100: {
+		width: Dimensions.get("window").width - 60
+	}
 });
 export default ChallengesList;
-=======
-import React from "react";
-import { StyleSheet, Text, View, FlatList, StatusBar } from "react-native";
-import styles from "../../Styles";
-import ChallengeCard from "../../components/ChallengeCard";
-import axios from "axios";
-
-class ChallengesList extends React.Component {
-	_keyExtractor = (item, index) => item._id;
-
-	state = {};
-
-	getChallenges() {
-		axios
-			.get(
-				"https://human-challenge-back-end.herokuapp.com/api/challenge?distance=300000000"
-			)
-			.then(response => {
-				this.setState(response.data, () => {
-					// console.log(this.state);
-				});
-			});
-	}
-
-	componentDidMount() {
-		this.getChallenges();
-	}
-
-	render() {
-		return (
-			<View style={styles.container}>
-				<FlatList
-					data={this.state.Challenges}
-					keyExtractor={this._keyExtractor}
-					renderItem={({ item }) => (
-						<View style={{ marginBottom: 1 }}>
-							<ChallengeCard id={item._id} challenge={item} />
-						</View>
-					)}
-				/>
-			</View>
-		);
-	}
-}
-
-/*
-const customStyles = StyleSheet.create({
-	customCSS: {}
-});
-*/
-
-export default ChallengesList;
->>>>>>> 75937046d6f40f93e3d865ea8d1ca50ad421d678

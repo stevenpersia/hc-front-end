@@ -1,4 +1,7 @@
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions
+} from "react-native";
 
 const primaryColor = "black";
 const secondaryColor = "gray";
@@ -156,6 +159,17 @@ export default StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 3,
     width: fullW / 2 - 40
+  },
+  buttonSmall: {
+    backgroundColor: grayColor,
+    marginHorizontal: 4,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    borderRadius: 8,
+    width: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 30
   },
 
   /* SCREEN RESOLUTIONS */
