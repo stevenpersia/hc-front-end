@@ -4,7 +4,8 @@ import {
 	Text,
 	View,
 	Dimensions,
-	TouchableOpacity
+	TouchableOpacity,
+	TouchableHighlight
 } from "react-native";
 import styles from "../../Styles";
 import { Entypo } from "@expo/vector-icons";
@@ -88,15 +89,21 @@ class ListBar extends React.Component {
 							borderRadius: 8
 						}}
 					/>
-					<Entypo
-						name="funnel"
-						size={30}
-						color="black"
-						style={{
-							backgroundColor: "white",
-							borderRadius: 8
+					<TouchableHighlight
+						onPress={() => {
+							this.props.setModalVisible(true);
 						}}
-					/>
+					>
+						<Entypo
+							name="funnel"
+							size={30}
+							color="black"
+							style={{
+								backgroundColor: "white",
+								borderRadius: 8
+							}}
+						/>
+					</TouchableHighlight>
 				</View>
 			</View>
 		);

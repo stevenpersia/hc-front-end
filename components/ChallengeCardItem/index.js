@@ -25,6 +25,16 @@ class ChallengeCardItem extends React.Component {
 				/>
 			);
 		}
+		if (this.props.icon === "time") {
+			return (
+				<Entypo
+					style={{ marginRight: 4 }}
+					name="time-slot"
+					size={16}
+					color="white"
+				/>
+			);
+		}
 
 		return null;
 	}

@@ -7,22 +7,33 @@ import {
 	ActivityIndicator,
 	Image,
 	TouchableOpacity,
-	Dimensions
+	Dimensions,
+	Modal,
+	TouchableHighlight
 } from "react-native";
 import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
 import axios from "axios";
 import ListBar from "../../components/ListBar";
+import Filters from "../../components/Filters";
+import { Entypo } from "@expo/vector-icons";
 
 class ChallengesList extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
-	_keyExtractor = (item, index) => item._id;
 
 	state = {
+		modalVisible: false,
 		params: {}
 	};
+
+	setModalVisible = visible => {
+		this.setState({ modalVisible: visible });
+		console.log(this.state);
+	};
+
+	_keyExtractor = (item, index) => item._id;
 
 	getChallenges() {
 		axios
@@ -34,6 +45,51 @@ class ChallengesList extends React.Component {
 					console.log(this.state);
 				});
 			});
+	}
+
+	getFilters = filters => {
+		this.setState({ params: filters }, () => {
+			this.getChallenges();
+		});
+	};
+
+	renderFilters() {
+		return (
+			<Modal
+				animationType="slide"
+				transparent={false}
+				visible={this.state.modalVisible}
+				onRequestClose={() => {}}
+			>
+				<View style={[{ flex: 1 }]}>
+					<View
+						style={{
+							height: 40,
+							marginBottom: 10,
+							alignItems: "flex-start"
+						}}
+					>
+						<TouchableHighlight
+							onPress={() => {
+								this.setModalVisible(!this.state.modalVisible);
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									alignItems: "center"
+								}}
+							>
+								<Entypo name="chevron-left" size={25} color="black" />
+								<Text style={[styles.h5, styles.bold]}>Filtres</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
+					<Filters getFilters={this.getFilters} />
+				</View>
+			</Modal>
+		);
 	}
 
 	componentDidMount() {
@@ -51,7 +107,8 @@ class ChallengesList extends React.Component {
 					}
 				]}
 			>
-				<ListBar />
+				<ListBar setModalVisible={this.setModalVisible} />
+				{this.renderFilters()}
 				<View
 					style={[
 						styles.container,
@@ -121,7 +178,8 @@ class ChallengesList extends React.Component {
 	renderList() {
 		return (
 			<View style={[styles.container]}>
-				<ListBar />
+				<ListBar setModalVisible={this.setModalVisible} />
+				{this.renderFilters()}
 				<View>
 					<FlatList
 						data={this.state.Challenges}
