@@ -10,9 +10,21 @@ import {
 	Dimensions
 } from 'react-native';
 import styles from '../../Styles';
+import axios from 'axios';
+import ChallengeCard from '../../components/ChallengeCard';
 
 class Profile extends React.Component {
 	state = {
+		user: {
+			account: {
+				username: '',
+				avatar: ''
+			},
+			challenges: {
+				player: [],
+				manager: []
+			}
+		},
 		tabs: {
 			participate: true,
 			organizer: false,
@@ -112,12 +124,17 @@ class Profile extends React.Component {
 	};
 
 	render() {
+		const { username, avatar } = this.state.user.account;
+		const { player, manager } = this.state.user.challenges;
+
 		return (
 			<ScrollView>
 				<View style={[styles.container, { justifyContent: 'center' }]}>
 					<View style={customStyles.avatarContainer}>
 						<View style={{ width: 100 }}>
-							<Text style={[styles.h4, styles.textCenter]}>8</Text>
+							<Text style={[styles.h4, styles.textCenter]}>
+								{manager.length}
+							</Text>
 							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
 								défis
 							</Text>
@@ -126,10 +143,15 @@ class Profile extends React.Component {
 							</Text>
 						</View>
 						<View style={customStyles.avatar}>
-							<Image />
+							<Image
+								style={{ width: 100, height: 100, borderRadius: 50 }}
+								source={{ uri: avatar.toString() }}
+							/>
 						</View>
 						<View style={{ width: 100 }}>
-							<Text style={[styles.h4, styles.textCenter]}>3</Text>
+							<Text style={[styles.h4, styles.textCenter]}>
+								{player.length}
+							</Text>
 							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
 								défis
 							</Text>
@@ -138,7 +160,7 @@ class Profile extends React.Component {
 							</Text>
 						</View>
 					</View>
-					<Text style={[styles.h4, styles.paddingV10]}>John Doe</Text>
+					<Text style={[styles.h4, styles.paddingV10]}>{username}</Text>
 					<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
 						<TouchableOpacity onPress={() => this.listParticipate()}>
 							<Text
@@ -170,6 +192,37 @@ class Profile extends React.Component {
 			</ScrollView>
 		);
 	}
+
+	componentDidMount() {
+		axios
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/profile/5c0412b7a380ae141cba4919',
+				{
+					headers: {
+						Authorization:
+							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+					}
+				}
+			)
+			.then(response => {
+				console.log(response);
+				this.setState({
+					user: {
+						account: {
+							username: response.data.account.username,
+							avatar: response.data.account.avatar[0].url
+						},
+						challenges: {
+							player: response.data.challenges.player,
+							manager: response.data.challenges.manager
+						}
+					}
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}
 }
 
 const customStyles = StyleSheet.create({
@@ -190,7 +243,8 @@ const customStyles = StyleSheet.create({
 	tabs: {
 		flexDirection: 'row',
 		width: Dimensions.get('window').width,
-		marginVertical: 20
+		marginVertical: 20,
+		textAlign: 'center'
 	},
 	tab: {
 		paddingVertical: 20,
