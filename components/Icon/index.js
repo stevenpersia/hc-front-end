@@ -2,7 +2,8 @@ import React from "react";
 import { Image } from "react-native";
 import styles from "../../Styles";
 
-class IconPrerequisites extends React.Component {
+// Definition de la Taille et source de l'icone des prérequis
+class Icon extends React.Component {
   render() {
     return (
       <Image
@@ -20,4 +21,4 @@ class IconPrerequisites extends React.Component {
   }
 }
 
-export default IconPrerequisites;
+export default Icon;

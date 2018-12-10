@@ -143,11 +143,12 @@ class AvatarList extends React.Component {
 
   render() {
     let testStyle = {
-      marginLeft: this.props.variant ? 0 : -30
+      marginLeft: this.props.variant ? 0 : -25
     };
     if (this.props.variant) {
       testStyle.width = "80%";
       testStyle.justifyContent = "space-between";
+      testStyle.justifyContent = "space-around";
     }
     return (
       <View style={[styles.flexRowReverse, testStyle]}>
