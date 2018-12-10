@@ -18,7 +18,7 @@ class Profile extends React.Component {
 		user: {
 			account: {
 				username: '',
-				avatar: ''
+				avatar: 'Human Challenge SISI LA FAMILLE'
 			},
 			challenges: {
 				player: [],
