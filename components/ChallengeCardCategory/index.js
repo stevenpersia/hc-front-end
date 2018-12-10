@@ -27,7 +27,7 @@ class ChallengeCardCategory extends React.Component {
 				<Entypo
 					name={this.renderIcon()}
 					size={this.props.sizeFont ? Number(this.props.sizeFont) : 26}
-					color={this.props.color ? this.props.color : white}
+					color={this.props.color ? this.props.color : "white"}
 				/>
 			</View>
 		);

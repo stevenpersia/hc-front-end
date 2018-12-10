@@ -64,7 +64,7 @@ class ChallengesList extends React.Component {
 				<View style={[{ flex: 1 }]}>
 					<View
 						style={{
-							height: 40,
+							height: 30,
 							marginBottom: 10,
 							alignItems: "flex-start"
 						}}
@@ -85,6 +85,20 @@ class ChallengesList extends React.Component {
 								<Text style={[styles.h5, styles.bold]}>Filtres</Text>
 							</View>
 						</TouchableHighlight>
+						<View
+							style={{
+								backgroundColor: "black",
+								marginRight: 8,
+								height: 30,
+								width: 30,
+								borderRadius: 15,
+								alignItems: "center",
+								justifyContent: "center",
+								alignSelf: "flex-end"
+							}}
+						>
+							<Text style={[{ color: "white" }]}>{this.state.counter}</Text>
+						</View>
 					</View>
 					<Filters getFilters={this.getFilters} />
 				</View>
