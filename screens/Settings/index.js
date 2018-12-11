@@ -5,8 +5,6 @@ import {
 	TouchableOpacity,
 	TextInput,
 	KeyboardAvoidingView,
-	StyleSheet,
-	Dimensions,
 	View,
 	ScrollView
 } from 'react-native';
@@ -89,9 +87,16 @@ class Settings extends React.Component {
 			)
 			.then(response => {
 				console.log(response);
+				this.props.navigation.navigate('Walkthrough');
 			})
 			.catch(error => {
 				console.log(error);
+				this.setState({
+					message: {
+						error: true,
+						success: false
+					}
+				});
 			});
 	};
 
@@ -109,12 +114,12 @@ class Settings extends React.Component {
 					>
 						<Text style={styles.h4}>Mon compte</Text>
 
-						<Text style={styles.paddingTop10}>
+						<Text style={[styles.paddingTop10, { color: 'red' }]}>
 							{this.state.message.error === true
 								? 'Une erreur est survenue.'
 								: ''}
 						</Text>
-						<Text>
+						<Text style={{ color: 'green' }}>
 							{this.state.message.success === true ? 'Compte mis à jour.' : ''}
 						</Text>
 
@@ -220,7 +225,6 @@ class Settings extends React.Component {
 				this.setState({
 					phoneNumber: response.data.user.account.phoneNumber,
 					email: response.data.user.account.email,
-					password: response.data.user.account.password,
 					username: response.data.user.account.username
 				});
 			})
