@@ -147,7 +147,9 @@ class Filters extends React.Component {
 							]}
 							onValueChanged={value => this.setState({ distance: value })}
 							onPressIn={() => console.log("Pressed in")}
-							onPressOut={() => console.log(this.state.distance, "my man")}
+							onPressOut={() => {console.log(this.state.distance, "my man")
+						this.props.getFilters({ distance: this.state.distance})
+						}}
 							onDrag={() => console.log("Dragging")}
 						/>
 					</View>
