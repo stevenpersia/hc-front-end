@@ -14,11 +14,17 @@ import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
 import AvatarList from "../../components/AvatarList";
 import IconList from "../../components/IconList";
+import { Tooltip } from "react-native-elements";
 
 class Challenge extends React.Component {
   state = {
     isLoading: true,
-    ref: {}
+    ref: {},
+    adress: "",
+    // ... donner une valeur par défaut aux clés de response.data
+    owner: {
+      challenges: { player: [], manager: [] }
+    }
     //  ref.category.name
   };
 
@@ -28,7 +34,7 @@ class Challenge extends React.Component {
         "https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877"
       )
       .then(response => {
-        // console.log("responsedata", response.data);
+        console.log("responsedata", response.data);
         this.setState(
           {
             ...response.data,
@@ -43,6 +49,7 @@ class Challenge extends React.Component {
   // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27//
   //on a importer style, et on va chercher dedans ce dont on besoin//
   render() {
+    console.log("this.state.owner.organizer", this.state.owner.organizer);
     if (this.state.isLoading === true) {
       return <Text>En cours de chargement ... </Text>;
     }
@@ -63,7 +70,7 @@ class Challenge extends React.Component {
               <Text
                 style={{
                   textAlign: "center",
-                  backgroundColor: "yellow",
+                  backgroundColor: "#e5f7e1",
                   justifyContent: "center"
                 }}
               >
@@ -79,7 +86,7 @@ class Challenge extends React.Component {
               <Text
                 style={{
                   textAlign: "center",
-                  backgroundColor: "yellow",
+                  backgroundColor: "#e5f7e1",
                   justifyContent: "center"
                 }}
               >
@@ -117,6 +124,9 @@ class Challenge extends React.Component {
             </View>
             <View style={customStyles.secondElement}>
               <Text>{this.state.owner.organizer}</Text>
+              <Text>
+                {this.state.owner.challenges.manager.length} défis réalisés
+              </Text>
             </View>
           </View>
           <View style={customStyles.secondSquare}>
@@ -137,7 +147,7 @@ class Challenge extends React.Component {
           <Text style={[styles.h4, styles.bold, styles.textBlack]}>
             Participants
           </Text>
-          <View style={customStyles.squareComponent}>
+          <View style={[customStyles.squareComponent]}>
             <AvatarList challengers={this.state.challengers} variant />
           </View>
         </View>
@@ -156,20 +166,21 @@ const customStyles = StyleSheet.create({
     display: "flex",
     height: 250,
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#e5f7e1",
     flexDirection: "column",
     borderBottomWidth: 1
   },
   squareComponent: {
     flex: 1,
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "center",
     textAlign: "center"
   },
   firstSquare: {
     flexDirection: "row",
     width: 250,
-    backgroundColor: "pink",
+    backgroundColor: "#88fc5a",
     marginTop: "8%",
     marginBottom: "3%"
   },
@@ -188,7 +199,7 @@ const customStyles = StyleSheet.create({
     alignItems: "center",
     width: 250,
     flexDirection: "row",
-    backgroundColor: "grey",
+    backgroundColor: "#88fc5a",
     marginTop: "1%",
     marginBottom: "10%"
   },
