@@ -106,9 +106,9 @@ class ChallengesList extends React.Component {
 									style={{
 										backgroundColor: "black",
 										marginRight: 8,
-										height: 24,
-										width: 24,
-										borderRadius: 12,
+										height: 30,
+										width: 30,
+										borderRadius: 15,
 										alignItems: "center",
 										justifyContent: "center"
 									}}
@@ -178,6 +178,15 @@ class ChallengesList extends React.Component {
 								{
 									params: {
 										distance: 3000000
+									},
+									filterHelpers: {
+										Environnement: true,
+										Social: true,
+										Animaux: true,
+										Culture: true,
+										half: false,
+										day: false,
+										more: false
 									}
 								},
 								() => this.getChallenges()
