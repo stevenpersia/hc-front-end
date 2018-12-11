@@ -25,7 +25,16 @@ class ChallengesList extends React.Component {
 
 	state = {
 		modalVisible: false,
-		params: {}
+		params: { distance: 60 },
+		filterHelpers: {
+			Environnement: true,
+			Social: true,
+			Animaux: true,
+			Culture: true,
+			half: false,
+			day: false,
+			more: false
+		}
 	};
 
 	setModalVisible = visible => {
@@ -41,14 +50,15 @@ class ChallengesList extends React.Component {
 				params: this.state.params
 			})
 			.then(response => {
-				this.setState(response.data, () => {
-					console.log(this.state);
-				});
+				console.log("response", response.data);
+				this.setState(response.data, () => {});
 			});
 	}
 
-	getFilters = filters => {
-		this.setState({ params: filters }, () => {
+	getFilters = (filters, obj) => {
+		// console.log("​ChallengesList -> getFilters -> filters, obj", filters, obj);
+
+		this.setState({ params: filters, filterHelpers: obj }, () => {
 			this.getChallenges();
 		});
 	};
@@ -64,8 +74,8 @@ class ChallengesList extends React.Component {
 				<View style={[{ flex: 1 }]}>
 					<View
 						style={{
-							height: 30,
-							marginBottom: 10,
+							height: 40,
+							justifyContent: "center",
 							alignItems: "flex-start"
 						}}
 					>
@@ -77,30 +87,42 @@ class ChallengesList extends React.Component {
 							<View
 								style={{
 									flexDirection: "row",
-									justifyContent: "center",
-									alignItems: "center"
+									justifyContent: "space-between",
+									alignItems: "center",
+									width: "100%"
 								}}
 							>
-								<Entypo name="chevron-left" size={25} color="black" />
-								<Text style={[styles.h5, styles.bold]}>Filtres</Text>
+								<View
+									style={{
+										flexDirection: "row",
+
+										alignItems: "center"
+									}}
+								>
+									<Entypo name="chevron-left" size={25} color="black" />
+									<Text style={[styles.h5, styles.bold]}>Filtres</Text>
+								</View>
+								<View
+									style={{
+										backgroundColor: "black",
+										marginRight: 8,
+										height: 24,
+										width: 24,
+										borderRadius: 12,
+										alignItems: "center",
+										justifyContent: "center"
+									}}
+								>
+									<Text style={[{ color: "white" }]}>{this.state.counter}</Text>
+								</View>
 							</View>
 						</TouchableHighlight>
-						<View
-							style={{
-								backgroundColor: "black",
-								marginRight: 8,
-								height: 30,
-								width: 30,
-								borderRadius: 15,
-								alignItems: "center",
-								justifyContent: "center",
-								alignSelf: "flex-end"
-							}}
-						>
-							<Text style={[{ color: "white" }]}>{this.state.counter}</Text>
-						</View>
 					</View>
-					<Filters getFilters={this.getFilters} />
+					<Filters
+						getFilters={this.getFilters}
+						distance={this.state.params.distance}
+						filterHelpers={this.state.filterHelpers}
+					/>
 				</View>
 			</Modal>
 		);

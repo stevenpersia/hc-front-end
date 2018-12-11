@@ -1,30 +1,23 @@
 import React from "react";
-import {
-	StyleSheet,
-	Text,
-	View,
-	TouchableHighlight,
-	Dimensions
-} from "react-native";
+import { Text, View, TouchableHighlight, Dimensions } from "react-native";
 import styles from "../../Styles";
-import { Entypo } from "@expo/vector-icons";
 import ChallengeCardCategory from "../ChallengeCardCategory";
 import MotionSlider from "react-native-motion-slider";
-var { height, width } = Dimensions.get("window");
+var { width } = Dimensions.get("window");
 class Filters extends React.Component {
 	state = {
-		distance: 50,
-		Environnement: true,
-		Social: true,
-		Animaux: true,
-		Culture: true,
-		half: true,
-		day: true,
-		more: true
+		distance: this.props.distance,
+		Environnement: this.props.filterHelpers.Environnement,
+		Social: this.props.filterHelpers.Social,
+		Animaux: this.props.filterHelpers.Animaux,
+		Culture: this.props.filterHelpers.Culture,
+		half: this.props.filterHelpers.half,
+		day: this.props.filterHelpers.day,
+		more: this.props.filterHelpers.more
 	};
 
 	renderCheckbox(check) {
-		if (check === true) {
+		if (check === false) {
 			return (
 				<View
 					style={{
@@ -53,17 +46,62 @@ class Filters extends React.Component {
 		}
 	}
 
+	getCategoryParam() {
+		let response = "";
+		this.state.Environnement && (response += "environnement ");
+		this.state.Social && (response += "social ");
+		this.state.Animaux && (response += "animaux ");
+		this.state.Culture && (response += "culture ");
+		return response;
+	}
+
+	getDurationParam() {
+		let response = 0;
+		this.state.half && (response += 1);
+		this.state.day && (response += 3);
+		this.state.more && (response += 5);
+
+		return response;
+	}
+
+	getHelpers() {
+		return {
+			Environnement: this.state.Environnement,
+			Social: this.state.Social,
+			Animaux: this.state.Animaux,
+			Culture: this.state.Culture,
+			half: this.state.half,
+			day: this.state.day,
+			more: this.state.more
+		};
+	}
+
+	allOfTheparams() {
+		return {
+			distance: this.state.distance,
+			duration: this.getDurationParam(),
+			category: this.getCategoryParam()
+		};
+	}
+
 	render() {
 		return (
 			<View
 				style={{
 					flex: 1,
-					justifyContent: "space-between",
+					justifyContent: "space-evenly",
 					alignItems: "center"
 				}}
 			>
 				<View>
-					<Text style={[styles.h4, styles.textGray, styles.textCenter]}>
+					<Text
+						style={[
+							styles.h4,
+							styles.textGray,
+							styles.textCenter,
+							styles.marginBottom10
+						]}
+					>
 						Catégorie
 					</Text>
 					<View
@@ -77,56 +115,86 @@ class Filters extends React.Component {
 					>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ Environnement: !this.state.Environnement });
+								this.setState(
+									{ Environnement: !this.state.Environnement },
+									() => {
+										this.props.getFilters(
+											this.allOfTheparams(),
+											this.getHelpers()
+										);
+									}
+								);
 							}}
 							underlayColor="transparent"
 						>
 							<ChallengeCardCategory
 								type="Environnement"
-								color={this.state.Environnement ? "green" : "gray"}
+								color={this.state.Environnement ? "#FFBE1A" : "gray"}
 								sizeFont="50"
 							/>
 						</TouchableHighlight>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ Social: !this.state.Social });
+								this.setState({ Social: !this.state.Social }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
 							<ChallengeCardCategory
 								type="Social"
-								color={this.state.Social ? "red" : "gray"}
+								color={this.state.Social ? "#18DE22" : "gray"}
 								sizeFont="50"
 							/>
 						</TouchableHighlight>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ Animaux: !this.state.Animaux });
+								this.setState({ Animaux: !this.state.Animaux }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
 							<ChallengeCardCategory
 								type="Animaux"
-								color={this.state.Animaux ? "yellow" : "gray"}
+								color={this.state.Animaux ? "#7D1AFF" : "gray"}
 								sizeFont="50"
 							/>
 						</TouchableHighlight>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ Culture: !this.state.Culture });
+								this.setState({ Culture: !this.state.Culture }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
 							<ChallengeCardCategory
 								type="Culture"
-								color={this.state.Culture ? "blue" : "gray"}
+								color={this.state.Culture ? "#DF4FFF" : "gray"}
 								sizeFont="50"
 							/>
 						</TouchableHighlight>
 					</View>
 				</View>
 				<View style={{ alignItems: "center", justifyContent: "center" }}>
-					<Text style={[styles.h4, styles.textGray, styles.textCenter]}>
+					<Text
+						style={[
+							styles.h4,
+							styles.textGray,
+							styles.textCenter,
+							styles.marginBottom10
+						]}
+					>
 						Localisation
 					</Text>
 					<View>
@@ -134,7 +202,7 @@ class Filters extends React.Component {
 							title={"Sur combien de Km souhaitez-vous faire la recherche"}
 							min={1}
 							max={150}
-							value={50}
+							value={Number(this.props.distance)}
 							width={width}
 							height={40}
 							decimalPlaces={0}
@@ -147,9 +215,9 @@ class Filters extends React.Component {
 							]}
 							onValueChanged={value => this.setState({ distance: value })}
 							onPressIn={() => console.log("Pressed in")}
-							onPressOut={() => {console.log(this.state.distance, "my man")
-						this.props.getFilters({ distance: this.state.distance})
-						}}
+							onPressOut={() => {
+								this.props.getFilters(this.allOfTheparams(), this.getHelpers());
+							}}
 							onDrag={() => console.log("Dragging")}
 						/>
 					</View>
@@ -160,7 +228,8 @@ class Filters extends React.Component {
 							styles.h4,
 							styles.textGray,
 							styles.textCenter,
-							styles.marginLeft10
+
+							styles.marginBottom10
 						]}
 					>
 						Durée
@@ -173,7 +242,12 @@ class Filters extends React.Component {
 					>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ half: !this.state.half });
+								this.setState({ half: !this.state.half }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
@@ -191,7 +265,12 @@ class Filters extends React.Component {
 					>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ day: !this.state.day });
+								this.setState({ day: !this.state.day }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
@@ -209,7 +288,12 @@ class Filters extends React.Component {
 					>
 						<TouchableHighlight
 							onPress={() => {
-								this.setState({ more: !this.state.more });
+								this.setState({ more: !this.state.more }, () => {
+									this.props.getFilters(
+										this.allOfTheparams(),
+										this.getHelpers()
+									);
+								});
 							}}
 							underlayColor="transparent"
 						>
@@ -219,9 +303,6 @@ class Filters extends React.Component {
 							Plus d'une journée
 						</Text>
 					</View>
-				</View>
-				<View>
-					<Text style={[styles.h5, styles.textGray]}>Date</Text>
 				</View>
 			</View>
 		);

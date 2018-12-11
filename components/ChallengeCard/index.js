@@ -26,7 +26,10 @@ class ChallengeCard extends React.Component {
 	render() {
 		const { challenge } = this.props;
 		console.log(this.props);
-		if (challenge.ref === undefined) {
+		if (
+			challenge.ref === undefined ||
+			challenge.media.images[0] === undefined
+		) {
 			return (
 				<View
 					style={
