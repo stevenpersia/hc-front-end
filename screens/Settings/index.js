@@ -47,7 +47,8 @@ class Settings extends React.Component {
 						phoneNumber: phoneNumber,
 						email: email,
 						password: password
-					}
+					},
+					files: []
 				}
 			)
 			.then(response => {
