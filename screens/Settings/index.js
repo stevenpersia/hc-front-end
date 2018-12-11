@@ -36,19 +36,21 @@ class Settings extends React.Component {
 			.put(
 				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c0412b7a380ae141cba4919',
 				{
+					account: {
+						username: username,
+						phoneNumber: phoneNumber,
+						email: email
+					},
+					security: {
+						password: password
+					},
+					files: []
+				},
+				{
 					headers: {
 						Authorization:
 							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
 					}
-				},
-				{
-					account: {
-						username: username,
-						phoneNumber: phoneNumber,
-						email: email,
-						password: password
-					},
-					files: []
 				}
 			)
 			.then(response => {
