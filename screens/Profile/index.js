@@ -251,6 +251,7 @@ class Profile extends React.Component {
 				}
 			)
 			.then(response => {
+				console.log(response);
 				this.setState({
 					user: {
 						account: {
@@ -264,44 +265,52 @@ class Profile extends React.Component {
 					}
 				});
 
-				// Grab all challenges who participate
-				let challengesPlayerFound = [];
-				for (let i = 0; i < this.state.user.challenges.player.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								this.state.user.challenges.player[i]._id
-							}`
-						)
-						.then(response => {
-							challengesPlayerFound.push(response.data);
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
+				// // Grab all challenges who participate
+				// let challengesPlayerFound = [];
+				// for (let i = 0; i < this.state.user.challenges.player.length; i++) {
+				// 	axios
+				// 		.get(
+				// 			`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+				// 				this.state.user.challenges.player[i]._id
+				// 			}`
+				// 		)
+				// 		.then(response => {
+				// 			challengesPlayerFound.push(response.data);
+				// 		})
+				// 		.catch(error => {
+				// 			console.log(error);
+				// 		});
+				// }
 
-				// Grab all challenges who organize
-				let challengesManagerFound = [];
-				for (let i = 0; i < this.state.user.challenges.manager.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								this.state.user.challenges.manager[i]._id
-							}`
-						)
-						.then(response => {
-							challengesManagerFound.push(response.data);
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
+				// // Grab all challenges who organize
+				// let challengesManagerFound = [];
+				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {
+				// 	axios
+				// 		.get(
+				// 			`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+				// 				this.state.user.challenges.manager[i]._id
+				// 			}`
+				// 		)
+				// 		.then(response => {
+				// 			challengesManagerFound.push(response.data);
+				// 		})
+				// 		.catch(error => {
+				// 			console.log(error);
+				// 		});
+				// }
 
-				this.setState({
-					challengesPlayerItems: challengesPlayerFound,
-					challengesManagerItems: challengesManagerFound
-				});
+				// this.setState({
+				// 	challengesPlayerItems: challengesPlayerFound,
+				// 	challengesManagerItems: challengesManagerFound,
+				// 	challengesFinishedItems: challengesFinishedFound
+				// });
+
+				// All finished challenges
+				// let challengesFinishedFound = [];
+
+				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {}
+
+				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {}
 			})
 			.catch(error => {
 				console.log(error);
