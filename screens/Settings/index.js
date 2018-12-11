@@ -54,7 +54,7 @@ class Settings extends React.Component {
 				}
 			)
 			.then(response => {
-				console.log(response);
+				console.log(response.data);
 				this.setState({
 					message: {
 						error: false,
@@ -224,7 +224,7 @@ class Settings extends React.Component {
 				}
 			)
 			.then(response => {
-				console.log(response);
+				console.log(response.data);
 				this.setState({
 					phoneNumber: response.data.user.account.phoneNumber,
 					email: response.data.user.account.email,
