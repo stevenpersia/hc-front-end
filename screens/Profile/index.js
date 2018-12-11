@@ -29,14 +29,19 @@ class Profile extends React.Component {
 			participate: true,
 			organizer: false,
 			finished: false
-		}
+		},
+		challengesPlayerItems: [],
+		challengesManagerItems: [],
+		challengesFinishedItems: []
 	};
 
 	// Return this if no challenges
 	noChallenges = () => {
 		return (
 			<View>
-				<Text style={[styles.h4, styles.textCenter]}>0 défis trouvés</Text>
+				<Text style={[styles.h4, styles.textCenter, styles.paddingTop30]}>
+					0 défis trouvés
+				</Text>
 				<Text
 					style={[
 						styles.text,
@@ -78,15 +83,57 @@ class Profile extends React.Component {
 		const { participate, organizer, finished } = this.state.tabs;
 
 		if (participate === true) {
-			return <Text>Liste des défis auxquels je participe.</Text>;
+			if (this.state.challengesPlayerItems.length === 0) {
+				this.noChallenges();
+			} else {
+				return (
+					<FlatList
+						data={this.state.challengesPlayerItems}
+						keyExtractor={this._keyExtractor}
+						renderItem={({ item }) => (
+							<View style={{ marginBottom: 1 }}>
+								<ChallengeCard id={item._id} challenge={item} />
+							</View>
+						)}
+					/>
+				);
+			}
 		}
 
 		if (organizer === true) {
-			return <Text>Liste des défis que j'organise.</Text>;
+			if (this.state.challengesManagerItems.length === 0) {
+				this.noChallenges();
+			} else {
+				return (
+					<FlatList
+						data={this.state.challengesManagerItems}
+						keyExtractor={this._keyExtractor}
+						renderItem={({ item }) => (
+							<View style={{ marginBottom: 1 }}>
+								<ChallengeCard id={item._id} challenge={item} />
+							</View>
+						)}
+					/>
+				);
+			}
 		}
 
 		if (finished === true) {
-			return <Text>Liste des défis terminés.</Text>;
+			if (this.state.challengesFinishedItems.length === 0) {
+				this.noChallenges();
+			} else {
+				return (
+					<FlatList
+						data={this.state.challengesFinishedItems}
+						keyExtractor={this._keyExtractor}
+						renderItem={({ item }) => (
+							<View style={{ marginBottom: 1 }}>
+								<ChallengeCard id={item._id} challenge={item} />
+							</View>
+						)}
+					/>
+				);
+			}
 		}
 	};
 
@@ -126,74 +173,73 @@ class Profile extends React.Component {
 	render() {
 		const { username, avatar } = this.state.user.account;
 		const { player, manager } = this.state.user.challenges;
-
 		return (
-			<ScrollView>
-				<View style={[styles.container, { justifyContent: 'center' }]}>
-					<View style={customStyles.avatarContainer}>
-						<View style={{ width: 100 }}>
-							<Text style={[styles.h4, styles.textCenter]}>
-								{manager.length}
-							</Text>
-							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-								défis
-							</Text>
-							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-								réalisés
-							</Text>
-						</View>
-						<View style={customStyles.avatar}>
-							<Image
-								style={{ width: 100, height: 100, borderRadius: 50 }}
-								source={{ uri: avatar.toString() }}
-							/>
-						</View>
-						<View style={{ width: 100 }}>
-							<Text style={[styles.h4, styles.textCenter]}>
-								{player.length}
-							</Text>
-							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-								défis
-							</Text>
-							<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-								participés
-							</Text>
-						</View>
+			<View style={[{ alignItem: 'center', justifyContent: 'center' }]}>
+				<View
+					style={[
+						customStyles.avatarContainer,
+
+						{ justifyContent: 'center', textAlign: 'center', width: 'auto' }
+					]}
+				>
+					<View style={{ width: 100 }}>
+						<Text style={[styles.h4, styles.textCenter]}>{manager.length}</Text>
+						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
+							défis
+						</Text>
+						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
+							réalisés
+						</Text>
 					</View>
-					<Text style={[styles.h4, styles.paddingV10]}>{username}</Text>
-					<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
-						<TouchableOpacity onPress={() => this.listParticipate()}>
-							<Text
-								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-							>
-								Je participe
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => this.listOrganizer()}>
-							<Text
-								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-							>
-								J'organise
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => this.listFinished()}>
-							<Text
-								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-							>
-								Terminés
-							</Text>
-						</TouchableOpacity>
+					<View style={customStyles.avatar}>
+						<Image
+							style={{ width: 100, height: 100, borderRadius: 50 }}
+							source={{ uri: avatar.toString() }}
+						/>
 					</View>
-					<View>
-						{this.renderList()}
-						{this.noChallenges()}
+					<View style={{ width: 100 }}>
+						<Text style={[styles.h4, styles.textCenter]}>{player.length}</Text>
+						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
+							défis
+						</Text>
+						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
+							participés
+						</Text>
 					</View>
 				</View>
-			</ScrollView>
+				<Text style={[styles.h4, styles.paddingV10, styles.textCenter]}>
+					{username}
+				</Text>
+				<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
+					<TouchableOpacity onPress={() => this.listParticipate()}>
+						<Text
+							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+						>
+							Je participe
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => this.listOrganizer()}>
+						<Text
+							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+						>
+							J'organise
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => this.listFinished()}>
+						<Text
+							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+						>
+							Terminés
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View>{this.renderList()}</View>
+			</View>
 		);
 	}
 
 	componentDidMount() {
+		// Find profile
 		axios
 			.get(
 				'https://human-challenge-back-end.herokuapp.com/api/profile/5c0412b7a380ae141cba4919',
@@ -205,7 +251,6 @@ class Profile extends React.Component {
 				}
 			)
 			.then(response => {
-				console.log(response);
 				this.setState({
 					user: {
 						account: {
@@ -217,6 +262,45 @@ class Profile extends React.Component {
 							manager: response.data.challenges.manager
 						}
 					}
+				});
+
+				// Grab all challenges who participate
+				let challengesPlayerFound = [];
+				for (let i = 0; i < this.state.user.challenges.player.length; i++) {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								this.state.user.challenges.player[i]._id
+							}`
+						)
+						.then(response => {
+							challengesPlayerFound.push(response.data);
+						})
+						.catch(error => {
+							console.log(error);
+						});
+				}
+
+				// Grab all challenges who organize
+				let challengesManagerFound = [];
+				for (let i = 0; i < this.state.user.challenges.manager.length; i++) {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								this.state.user.challenges.manager[i]._id
+							}`
+						)
+						.then(response => {
+							challengesManagerFound.push(response.data);
+						})
+						.catch(error => {
+							console.log(error);
+						});
+				}
+
+				this.setState({
+					challengesPlayerItems: challengesPlayerFound,
+					challengesManagerItems: challengesManagerFound
 				});
 			})
 			.catch(error => {
@@ -243,7 +327,7 @@ const customStyles = StyleSheet.create({
 	tabs: {
 		flexDirection: 'row',
 		width: Dimensions.get('window').width,
-		marginVertical: 20,
+		marginTop: 20,
 		textAlign: 'center'
 	},
 	tab: {
