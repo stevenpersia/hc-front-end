@@ -4,6 +4,7 @@ import styles from "../../Styles";
 import { Entypo } from "@expo/vector-icons";
 
 class LittleAvatar extends React.Component {
+
   paddingNumber = this.props.number;
   randomColor() {
     var letters = "0123456789ABCDEF";
@@ -58,6 +59,7 @@ class LittleAvatar extends React.Component {
       </View>
     );
   }
+
 }
 
 /*
