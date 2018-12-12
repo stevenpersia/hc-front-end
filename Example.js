@@ -188,7 +188,7 @@ class Example extends React.Component {
 }
 
 const customStyles = StyleSheet.create({
-	content: { flex: 1, margin: 30 }
+	content: { flex: 1, padding: 30 }
 });
 
 export default Example;

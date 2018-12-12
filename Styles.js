@@ -36,6 +36,9 @@ export default StyleSheet.create({
   flexRow: {
     flexDirection: "row"
   },
+  flexRowReverse: {
+    flexDirection: "row-reverse"
+  },
 
   /* TEXT COLORS */
   textAnimauxColor: {
@@ -146,6 +149,52 @@ export default StyleSheet.create({
     fontStyle: "italic"
   },
 
+  /* TEXT */
+  h1: {
+    fontSize: 55
+  },
+  h2: {
+    fontSize: 45
+  },
+  h3: {
+    fontSize: 35
+  },
+  h4: {
+    fontSize: 25
+  },
+  h5: {
+    fontSize: 20
+  },
+  text: {
+    fontSize: 14
+  },
+  small: {
+    fontSize: 11
+  },
+  textCenter: {
+    textAlign: "center"
+  },
+  textJustify: {
+    textAlign: "justify"
+  },
+  textLeft: {
+    textAlign: "left"
+  },
+  textRight: {
+    textAlign: "right"
+  },
+  bold: {
+    fontWeight: "bold"
+  },
+  uppercase: {
+    textTransform: "uppercase"
+  },
+  italic: {
+    fontStyle: "italic"
+  },
+  error: {
+    color: "red"
+  },
   /* BUTTONS & LINKS */
   primaryButtonColor: {
     backgroundColor: primaryColor
@@ -176,6 +225,10 @@ export default StyleSheet.create({
   fullHeight: fullH,
   fullWidth: fullW,
 
+  /* SCREEN RESOLUTIONS & DIMENSIONS */
+  fullHeight: { height: fullH },
+  fullWidth: { width: fullW },
+  w100: { width: Dimensions.get("window").width - 60 },
   /* BORDER RADIUS SISILAFAMILLE TOVO */
   rounded: {
     borderRadius: 5
@@ -288,6 +341,41 @@ export default StyleSheet.create({
   marginRight30: {
     marginRight: 30
   },
+
+  /* MARGIN 30 PX */
+  margin30: {
+    margin: 30
+  },
+  marginV30: {
+    marginVertical: 30
+  },
+  marginH30: {
+    marginHorizontal: 30
+  },
+  marginTop30: {
+    marginTop: 30
+  },
+  marginBottom30: {
+    marginBottom: 30
+  },
+  marginLeft30: {
+    marginLeft: 30
+  },
+  marginRight30: {
+    marginRight: 30
+  },
+
+  /* FORM */
+  input: {
+    borderWidth: 1,
+    borderColor: grayColor,
+    borderRadius: 3,
+    padding: 15,
+    width: fullW - 60,
+    margin: 10
+  },
+
+  /* ORGANISATEUR ANNE */
 
   /* BOX SHADOW NONOLAFAMILLE TOVO */
   android_WTF_Are_You_Doing: {}
