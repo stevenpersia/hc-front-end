@@ -43,8 +43,8 @@ class AvatarList extends React.Component {
     }
     return (
       <View style={[styles.flexRowReverse, testStyle]}>
-        {/* {this.renderAvatars(this.props.challengers)} */}
-        {this.renderAvatars(this.test)}
+        {this.renderAvatars(this.props.challengers)} 
+        
       </View>
     );
   }
