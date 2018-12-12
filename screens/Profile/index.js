@@ -3,7 +3,6 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	ScrollView,
 	FlatList,
 	TouchableOpacity,
 	Image,
@@ -12,6 +11,7 @@ import {
 import styles from '../../Styles';
 import axios from 'axios';
 import ChallengeCard from '../../components/ChallengeCard';
+import { format } from 'date-fns';
 
 class Profile extends React.Component {
 	state = {
@@ -38,7 +38,13 @@ class Profile extends React.Component {
 	// Return this if no challenges
 	noChallenges = () => {
 		return (
-			<View>
+			<View
+				style={{
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'center'
+				}}
+			>
 				<Text style={[styles.h4, styles.textCenter, styles.paddingTop30]}>
 					0 défis trouvés
 				</Text>
@@ -84,7 +90,7 @@ class Profile extends React.Component {
 
 		if (participate === true) {
 			if (this.state.challengesPlayerItems.length === 0) {
-				this.noChallenges();
+				return this.noChallenges();
 			} else {
 				return (
 					<FlatList
@@ -102,7 +108,7 @@ class Profile extends React.Component {
 
 		if (organizer === true) {
 			if (this.state.challengesManagerItems.length === 0) {
-				this.noChallenges();
+				return this.noChallenges();
 			} else {
 				return (
 					<FlatList
@@ -120,7 +126,7 @@ class Profile extends React.Component {
 
 		if (finished === true) {
 			if (this.state.challengesFinishedItems.length === 0) {
-				this.noChallenges();
+				return this.noChallenges();
 			} else {
 				return (
 					<FlatList
@@ -173,6 +179,7 @@ class Profile extends React.Component {
 	render() {
 		const { username, avatar } = this.state.user.account;
 		const { player, manager } = this.state.user.challenges;
+
 		return (
 			<View style={[{ alignItem: 'center', justifyContent: 'center' }]}>
 				<View
@@ -183,12 +190,12 @@ class Profile extends React.Component {
 					]}
 				>
 					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{manager.length}</Text>
+						<Text style={[styles.h4, styles.textCenter]}>{player.length}</Text>
 						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
 							défis
 						</Text>
 						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							réalisés
+							participés
 						</Text>
 					</View>
 					<View style={customStyles.avatar}>
@@ -198,12 +205,12 @@ class Profile extends React.Component {
 						/>
 					</View>
 					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{player.length}</Text>
+						<Text style={[styles.h4, styles.textCenter]}>{manager.length}</Text>
 						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
 							défis
 						</Text>
 						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							participés
+							réalisés
 						</Text>
 					</View>
 				</View>
@@ -251,7 +258,57 @@ class Profile extends React.Component {
 				}
 			)
 			.then(response => {
-				console.log(response);
+				// Grab all finished challenges
+				let challengesFinishedFound = [];
+
+				// Grab all challenges who participate
+				let challengesPlayerFound = [];
+				for (let i = 0; i < response.data.challenges.player.length; i++) {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								response.data.challenges.player[i]._id
+							}`
+						)
+						.then(response => {
+							if (
+								format(response.data.date.endDate, 'x') >
+								format(new Date(), 'x')
+							) {
+								challengesPlayerFound.push(response.data);
+							} else {
+								challengesFinishedFound.push(response.data);
+							}
+						})
+						.catch(error => {
+							console.log(error);
+						});
+				}
+
+				// Grab all challenges who organize
+				let challengesManagerFound = [];
+				for (let i = 0; i < response.data.challenges.manager.length; i++) {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								response.data.challenges.manager[i]._id
+							}`
+						)
+						.then(response => {
+							if (
+								format(response.data.date.endDate, 'x') >
+								format(new Date(), 'x')
+							) {
+								challengesManagerFound.push(response.data);
+							} else {
+								challengesFinishedFound.push(response.data);
+							}
+						})
+						.catch(error => {
+							console.log(error);
+						});
+				}
+
 				this.setState({
 					user: {
 						account: {
@@ -262,55 +319,11 @@ class Profile extends React.Component {
 							player: response.data.challenges.player,
 							manager: response.data.challenges.manager
 						}
-					}
+					},
+					challengesPlayerItems: challengesPlayerFound,
+					challengesManagerItems: challengesManagerFound,
+					challengesFinishedItems: challengesFinishedFound
 				});
-
-				// // Grab all challenges who participate
-				// let challengesPlayerFound = [];
-				// for (let i = 0; i < this.state.user.challenges.player.length; i++) {
-				// 	axios
-				// 		.get(
-				// 			`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-				// 				this.state.user.challenges.player[i]._id
-				// 			}`
-				// 		)
-				// 		.then(response => {
-				// 			challengesPlayerFound.push(response.data);
-				// 		})
-				// 		.catch(error => {
-				// 			console.log(error);
-				// 		});
-				// }
-
-				// // Grab all challenges who organize
-				// let challengesManagerFound = [];
-				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {
-				// 	axios
-				// 		.get(
-				// 			`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-				// 				this.state.user.challenges.manager[i]._id
-				// 			}`
-				// 		)
-				// 		.then(response => {
-				// 			challengesManagerFound.push(response.data);
-				// 		})
-				// 		.catch(error => {
-				// 			console.log(error);
-				// 		});
-				// }
-
-				// this.setState({
-				// 	challengesPlayerItems: challengesPlayerFound,
-				// 	challengesManagerItems: challengesManagerFound,
-				// 	challengesFinishedItems: challengesFinishedFound
-				// });
-
-				// All finished challenges
-				// let challengesFinishedFound = [];
-
-				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {}
-
-				// for (let i = 0; i < this.state.user.challenges.manager.length; i++) {}
 			})
 			.catch(error => {
 				console.log(error);
