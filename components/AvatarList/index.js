@@ -15,6 +15,7 @@ class AvatarList extends React.Component {
 			numberItems = team.length;
 		}
 
+<<<<<<< HEAD
 		for (let i = 0; i < maxNum && i < team.length; i++) {
 			result.push(
 				<LittleAvatar
@@ -43,6 +44,41 @@ class AvatarList extends React.Component {
 			</View>
 		);
 	}
+=======
+
+
+    for (let i = 0; i < maxNum && i < team.length; i++) {
+      result.push(
+        <LittleAvatar
+          key={i}
+          name={team[i].account.username}
+          photo={team[i].account.avatar[0]}
+          variant={this.props.variant || false}
+        />
+      );
+    }
+    return result;
+  }
+
+
+  render() {
+    let testStyle = {
+      marginLeft: this.props.variant ? 0 : -25
+    };
+    if (this.props.variant) {
+      testStyle.width = "80%";
+      testStyle.justifyContent = "space-between";
+      testStyle.justifyContent = "space-around";
+    }
+    return (
+      <View style={[styles.flexRowReverse, testStyle]}>
+        {this.renderAvatars(this.props.challengers)} 
+        
+      </View>
+    );
+  }
+
+>>>>>>> search styling
 }
 
 /*

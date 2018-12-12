@@ -9,7 +9,8 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	Modal,
-	TouchableHighlight
+	TouchableHighlight,
+	TextInput
 } from "react-native";
 import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
@@ -149,7 +150,11 @@ class ChallengesList extends React.Component {
 					}
 				]}
 			>
-				<ListBar setModalVisible={this.setModalVisible} />
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+					enable={this.props.enable}
+				/>
 				{this.renderFilters()}
 				<View
 					style={[
@@ -232,22 +237,36 @@ class ChallengesList extends React.Component {
 				<ListBar
 					setModalVisible={this.setModalVisible}
 					toggleDisplay={this.toggleDisplay}
+					enable={this.state.enable}
 				/>
 				{this.renderFilters()}
 				<Display
+					style={{ position: "absolute", top: 60, zIndex: 15 }}
 					enable={this.state.enable}
 					enterDuration={500}
 					exitDuration={250}
 					exit="fadeOutLeft"
 					enter="fadeInLeft"
 				>
-					<View
-						style={{ backgroundColor: "black", height: 60, width: "100%" }}
+					<TextInput
+						placeholder="recherche"
+						style={{
+							paddingLeft: 20,
+							backgroundColor: "white",
+							height: 40,
+							borderColor: "blue",
+							borderWidth: 1,
+							borderRadius: 20,
+							width: 300,
+							marginBottom: 10
+						}}
+						onChangeText={text => this.setState({ text })}
+						value={this.state.text}
 					/>
-					<Text>yoyoyoyooyyoyo</Text>
 				</Display>
 				<View>
 					<FlatList
+						style={{ paddingTop: 50 }}
 						data={this.state.Challenges}
 						keyExtractor={this._keyExtractor}
 						renderItem={({ item, index }) => {
@@ -255,8 +274,7 @@ class ChallengesList extends React.Component {
 								return (
 									<View
 										style={{
-											marginBottom: 1,
-											paddingTop: 48
+											marginBottom: 1
 										}}
 									>
 										<TouchableOpacity

@@ -88,7 +88,7 @@ class ListBar extends React.Component {
 						<Entypo
 							name="magnifying-glass"
 							size={30}
-							color="black"
+							color={this.props.enable ? "blue" : "black"}
 							style={{
 								backgroundColor: "white",
 								borderRadius: 8
