@@ -6,9 +6,14 @@ import {
 	TextInput,
 	KeyboardAvoidingView,
 	View,
-	ScrollView
+	ScrollView,
+	StyleSheet,
+	Dimensions,
+	Image
 } from 'react-native';
 import styles from '../../Styles';
+import { ImagePicker, Camera, Permissions } from 'expo';
+import { Entypo } from '@expo/vector-icons';
 
 class Settings extends React.Component {
 	state = {
@@ -21,20 +26,70 @@ class Settings extends React.Component {
 		message: {
 			error: false,
 			success: false
-		}
+		},
+		image: 'WOW',
+		hasCameraPermission: null,
+		showCamera: false,
+		avatar: ''
 	};
+
+	async componentWillMount() {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA);
+		this.setState({ hasCameraPermission: status === 'granted' });
+	}
 
 	// Add input changes to state
 	handleChange = (key, value) => {
 		this.setState({ [key]: value });
 	};
 
+	renderPicture = () => {
+		let { image, showCamera } = this.state;
+
+		if (showCamera === true) {
+			return (
+				<View>
+					<View style={customStyles.viewCamera}>
+						<Camera
+							style={customStyles.camera}
+							type={Camera.Constants.Type.front}
+							ref={ref => {
+								this.camera = ref;
+							}}
+						/>
+					</View>
+
+					<TouchableOpacity onPress={this.snap} style={customStyles.snap}>
+						<Entypo name="fingerprint" size={34} color="#FFFFFF" />
+					</TouchableOpacity>
+				</View>
+			);
+		} else {
+			return (
+				<View>
+					<Image
+						// Add component of Tovo (inital name) if there is no image
+						source={{ uri: image || image }}
+						style={customStyles.image}
+					/>
+				</View>
+			);
+		}
+	};
+
+	// Add avatar image to state
+	handleAvatar = value => {
+		this.setState({
+			avatar: 'data:image/jpg;base64,' + value
+		});
+	};
+
 	// Update my settings
 	update = () => {
-		const { username, phoneNumber, email, password } = this.state;
+		const { username, phoneNumber, email, password, avatar } = this.state;
 		axios
 			.put(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c0412b7a380ae141cba4919',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c11228a5bc6600016c06192',
 				{
 					account: {
 						username: username,
@@ -44,12 +99,16 @@ class Settings extends React.Component {
 					security: {
 						password: password
 					},
-					files: []
+					files: [avatar],
+					challenges: {
+						player: [],
+						manager: []
+					}
 				},
 				{
 					headers: {
 						Authorization:
-							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
 					}
 				}
 			)
@@ -80,11 +139,11 @@ class Settings extends React.Component {
 	delete = () => {
 		axios
 			.delete(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c0412b7a380ae141cba4919',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c11228a5bc6600016c06192',
 				{
 					headers: {
 						Authorization:
-							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
 					}
 				}
 			)
@@ -116,8 +175,58 @@ class Settings extends React.Component {
 						]}
 					>
 						<Text style={styles.h4}>Mon compte</Text>
+						{this.renderPicture()}
+						<View
+							style={{
+								flexDirection: 'row',
+								paddingTop: 30
+							}}
+						>
+							<TouchableOpacity
+								onPress={this._pickImage}
+								style={[
+									styles.bgGray,
+									styles.padding10,
+									styles.marginTop10,
+									styles.marginH10,
+									{ borderRadius: 5 }
+								]}
+							>
+								<Entypo
+									name="images"
+									size={32}
+									color="black"
+									style={styles.textCenter}
+								/>
+								<Text style={styles.textCenter}>Choisir une photo</Text>
+							</TouchableOpacity>
 
-						<Text style={[styles.paddingTop10, { color: 'red' }]}>
+							<TouchableOpacity
+								onPress={() => {
+									this.setState({
+										showCamera: true
+									});
+								}}
+								style={[
+									styles.bgGray,
+									styles.padding10,
+									styles.marginTop10,
+									styles.marginH10,
+									{ borderRadius: 5 }
+								]}
+							>
+								<Entypo
+									name="camera"
+									size={32}
+									color="black"
+									style={styles.textCenter}
+								/>
+
+								<Text style={styles.textCenter}>Prendre une photo</Text>
+							</TouchableOpacity>
+						</View>
+
+						<Text style={[{ color: 'red' }]}>
 							{this.state.message.error === true
 								? 'Une erreur est survenue.'
 								: ''}
@@ -215,35 +324,89 @@ class Settings extends React.Component {
 	componentDidMount() {
 		axios
 			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/5c0412b7a380ae141cba4919',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/5c11228a5bc6600016c06192',
 				{
 					headers: {
 						Authorization:
-							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
 					}
 				}
 			)
 			.then(response => {
 				console.log(response.data);
-				this.setState({
-					phoneNumber: response.data.user.account.phoneNumber,
-					email: response.data.user.account.email,
-					username: response.data.user.account.username
-				});
+
+				if (response.data.user.account.avatar.length > 0) {
+					this.setState({
+						phoneNumber: response.data.user.account.phoneNumber,
+						email: response.data.user.account.email,
+						username: response.data.user.account.username,
+						image: response.data.user.account.avatar[0].url,
+						avatar: response.data.user.account.avatar[0].url
+					});
+				} else {
+					this.setState({
+						phoneNumber: response.data.user.account.phoneNumber,
+						email: response.data.user.account.email,
+						username: response.data.user.account.username
+					});
+				}
 			})
 			.catch(error => {
 				console.log(error);
 			});
 	}
+
+	_pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [4, 4],
+			base64: true
+		});
+		this.handleAvatar(result.base64);
+		this.setState({ image: result.uri, showCamera: false });
+	};
+
+	snap = async () => {
+		let result = await this.camera.takePictureAsync({
+			base64: true
+		});
+		this.handleAvatar(result.base64);
+
+		this.setState({
+			image: result.uri,
+			showCamera: false
+		});
+	};
 }
 
-/*
 const customStyles = StyleSheet.create({
-	custom: {
-		width: Dimensions.get('window').width / 2 - 40,
-		alignItems: 'center'
+	w100: { width: Dimensions.get('window').width - 60 },
+	snap: {
+		backgroundColor: '#000',
+		width: 55,
+		height: 55,
+		borderRadius: 55,
+		borderColor: '#FFF',
+		borderWidth: 5,
+		position: 'absolute',
+		padding: 5,
+		top: 140,
+		left: 48
+	},
+	camera: { width: 150, height: 190 },
+	viewCamera: {
+		width: 150,
+		overflow: 'hidden',
+		height: 150,
+		borderRadius: 75,
+		marginTop: 20
+	},
+	image: {
+		width: 150,
+		height: 150,
+		borderRadius: 75,
+		marginTop: 20
 	}
 });
-*/
 
 export default Settings;
