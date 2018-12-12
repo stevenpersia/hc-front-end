@@ -95,7 +95,7 @@ class Profile extends React.Component {
 				return (
 					<FlatList
 						data={this.state.challengesPlayerItems}
-						keyExtractor={this._keyExtractor}
+						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item }) => (
 							<View style={{ marginBottom: 1 }}>
 								<ChallengeCard id={item._id} challenge={item} />
@@ -113,7 +113,7 @@ class Profile extends React.Component {
 				return (
 					<FlatList
 						data={this.state.challengesManagerItems}
-						keyExtractor={this._keyExtractor}
+						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item }) => (
 							<View style={{ marginBottom: 1 }}>
 								<ChallengeCard id={item._id} challenge={item} />
@@ -131,7 +131,7 @@ class Profile extends React.Component {
 				return (
 					<FlatList
 						data={this.state.challengesFinishedItems}
-						keyExtractor={this._keyExtractor}
+						keyExtractor={(item, index) => index.toString()}
 						renderItem={({ item }) => (
 							<View style={{ marginBottom: 1 }}>
 								<ChallengeCard id={item._id} challenge={item} />
@@ -181,7 +181,7 @@ class Profile extends React.Component {
 		const { player, manager } = this.state.user.challenges;
 
 		return (
-			<View style={[{ alignItem: 'center', justifyContent: 'center' }]}>
+			<View style={[{ justifyContent: 'center', flex: 1 }]}>
 				<View
 					style={[
 						customStyles.avatarContainer,
@@ -240,7 +240,7 @@ class Profile extends React.Component {
 						</Text>
 					</TouchableOpacity>
 				</View>
-				<View>{this.renderList()}</View>
+				{this.renderList()}
 			</View>
 		);
 	}
@@ -249,11 +249,11 @@ class Profile extends React.Component {
 		// Find profile
 		axios
 			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/profile/5c0412b7a380ae141cba4919',
+				'https://human-challenge-back-end.herokuapp.com/api/profile/5c11228a5bc6600016c06192',
 				{
 					headers: {
 						Authorization:
-							'fbCvVAqjvkHYBU83nn613hTqTIeQ7TQIb374DiPUakhfqcOFiPWjLGI0ihDUvZpZ'
+							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
 					}
 				}
 			)
