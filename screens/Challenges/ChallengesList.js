@@ -17,6 +17,7 @@ import axios from "axios";
 import ListBar from "../../components/ListBar";
 import Filters from "../../components/Filters";
 import { Entypo } from "@expo/vector-icons";
+import Display from "react-native-display";
 
 class ChallengesList extends React.Component {
 	static navigationOptions = {
@@ -34,7 +35,12 @@ class ChallengesList extends React.Component {
 			half: false,
 			day: false,
 			more: false
-		}
+		},
+		enable: true
+	};
+
+	toggleDisplay = () => {
+		this.setState({ enable: !this.state.enable });
 	};
 
 	setModalVisible = visible => {
@@ -223,8 +229,23 @@ class ChallengesList extends React.Component {
 	renderList() {
 		return (
 			<View style={[styles.container]}>
-				<ListBar setModalVisible={this.setModalVisible} />
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+				/>
 				{this.renderFilters()}
+				<Display
+					enable={this.state.enable}
+					enterDuration={500}
+					exitDuration={250}
+					exit="fadeOutLeft"
+					enter="fadeInLeft"
+				>
+					<View
+						style={{ backgroundColor: "black", height: 60, width: "100%" }}
+					/>
+					<Text>yoyoyoyooyyoyo</Text>
+				</Display>
 				<View>
 					<FlatList
 						data={this.state.Challenges}

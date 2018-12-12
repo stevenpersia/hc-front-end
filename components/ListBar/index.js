@@ -80,15 +80,21 @@ class ListBar extends React.Component {
 						alignItems: "center"
 					}}
 				>
-					<Entypo
-						name="magnifying-glass"
-						size={30}
-						color="black"
-						style={{
-							backgroundColor: "white",
-							borderRadius: 8
+					<TouchableHighlight
+						onPress={() => {
+							this.props.toggleDisplay();
 						}}
-					/>
+					>
+						<Entypo
+							name="magnifying-glass"
+							size={30}
+							color="black"
+							style={{
+								backgroundColor: "white",
+								borderRadius: 8
+							}}
+						/>
+					</TouchableHighlight>
 					<TouchableHighlight
 						onPress={() => {
 							this.props.setModalVisible(true);
