@@ -27,7 +27,7 @@ class ChallengesList extends React.Component {
 
 	state = {
 		modalVisible: false,
-		params: { distance: 60 },
+		params: { distance: 60, name: "" },
 		filterHelpers: {
 			Environnement: true,
 			Social: true,
@@ -37,7 +37,7 @@ class ChallengesList extends React.Component {
 			day: false,
 			more: false
 		},
-		enable: true
+		enable: false
 	};
 
 	toggleDisplay = () => {
@@ -46,7 +46,6 @@ class ChallengesList extends React.Component {
 
 	setModalVisible = visible => {
 		this.setState({ modalVisible: visible });
-		console.log(this.state);
 	};
 
 	_keyExtractor = (item, index) => item._id;
@@ -57,14 +56,11 @@ class ChallengesList extends React.Component {
 				params: this.state.params
 			})
 			.then(response => {
-				console.log("response", response.data);
 				this.setState(response.data, () => {});
 			});
 	}
 
 	getFilters = (filters, obj) => {
-		// console.log("​ChallengesList -> getFilters -> filters, obj", filters, obj);
-
 		this.setState({ params: filters, filterHelpers: obj }, () => {
 			this.getChallenges();
 		});
@@ -260,8 +256,13 @@ class ChallengesList extends React.Component {
 							width: 300,
 							marginBottom: 10
 						}}
-						onChangeText={text => this.setState({ text })}
-						value={this.state.text}
+						onChangeText={text =>
+							this.setState(
+								{ params: { ...this.state.params, name: text } },
+								() => this.getChallenges()
+							)
+						}
+						value={this.state.params.name}
 					/>
 				</Display>
 				<View>
