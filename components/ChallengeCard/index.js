@@ -8,13 +8,7 @@ import {
 	Dimensions
 } from "react-native";
 import styles from "../../Styles";
-import {
-	format,
-	formatDistance,
-	formatRelative,
-	subDays,
-	distanceInWords
-} from "date-fns";
+import { format, distanceInWords } from "date-fns";
 var frLocale = require("date-fns/locale/fr");
 
 import ChallengeCardItem from "../ChallengeCardItem";
