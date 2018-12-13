@@ -6,7 +6,8 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
-	Dimensions
+	Dimensions,
+	ImageBackground
 } from 'react-native';
 import styles from '../../Styles';
 import axios from 'axios';
@@ -14,6 +15,10 @@ import ChallengeCard from '../../components/ChallengeCard';
 import { format } from 'date-fns';
 
 class Profile extends React.Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
 		user: {
 			account: {
@@ -181,65 +186,108 @@ class Profile extends React.Component {
 		const { player, manager } = this.state.user.challenges;
 
 		return (
-			<View style={[{ justifyContent: 'center', flex: 1 }]}>
-				<View
-					style={[
-						customStyles.avatarContainer,
-
-						{ justifyContent: 'center', textAlign: 'center', width: 'auto' }
-					]}
+			<View style={[{ justifyContent: 'center' }]}>
+				<ImageBackground
+					source={require('../../assets/images/bg/02.jpg')}
+					style={[styles.fullW, styles.fullH, { resizeMode: 'cover' }]}
 				>
-					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{player.length}</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							défis
-						</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							participés
-						</Text>
+					<View
+						style={[
+							customStyles.avatarContainer,
+
+							{ justifyContent: 'center', textAlign: 'center', width: 'auto' }
+						]}
+					>
+						<View style={{ width: 100 }}>
+							<Text style={[styles.h4, styles.textCenter, styles.blackColor]}>
+								{player.length}
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								défis
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								participés
+							</Text>
+						</View>
+						<View style={customStyles.avatar}>
+							<Image
+								style={{
+									width: 100,
+									height: 100,
+									borderRadius: 50,
+									borderWidth: 3,
+									borderColor: '#FFF'
+								}}
+								source={{ uri: avatar.toString() }}
+							/>
+						</View>
+						<View style={{ width: 100 }}>
+							<Text style={[styles.h4, styles.textCenter, styles.blackColor]}>
+								{manager.length}
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								défis
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								réalisés
+							</Text>
+						</View>
 					</View>
-					<View style={customStyles.avatar}>
-						<Image
-							style={{ width: 100, height: 100, borderRadius: 50 }}
-							source={{ uri: avatar.toString() }}
-						/>
+					<Text style={[styles.h4, styles.paddingV10, styles.textCenter]}>
+						{username}
+					</Text>
+					<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
+						<TouchableOpacity onPress={() => this.listParticipate()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								Je participe
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => this.listOrganizer()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								J'organise
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => this.listFinished()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								Terminés
+							</Text>
+						</TouchableOpacity>
 					</View>
-					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{manager.length}</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							défis
-						</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							réalisés
-						</Text>
-					</View>
-				</View>
-				<Text style={[styles.h4, styles.paddingV10, styles.textCenter]}>
-					{username}
-				</Text>
-				<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
-					<TouchableOpacity onPress={() => this.listParticipate()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							Je participe
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => this.listOrganizer()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							J'organise
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => this.listFinished()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							Terminés
-						</Text>
-					</TouchableOpacity>
-				</View>
+				</ImageBackground>
 				{this.renderList()}
 			</View>
 		);
@@ -337,13 +385,14 @@ const customStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: Dimensions.get('window').width - 60,
-		marginTop: 20
+		marginTop: 20,
+		paddingTop: 50
 	},
 	avatar: {
 		backgroundColor: '#DDD',
 		width: 100,
 		height: 100,
-		borderRadius: 100,
+		borderRadius: 50,
 		margin: 10
 	},
 	tabs: {

@@ -9,13 +9,18 @@ import {
 	ScrollView,
 	StyleSheet,
 	Dimensions,
-	Image
+	Image,
+	ImageBackground
 } from 'react-native';
 import styles from '../../Styles';
 import { ImagePicker, Camera, Permissions } from 'expo';
 import { Entypo } from '@expo/vector-icons';
 
 class Settings extends React.Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
 		phoneNumber: '',
 		email: '',
@@ -166,158 +171,167 @@ class Settings extends React.Component {
 		const { email, phoneNumber, password, username } = this.state;
 
 		return (
-			<KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
-				<ScrollView>
-					<View
-						style={[
-							styles.container,
-							{ justifyContent: 'center', marginTop: 30 }
-						]}
-					>
-						<Text style={styles.h4}>Mon compte</Text>
-						{this.renderPicture()}
+			<ImageBackground
+				source={require('../../assets/images/bg/02.jpg')}
+				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
+			>
+				<KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
+					<ScrollView>
 						<View
-							style={{
-								flexDirection: 'row',
-								paddingTop: 30
-							}}
+							style={[
+								styles.container,
+								{ justifyContent: 'center', marginTop: 30 }
+							]}
 						>
+							{this.renderPicture()}
+							<View
+								style={{
+									flexDirection: 'row',
+									paddingTop: 30
+								}}
+							>
+								<TouchableOpacity
+									onPress={this._pickImage}
+									style={[
+										styles.bgWhite,
+										styles.padding10,
+										styles.marginTop10,
+										styles.marginH10,
+										customStyles.w50,
+										{ borderRadius: 5 }
+									]}
+								>
+									<Entypo
+										name="images"
+										size={32}
+										color="#1d262a"
+										style={styles.textCenter}
+									/>
+									<Text style={[styles.textCenter, styles.blackColor]}>
+										Choisir une photo
+									</Text>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => {
+										this.setState({
+											showCamera: true
+										});
+									}}
+									style={[
+										styles.bgWhite,
+										styles.padding10,
+										styles.marginTop10,
+										styles.marginH10,
+										customStyles.w50,
+										{ borderRadius: 5 }
+									]}
+								>
+									<Entypo
+										name="camera"
+										size={32}
+										color="#1d262a"
+										style={styles.textCenter}
+									/>
+
+									<Text style={[styles.textCenter, styles.blackColor]}>
+										Prendre une photo
+									</Text>
+								</TouchableOpacity>
+							</View>
+
+							<Text>
+								{this.state.message.error === true
+									? 'Une erreur est survenue.'
+									: ''}
+							</Text>
+							<Text>
+								{this.state.message.success === true
+									? 'Compte mis à jour.'
+									: ''}
+							</Text>
+
+							<TextInput
+								style={customStyles.input}
+								placeholder="Pseudo"
+								placeholderTextColor="#1d262a"
+								onChangeText={value => {
+									this.handleChange('username', value);
+								}}
+								value={username}
+							/>
+
+							<TextInput
+								style={customStyles.input}
+								placeholder="Téléphone"
+								placeholderTextColor="#1d262a"
+								keyboardType="numeric"
+								maxLength={10}
+								onChangeText={value => {
+									this.handleChange('phoneNumber', value);
+								}}
+								value={phoneNumber}
+							/>
+
+							<TextInput
+								style={customStyles.input}
+								placeholder="Adresse email"
+								placeholderTextColor="#1d262a"
+								keyboardType="email-address"
+								onChangeText={value => {
+									this.handleChange('email', value);
+								}}
+								value={email}
+							/>
+
+							<TextInput
+								style={customStyles.input}
+								placeholder="Mot de passe"
+								placeholderTextColor="#1d262a"
+								secureTextEntry={true}
+								onChangeText={value => {
+									this.handleChange('password', value);
+								}}
+								value={password}
+							/>
+
 							<TouchableOpacity
-								onPress={this._pickImage}
+								onPress={() => this.update()}
+								style={[customStyles.button, styles.marginV10, styles.w100]}
+							>
+								<Text style={[styles.textCenter, styles.textWhite]}>
+									Enregistrer
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								onPress={() => this.logout()}
 								style={[
-									styles.bgGray,
-									styles.padding10,
-									styles.marginTop10,
-									styles.marginH10,
-									{ borderRadius: 5 }
+									customStyles.buttonSecondary,
+									styles.margin10,
+									styles.w100
 								]}
 							>
-								<Entypo
-									name="images"
-									size={32}
-									color="black"
-									style={styles.textCenter}
-								/>
-								<Text style={styles.textCenter}>Choisir une photo</Text>
+								<Text style={[styles.textCenter, styles.blackColor]}>
+									Se déconnecter
+								</Text>
 							</TouchableOpacity>
 
 							<TouchableOpacity
-								onPress={() => {
-									this.setState({
-										showCamera: true
-									});
-								}}
+								onPress={() => this.delete()}
 								style={[
-									styles.bgGray,
-									styles.padding10,
-									styles.marginTop10,
-									styles.marginH10,
-									{ borderRadius: 5 }
+									customStyles.buttonSecondary,
+									styles.margin10,
+									styles.w100
 								]}
 							>
-								<Entypo
-									name="camera"
-									size={32}
-									color="black"
-									style={styles.textCenter}
-								/>
-
-								<Text style={styles.textCenter}>Prendre une photo</Text>
+								<Text style={[styles.textCenter, styles.blackColor]}>
+									Supprimer son compte
+								</Text>
 							</TouchableOpacity>
 						</View>
-
-						<Text style={[{ color: 'red' }]}>
-							{this.state.message.error === true
-								? 'Une erreur est survenue.'
-								: ''}
-						</Text>
-						<Text style={{ color: 'green' }}>
-							{this.state.message.success === true ? 'Compte mis à jour.' : ''}
-						</Text>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Pseudo"
-							onChangeText={value => {
-								this.handleChange('username', value);
-							}}
-							value={username}
-						/>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Téléphone"
-							keyboardType="numeric"
-							maxLength={10}
-							onChangeText={value => {
-								this.handleChange('phoneNumber', value);
-							}}
-							value={phoneNumber}
-						/>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Adresse email"
-							keyboardType="email-address"
-							onChangeText={value => {
-								this.handleChange('email', value);
-							}}
-							value={email}
-						/>
-
-						<TextInput
-							style={styles.input}
-							placeholder="Mot de passe"
-							secureTextEntry={true}
-							onChangeText={value => {
-								this.handleChange('password', value);
-							}}
-							value={password}
-						/>
-
-						<TouchableOpacity
-							onPress={() => this.update()}
-							style={[
-								styles.button,
-								styles.primaryButtonColor,
-								styles.marginV10,
-								styles.w100
-							]}
-						>
-							<Text style={[styles.textCenter, styles.textWhite]}>
-								Enregistrer
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => this.logout()}
-							style={[
-								styles.button,
-								styles.secondaryButtonColor,
-								styles.margin10,
-								styles.w100
-							]}
-						>
-							<Text style={[styles.textCenter, styles.textWhite]}>
-								Se déconnecter
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => this.delete()}
-							style={[
-								styles.button,
-								styles.secondaryButtonColor,
-								styles.margin10,
-								styles.w100
-							]}
-						>
-							<Text style={[styles.textCenter, styles.textWhite]}>
-								Supprimer son compte
-							</Text>
-						</TouchableOpacity>
-					</View>
-				</ScrollView>
-			</KeyboardAvoidingView>
+					</ScrollView>
+				</KeyboardAvoidingView>
+			</ImageBackground>
 		);
 	}
 
@@ -380,13 +394,13 @@ class Settings extends React.Component {
 }
 
 const customStyles = StyleSheet.create({
-	w100: { width: Dimensions.get('window').width - 60 },
+	w50: { width: Dimensions.get('window').width / 2 - 40 },
 	snap: {
-		backgroundColor: '#000',
+		backgroundColor: '#1d262a',
 		width: 55,
 		height: 55,
 		borderRadius: 55,
-		borderColor: '#FFF',
+		borderColor: '#1d262a',
 		borderWidth: 5,
 		position: 'absolute',
 		padding: 5,
@@ -405,7 +419,33 @@ const customStyles = StyleSheet.create({
 		width: 150,
 		height: 150,
 		borderRadius: 75,
-		marginTop: 20
+		marginTop: 20,
+		borderColor: '#FFF',
+		borderWidth: 5
+	},
+	input: {
+		backgroundColor: '#FFF',
+		borderRadius: 3,
+		padding: 15,
+		width: Dimensions.get('window').width - 60,
+		margin: 10
+	},
+	button: {
+		backgroundColor: '#1d262a',
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		width: Dimensions.get('window').width - 60
+	},
+	buttonSecondary: {
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		borderWidth: 1,
+		borderColor: '#1d262a',
+		width: Dimensions.get('window').width - 60
 	}
 });
 

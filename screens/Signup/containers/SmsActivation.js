@@ -5,7 +5,8 @@ import {
 	TextInput,
 	KeyboardAvoidingView,
 	StyleSheet,
-	Dimensions
+	Dimensions,
+	ImageBackground
 } from 'react-native';
 import styles from '../../../Styles';
 import axios from 'axios';
@@ -52,67 +53,89 @@ class SmsActivation extends React.Component {
 	render() {
 		const { smsCodeUser } = this.props;
 		return (
-			<KeyboardAvoidingView
-				style={[styles.container, { justifyContent: 'center' }]}
-				behavior="padding"
-				enabled
+			<ImageBackground
+				source={require('../../../assets/images/bg/06.jpg')}
+				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
-				<Text style={styles.h4}>Renseignez le code</Text>
-				<Text
-					style={[
-						styles.text,
-						styles.paddingV10,
-						customStyles.w100,
-						styles.textCenter
-					]}
+				<KeyboardAvoidingView
+					style={[styles.container, { justifyContent: 'center' }]}
+					behavior="padding"
+					enabled
 				>
-					Veuillez confirmer votre numéro de téléphone en renseignant le code
-					que vous avez reçu par SMS.
-				</Text>
-				<TextInput
-					style={styles.input}
-					placeholder="Code à 4 chiffres"
-					keyboardType="numeric"
-					maxLength={4}
-					onChangeText={value => {
-						this.props.handleChange('smsCodeUser', value);
-					}}
-					value={smsCodeUser}
-				/>
-				<Text style={[styles.error]}>
-					{this.state.errors.sms === true ? 'Code invalide' : ''}
-				</Text>
-
-				<TouchableOpacity
-					onPress={this.send}
-					style={[
-						styles.button,
-						styles.primaryButtonColor,
-						styles.marginV10,
-						customStyles.w100
-					]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
-						Confirmer mon code
+					<Text style={[styles.h4, styles.blackColor]}>Renseignez le code</Text>
+					<Text
+						style={[
+							styles.text,
+							styles.paddingV10,
+							styles.w100,
+							styles.textCenter,
+							styles.blackColor
+						]}
+					>
+						Veuillez confirmer votre numéro de téléphone en renseignant le code
+						que vous avez reçu par SMS.
 					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={this.back}
-					style={[
-						styles.button,
-						styles.secondaryButtonColor,
-						customStyles.w100
-					]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>Précédent</Text>
-				</TouchableOpacity>
-			</KeyboardAvoidingView>
+					<TextInput
+						style={customStyles.input}
+						placeholder="Code à 4 chiffres"
+						placeholderTextColor="#1d262a"
+						keyboardType="numeric"
+						maxLength={4}
+						onChangeText={value => {
+							this.props.handleChange('smsCodeUser', value);
+						}}
+						value={smsCodeUser}
+					/>
+					<Text>{this.state.errors.sms === true ? 'Code invalide' : ''}</Text>
+
+					<TouchableOpacity
+						onPress={this.send}
+						style={[customStyles.button, styles.marginV10, styles.w100]}
+					>
+						<Text style={[styles.textCenter, styles.textWhite]}>
+							Confirmer mon code
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={this.back}
+						style={[customStyles.buttonSecondary, styles.w100]}
+					>
+						<Text style={[styles.textCenter, styles.blackColor]}>
+							Précédent
+						</Text>
+					</TouchableOpacity>
+				</KeyboardAvoidingView>
+			</ImageBackground>
 		);
 	}
 }
 
 const customStyles = StyleSheet.create({
-	w100: { width: Dimensions.get('window').width - 60 }
+	input: {
+		backgroundColor: '#FFF',
+		borderRadius: 3,
+		padding: 15,
+		width: Dimensions.get('window').width - 60,
+		marginBottom: 10,
+		marginTop: 30
+	},
+	button: {
+		backgroundColor: '#1d262a',
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		width: Dimensions.get('window').width - 60
+	},
+	buttonSecondary: {
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		borderWidth: 1,
+		borderColor: '#1d262a',
+		width: Dimensions.get('window').width - 60
+	}
 });
 
 export default SmsActivation;

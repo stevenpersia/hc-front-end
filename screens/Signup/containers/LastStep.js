@@ -8,7 +8,8 @@ import {
 	Image,
 	StyleSheet,
 	View,
-	ScrollView
+	ScrollView,
+	ImageBackground
 } from 'react-native';
 import styles from '../../../Styles';
 import { ImagePicker, Camera, Permissions } from 'expo';
@@ -16,7 +17,7 @@ import { Entypo } from '@expo/vector-icons';
 
 class LastStep extends React.Component {
 	state = {
-		image: null,
+		image: 'WOW',
 		hasCameraPermission: null,
 		showCamera: false
 	};
@@ -68,81 +69,90 @@ class LastStep extends React.Component {
 	render() {
 		const { email, avatar, interests } = this.props;
 		return (
-			<KeyboardAvoidingView
-				style={[styles.container, { justifyContent: 'center' }]}
-				behavior="padding"
-				enabled
+			<ImageBackground
+				source={require('../../../assets/images/bg/06.jpg')}
+				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
-				{this.renderPicture()}
-				<View
-					style={{
-						flexDirection: 'row',
-						paddingTop: 30
-					}}
+				<KeyboardAvoidingView
+					style={[styles.container, { justifyContent: 'center' }]}
+					behavior="padding"
+					enabled
 				>
-					<TouchableOpacity
-						onPress={this._pickImage}
-						style={[
-							styles.bgGray,
-							styles.padding10,
-							styles.margin10,
-							{ borderRadius: 5 }
-						]}
-					>
-						<Entypo
-							name="images"
-							size={32}
-							color="black"
-							style={styles.textCenter}
-						/>
-						<Text style={styles.textCenter}>Choisir une photo</Text>
-					</TouchableOpacity>
-
-					<TouchableOpacity
-						onPress={() => {
-							this.setState({
-								showCamera: true
-							});
+					{this.renderPicture()}
+					<View
+						style={{
+							flexDirection: 'row',
+							paddingTop: 50
 						}}
-						style={[
-							styles.bgGray,
-							styles.padding10,
-							styles.margin10,
-							{ borderRadius: 5 }
-						]}
 					>
-						<Entypo
-							name="camera"
-							size={32}
-							color="black"
-							style={styles.textCenter}
-						/>
+						<TouchableOpacity
+							onPress={this._pickImage}
+							style={[
+								styles.bgWhite,
+								styles.padding10,
+								styles.margin10,
+								customStyles.w50,
+								{ borderRadius: 5 }
+							]}
+						>
+							<Entypo
+								name="images"
+								size={32}
+								color="#1d262a"
+								style={styles.textCenter}
+							/>
+							<Text style={[styles.textCenter, styles.blackColor]}>
+								Choisir une photo
+							</Text>
+						</TouchableOpacity>
 
-						<Text style={styles.textCenter}>Prendre une photo</Text>
+						<TouchableOpacity
+							onPress={() => {
+								this.setState({
+									showCamera: true
+								});
+							}}
+							style={[
+								styles.bgWhite,
+								styles.padding10,
+								styles.margin10,
+								customStyles.w50,
+								{ borderRadius: 5 }
+							]}
+						>
+							<Entypo
+								name="camera"
+								size={32}
+								color="#1d262a"
+								style={styles.textCenter}
+							/>
+
+							<Text style={[styles.textCenter, styles.blackColor]}>
+								Prendre une photo
+							</Text>
+						</TouchableOpacity>
+					</View>
+					<TextInput
+						style={customStyles.input}
+						placeholder="Adresse email"
+						placeholderTextColor="#1d262a"
+						keyboardType="email-address"
+						onChangeText={value => {
+							this.props.handleChange('email', value);
+						}}
+						value={email}
+					/>
+
+					<TouchableOpacity
+						onPress={this.props.register}
+						style={[customStyles.button, styles.marginV10, styles.w100]}
+					>
+						<Text style={[styles.textCenter, styles.textWhite]}>
+							Inscription
+						</Text>
 					</TouchableOpacity>
-				</View>
-				<TextInput
-					style={styles.input}
-					placeholder="Adresse email"
-					keyboardType="email-address"
-					onChangeText={value => {
-						this.props.handleChange('email', value);
-					}}
-					value={email}
-				/>
-
-				<TouchableOpacity
-					onPress={this.props.register}
-					style={[
-						styles.button,
-						styles.primaryButtonColor,
-						styles.marginV10,
-						customStyles.w100
-					]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>Inscription</Text>
-				</TouchableOpacity>
-			</KeyboardAvoidingView>
+				</KeyboardAvoidingView>
+			</ImageBackground>
 		);
 	}
 	_pickImage = async () => {
@@ -169,13 +179,13 @@ class LastStep extends React.Component {
 }
 
 const customStyles = StyleSheet.create({
-	w100: { width: Dimensions.get('window').width - 60 },
+	w50: { width: Dimensions.get('window').width / 2 - 40 },
 	snap: {
-		backgroundColor: '#000',
+		backgroundColor: '#1d262a',
 		width: 55,
 		height: 55,
 		borderRadius: 55,
-		borderColor: '#FFF',
+		borderColor: '#1d262a',
 		borderWidth: 5,
 		position: 'absolute',
 		padding: 5,
@@ -187,12 +197,40 @@ const customStyles = StyleSheet.create({
 		width: 150,
 		overflow: 'hidden',
 		height: 150,
-		borderRadius: 150
+		borderRadius: 75
 	},
 	image: {
 		width: 150,
 		height: 150,
-		borderRadius: 150
+		borderRadius: 75,
+		borderColor: '#FFF',
+		borderWidth: 5,
+		backgroundColor: '#1d262a'
+	},
+	input: {
+		backgroundColor: '#FFF',
+		borderRadius: 3,
+		padding: 15,
+		width: Dimensions.get('window').width - 60,
+		marginBottom: 10,
+		marginTop: 30
+	},
+	button: {
+		backgroundColor: '#1d262a',
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		width: Dimensions.get('window').width - 60
+	},
+	buttonSecondary: {
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		borderWidth: 1,
+		borderColor: '#1d262a',
+		width: Dimensions.get('window').width - 60
 	}
 });
 
