@@ -55,7 +55,9 @@ class ListBar extends React.Component {
 					}}
 				>
 					<TouchableOpacity
-						onPress={() => {}}
+						onPress={() => {
+							this.props.setStep(2);
+						}}
 						style={[styles.buttonSmall, styles.secondaryButtonColor]}
 					>
 						<Text style={[styles.textCenter, styles.textWhite]}>
@@ -63,7 +65,9 @@ class ListBar extends React.Component {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => {}}
+						onPress={() => {
+							this.props.setStep(1);
+						}}
 						style={[styles.buttonSmall, styles.primaryButtonColor]}
 					>
 						<Text style={[styles.textCenter, styles.textWhite]}>

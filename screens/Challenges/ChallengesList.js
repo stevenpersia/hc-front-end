@@ -26,6 +26,7 @@ class ChallengesList extends React.Component {
 	};
 
 	state = {
+		step: 1,
 		modalVisible: false,
 		params: { distance: 60, name: "" },
 		filterHelpers: {
@@ -40,16 +41,30 @@ class ChallengesList extends React.Component {
 		enable: false
 	};
 
+	componentDidMount() {
+		this.getChallenges();
+	}
+
+	setStep = step => {
+		this.setState({
+			step
+		});
+	};
+
+	// Display SearchBar
 	toggleDisplay = () => {
 		this.setState({ enable: !this.state.enable });
 	};
 
+	// Display Filters
 	setModalVisible = visible => {
 		this.setState({ modalVisible: visible });
 	};
 
+	// Give each Flatlist item a unique key
 	_keyExtractor = (item, index) => item._id;
 
+	// Recup the challenges
 	getChallenges() {
 		axios
 			.get("http://human-challenge-back-end.herokuapp.com/api/challenge", {
@@ -60,12 +75,14 @@ class ChallengesList extends React.Component {
 			});
 	}
 
+	// Recup the filters
 	getFilters = (filters, obj) => {
 		this.setState({ params: filters, filterHelpers: obj }, () => {
 			this.getChallenges();
 		});
 	};
 
+	// Show the filters
 	renderFilters() {
 		return (
 			<Modal
@@ -131,10 +148,7 @@ class ChallengesList extends React.Component {
 		);
 	}
 
-	componentDidMount() {
-		this.getChallenges();
-	}
-
+	// No results case
 	renderNull() {
 		return (
 			<View
@@ -150,6 +164,7 @@ class ChallengesList extends React.Component {
 					setModalVisible={this.setModalVisible}
 					toggleDisplay={this.toggleDisplay}
 					enable={this.props.enable}
+					setStep={this.setStep}
 				/>
 				{this.renderFilters()}
 				<View
@@ -227,6 +242,7 @@ class ChallengesList extends React.Component {
 		);
 	}
 
+	// Some results case
 	renderList() {
 		return (
 			<View style={[styles.container]}>
@@ -234,6 +250,7 @@ class ChallengesList extends React.Component {
 					setModalVisible={this.setModalVisible}
 					toggleDisplay={this.toggleDisplay}
 					enable={this.state.enable}
+					setStep={this.setStep}
 				/>
 				{this.renderFilters()}
 				<Display
@@ -313,7 +330,7 @@ class ChallengesList extends React.Component {
 		);
 	}
 
-	render() {
+	renderCaseList() {
 		return this.state.counter === undefined ? (
 			<View
 				style={
@@ -331,6 +348,15 @@ class ChallengesList extends React.Component {
 		) : (
 			this.renderList()
 		);
+	}
+
+	render() {
+		switch (this.state.step) {
+			case 1:
+				return this.renderCaseList();
+			case 2:
+				return <Text>C'est la map que je préfère</Text>;
+		}
 	}
 }
 
