@@ -23,11 +23,11 @@ import Display from "react-native-display";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const homePlace = {
-	description: "Home",
+	description: "Adresse",
 	geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }
 };
 const workPlace = {
-	description: "Work",
+	description: "Travail, si t'en a, sinon l'@ de tes parents",
 	geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }
 };
 class ChallengesList extends React.Component {
@@ -38,7 +38,7 @@ class ChallengesList extends React.Component {
 	state = {
 		step: 2,
 		modalVisible: false,
-		params: { distance: 60, name: "" },
+		params: { distance: 60, name: "", latitude: 45, longitude: 2 },
 		filterHelpers: {
 			Environnement: true,
 			Social: true,
@@ -67,7 +67,17 @@ class ChallengesList extends React.Component {
 				renderDescription={row => row.description} // custom description render
 				onPress={(data, details = null) => {
 					// 'details' is provided when fetchDetails = true
-					console.log(data, details);
+					console.log(details.geometry.location);
+					this.setState(
+						{
+							params: {
+								...this.state.params,
+								latitude: details.geometry.location.lat,
+								longitude: details.geometry.location.lng
+							}
+						},
+						() => this.getChallenges()
+					);
 				}}
 				getDefaultValue={() => ""}
 				listUnderlayColor="white"
@@ -116,7 +126,7 @@ class ChallengesList extends React.Component {
 					}
 				}}
 				currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-				currentLocationLabel="Current location"
+				currentLocationLabel="Localisation actuelle"
 				nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
 				GoogleReverseGeocodingQuery={
 					{
@@ -478,9 +488,9 @@ class ChallengesList extends React.Component {
 						width: Dimensions.get("window").width,
 						zIndex: 0
 					}}
-					initialRegion={{
-						latitude: 48.8708243,
-						longitude: 2.3715514,
+					region={{
+						latitude: this.state.params.latitude,
+						longitude: this.state.params.longitude,
 						latitudeDelta: 0.0922,
 						longitudeDelta: 0.0421
 					}}
