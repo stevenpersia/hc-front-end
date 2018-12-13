@@ -45,6 +45,7 @@ class ChallengesList extends React.Component {
 		this.getChallenges();
 	}
 
+	// Change view between map and list
 	setStep = step => {
 		this.setState({
 			step
@@ -262,7 +263,7 @@ class ChallengesList extends React.Component {
 					enter="fadeInLeft"
 				>
 					<TextInput
-						placeholder="recherche"
+						placeholder="Nom du Challenge"
 						style={{
 							paddingLeft: 20,
 							backgroundColor: "white",
@@ -350,12 +351,29 @@ class ChallengesList extends React.Component {
 		);
 	}
 
+	renderCaseMap() {
+		return (
+			<View style={[styles.container, { flex: 1 }]}>
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+					enable={this.props.enable}
+					setStep={this.setStep}
+				/>
+				{this.renderFilters()}
+				<View style={{ marginTop: 48 }}>
+					<Text>{"hello my men " + this.state.counter}</Text>
+				</View>
+			</View>
+		);
+	}
+
 	render() {
 		switch (this.state.step) {
 			case 1:
 				return this.renderCaseList();
 			case 2:
-				return <Text>C'est la map que je préfère</Text>;
+				return this.renderCaseMap();
 		}
 	}
 }
