@@ -94,7 +94,7 @@ class Settings extends React.Component {
 		const { username, phoneNumber, email, password, avatar } = this.state;
 		axios
 			.put(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c11228a5bc6600016c06192',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c117fbd39ec4800168972ce',
 				{
 					account: {
 						username: username,
@@ -113,7 +113,7 @@ class Settings extends React.Component {
 				{
 					headers: {
 						Authorization:
-							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
+							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
 					}
 				}
 			)
@@ -144,11 +144,11 @@ class Settings extends React.Component {
 	delete = () => {
 		axios
 			.delete(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c11228a5bc6600016c06192',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c117fbd39ec4800168972ce',
 				{
 					headers: {
 						Authorization:
-							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
+							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
 					}
 				}
 			)
@@ -338,11 +338,11 @@ class Settings extends React.Component {
 	componentDidMount() {
 		axios
 			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/5c11228a5bc6600016c06192',
+				'https://human-challenge-back-end.herokuapp.com/api/settings/5c117fbd39ec4800168972ce',
 				{
 					headers: {
 						Authorization:
-							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
+							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
 					}
 				}
 			)

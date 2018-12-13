@@ -79,9 +79,9 @@ class Profile extends React.Component {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => this.props.navigation.navigate('CreateChallenge')}
-					style={[styles.button, styles.secondaryButtonColor, styles.w100]}
+					style={[styles.buttonSecondary, styles.w100]}
 				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
+					<Text style={[styles.textCenter, styles.blackColor]}>
 						Créer un défi
 					</Text>
 				</TouchableOpacity>
