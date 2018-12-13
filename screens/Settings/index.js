@@ -162,29 +162,31 @@ class Settings extends React.Component {
 
 	// Delete my account
 	delete = () => {
-		axios
-			.delete(
-				`https://human-challenge-back-end.herokuapp.com/api/settings/remove/${
-					this.state.auth.id
-				}`,
-				{
-					headers: {
-						Authorization: this.state.auth.token
+		AsyncStorage.multiRemove(['id', 'token'], err => {
+			axios
+				.delete(
+					`https://human-challenge-back-end.herokuapp.com/api/settings/remove/${
+						this.state.auth.id
+					}`,
+					{
+						headers: {
+							Authorization: this.state.auth.token
+						}
 					}
-				}
-			)
-			.then(response => {
-				this.props.navigation.navigate('Authentication');
-			})
-			.catch(error => {
-				console.log(error);
-				this.setState({
-					message: {
-						error: true,
-						success: false
-					}
+				)
+				.then(response => {
+					this.props.navigation.navigate('Authentication');
+				})
+				.catch(error => {
+					console.log(error);
+					this.setState({
+						message: {
+							error: true,
+							success: false
+						}
+					});
 				});
-			});
+		});
 	};
 
 	render() {
