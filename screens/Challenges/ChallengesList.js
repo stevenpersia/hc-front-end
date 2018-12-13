@@ -39,7 +39,12 @@ class ChallengesList extends React.Component {
 	state = {
 		step: 1,
 		modalVisible: false,
-		params: { distance: 60, name: "", latitude: 45, longitude: 2 },
+		params: {
+			distance: 60,
+			name: "",
+			latitude: 45.7725738,
+			longitude: 2.9644431
+		},
 		filterHelpers: {
 			Environnement: true,
 			Social: true,
@@ -54,6 +59,22 @@ class ChallengesList extends React.Component {
 
 	componentDidMount() {
 		this.getChallenges();
+	}
+
+	pickLocationHandler = (event, index) => {
+		const coords = event.coordinate;
+		this._carousel.snapToItem(index);
+	};
+
+	centerMapOnMarker(slideIndex) {
+		const markerLocation = this.state.Challenges[slideIndex].loc;
+		this._map.animateToCoordinate(
+			{
+				latitude: markerLocation[1],
+				longitude: markerLocation[0]
+			},
+			200
+		);
 	}
 
 	GooglePlacesInput = () => {
@@ -74,10 +95,15 @@ class ChallengesList extends React.Component {
 							params: {
 								...this.state.params,
 								latitude: details.geometry.location.lat,
-								longitude: details.geometry.location.lng
+								longitude: details.geometry.location.lng,
+								distance: 50000
 							}
 						},
-						() => this.getChallenges()
+						() => {
+							console.log(this.state.params);
+
+							this.getChallenges();
+						}
 					);
 				}}
 				getDefaultValue={() => ""}
@@ -189,6 +215,28 @@ class ChallengesList extends React.Component {
 			this.getChallenges();
 		});
 	};
+
+	// Show the markers
+	renderMarkers() {
+		const tab = [];
+
+		this.state.Challenges.map((challenge, i) => {
+			tab.push(
+				<MapView.Marker
+					key={i}
+					coordinate={{
+						latitude: challenge.loc[1],
+						longitude: challenge.loc[0]
+					}}
+					title={challenge.ref.name}
+					description={""}
+					onPress={e => this.pickLocationHandler(e.nativeEvent, i)}
+					pinColor="black"
+				/>
+			);
+		});
+		return tab;
+	}
 
 	// Show the cards
 	_renderCards({ item, index }) {
@@ -514,9 +562,12 @@ class ChallengesList extends React.Component {
 						itemWidth={Dimensions.get("window").width - 60}
 						enableSnap={true}
 						loop={true}
+						inactiveSlideOpacity={0.4}
+						onSnapToItem={slideIndex => this.centerMapOnMarker(slideIndex)}
 					/>
 				</View>
 				<MapView
+					ref={component => (this._map = component)}
 					style={{
 						flex: 1,
 						height: Dimensions.get("window").height,
@@ -531,7 +582,9 @@ class ChallengesList extends React.Component {
 					}}
 					loadingEnabled={true}
 					loadingIndicatorColor="black"
-				/>
+				>
+					{this.renderMarkers()}
+				</MapView>
 			</View>
 		);
 	}

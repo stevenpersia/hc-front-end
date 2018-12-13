@@ -62,7 +62,11 @@ class ChallengeCard extends React.Component {
 					styles.card,
 					styles.bgBlack,
 
-					{ overflow: "hidden", width: "100%", borderRadius: 8 }
+					{
+						overflow: "hidden",
+						width: "100%",
+						borderRadius: 8
+					}
 				]}
 			>
 				<View style={detailsrightChallengeCard}>
