@@ -21,7 +21,6 @@ class ChangePassword extends React.Component {
 	};
 
 	back = e => {
-		e.preventDefault();
 		this.props.prevStep();
 	};
 	//
@@ -31,7 +30,7 @@ class ChangePassword extends React.Component {
 	//
 	send = e => {
 		const { smsCodeUser, phoneNumber, newPassword } = this.props;
-		e.preventDefault();
+
 		// Check if SMS code is good before to go to next step
 		if (smsCodeUser && newPassword.length >= 8) {
 			axios
@@ -43,7 +42,26 @@ class ChangePassword extends React.Component {
 				)
 				.then(response => {
 					console.log('SMS sended', response);
-					this.props.nextStep();
+
+					axios
+						.put(
+							'https://human-challenge-back-end.herokuapp.com/api/login/forgot',
+							{
+								account: {
+									phoneNumber: phoneNumber
+								},
+								security: {
+									password: newPassword
+								}
+							}
+						)
+						.then(response => {
+							console.log('Password changed', response);
+							this.props.nextStep();
+						})
+						.catch(error => {
+							console.log(error);
+						});
 				})
 				.catch(err => {
 					console.log(err);
