@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import styles from '../../Styles';
 import axios from 'axios';
+import { AsyncStorage } from 'react-native';
 
 class Login extends React.Component {
 	static navigationOptions = {
@@ -39,6 +40,8 @@ class Login extends React.Component {
 				}
 			})
 			.then(response => {
+				AsyncStorage.setItem('id', response.data._id);
+				AsyncStorage.setItem('token', response.data.security.token);
 				this.props.navigation.navigate('ChallengesMap');
 			})
 			.catch(error => {
