@@ -12,6 +12,7 @@ import {
 	TouchableHighlight,
 	TextInput
 } from "react-native";
+import { MapView } from "expo";
 import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
 import axios from "axios";
@@ -19,14 +20,23 @@ import ListBar from "../../components/ListBar";
 import Filters from "../../components/Filters";
 import { Entypo } from "@expo/vector-icons";
 import Display from "react-native-display";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
+const homePlace = {
+	description: "Home",
+	geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }
+};
+const workPlace = {
+	description: "Work",
+	geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }
+};
 class ChallengesList extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
 
 	state = {
-		step: 1,
+		step: 2,
 		modalVisible: false,
 		params: { distance: 60, name: "" },
 		filterHelpers: {
@@ -44,6 +54,92 @@ class ChallengesList extends React.Component {
 	componentDidMount() {
 		this.getChallenges();
 	}
+
+	GooglePlacesInput = () => {
+		return (
+			<GooglePlacesAutocomplete
+				placeholder="Adresse"
+				minLength={2} // minimum length of text to search
+				autoFocus={false}
+				returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+				listViewDisplayed="auto" // true/false/undefined
+				fetchDetails={true}
+				renderDescription={row => row.description} // custom description render
+				onPress={(data, details = null) => {
+					// 'details' is provided when fetchDetails = true
+					console.log(data, details);
+				}}
+				getDefaultValue={() => ""}
+				listUnderlayColor="white"
+				query={{
+					// available options: https://developers.google.com/places/web-service/autocomplete
+					key: "AIzaSyDVe2qiHnbsUl7Jrnt8S_I02UnVcBtT_0U",
+					language: "fr", // language of the results
+					types: "(cities)" // default: 'geocode'
+				}}
+				styles={{
+					container: {
+						backgroundColor: "white",
+
+						borderColor: "blue",
+						borderWidth: 1,
+						borderRadius: 20,
+
+						borderBottomRightRadius: 0,
+						width: 300
+					},
+					textInputContainer: {
+						width: "100%",
+						backgroundColor: "white",
+						borderTopWidth: 0,
+						height: 40,
+						borderBottomWidth: 0,
+						borderColor: "blue",
+						borderRadius: 20
+					},
+					description: {
+						borderRadius: 20,
+						color: "gray"
+					},
+					predefinedPlacesDescription: {
+						color: "blue",
+						borderRadius: 20
+					},
+					row: {
+						backgroundColor: "white",
+						borderRadius: 20
+					},
+					poweredContainer: {
+						backgroundColor: "white",
+						borderRadius: 20,
+						display: "none"
+					}
+				}}
+				currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+				currentLocationLabel="Current location"
+				nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+				GoogleReverseGeocodingQuery={
+					{
+						// available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+					}
+				}
+				GooglePlacesSearchQuery={{
+					// available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+					rankby: "distance",
+					types: "food"
+				}}
+				filterReverseGeocodingByTypes={[
+					"locality",
+					"administrative_area_level_3"
+				]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+				predefinedPlaces={[homePlace, workPlace]}
+				debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+				renderLeftButton={null}
+				renderRightButton={null}
+				isRowScrollable={true}
+			/>
+		);
+	};
 
 	// Change view between map and list
 	setStep = step => {
@@ -166,6 +262,7 @@ class ChallengesList extends React.Component {
 					toggleDisplay={this.toggleDisplay}
 					enable={this.props.enable}
 					setStep={this.setStep}
+					whereAmI={this.state.step}
 				/>
 				{this.renderFilters()}
 				<View
@@ -252,6 +349,7 @@ class ChallengesList extends React.Component {
 					toggleDisplay={this.toggleDisplay}
 					enable={this.state.enable}
 					setStep={this.setStep}
+					whereAmI={this.state.step}
 				/>
 				{this.renderFilters()}
 				<Display
@@ -357,13 +455,38 @@ class ChallengesList extends React.Component {
 				<ListBar
 					setModalVisible={this.setModalVisible}
 					toggleDisplay={this.toggleDisplay}
-					enable={this.props.enable}
+					enable={this.state.enable}
 					setStep={this.setStep}
+					whereAmI={this.state.step}
 				/>
 				{this.renderFilters()}
-				<View style={{ marginTop: 48 }}>
-					<Text>{"hello my men " + this.state.counter}</Text>
-				</View>
+				<Display
+					style={{ position: "absolute", top: 60, zIndex: 15 }}
+					enable={this.state.enable}
+					enterDuration={500}
+					exitDuration={250}
+					exit="fadeOutLeft"
+					enter="fadeInLeft"
+				>
+					{this.GooglePlacesInput()}
+				</Display>
+
+				<MapView
+					style={{
+						flex: 1,
+						height: Dimensions.get("window").height,
+						width: Dimensions.get("window").width,
+						zIndex: 0
+					}}
+					initialRegion={{
+						latitude: 48.8708243,
+						longitude: 2.3715514,
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421
+					}}
+					loadingEnabled={true}
+					loadingIndicatorColor="black"
+				/>
 			</View>
 		);
 	}

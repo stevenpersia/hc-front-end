@@ -14,8 +14,10 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-animatable": "^1.3.0",
     "react-native-display": "^1.0.8",
-    "react-native-motion-slider": "^1.0.3",
     "react-native-elements": "^1.0.0-beta7",
+    "react-native-google-places-autocomplete": "^1.3.9",
+    "react-native-motion-slider": "^1.0.3",
+    "react-native-snap-carousel": "^3.7.5",
     "react-navigation": "^3.0.5"
   },
   "devDependencies": {

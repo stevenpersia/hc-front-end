@@ -11,6 +11,45 @@ import styles from "../../Styles";
 import { Entypo } from "@expo/vector-icons";
 
 class ListBar extends React.Component {
+	renderPinOrGlass() {
+		if (this.props.whereAmI === 1) {
+			return (
+				<TouchableHighlight
+					onPress={() => {
+						this.props.toggleDisplay();
+					}}
+				>
+					<Entypo
+						name="magnifying-glass"
+						size={30}
+						color={this.props.enable ? "blue" : "black"}
+						style={{
+							backgroundColor: "white",
+							borderRadius: 8
+						}}
+					/>
+				</TouchableHighlight>
+			);
+		} else
+			return (
+				<TouchableHighlight
+					onPress={() => {
+						this.props.toggleDisplay();
+					}}
+				>
+					<Entypo
+						name="location-pin"
+						size={30}
+						color={this.props.enable ? "blue" : "black"}
+						style={{
+							backgroundColor: "white",
+							borderRadius: 8
+						}}
+					/>
+				</TouchableHighlight>
+			);
+	}
+
 	render() {
 		return (
 			<View
@@ -84,21 +123,7 @@ class ListBar extends React.Component {
 						alignItems: "center"
 					}}
 				>
-					<TouchableHighlight
-						onPress={() => {
-							this.props.toggleDisplay();
-						}}
-					>
-						<Entypo
-							name="magnifying-glass"
-							size={30}
-							color={this.props.enable ? "blue" : "black"}
-							style={{
-								backgroundColor: "white",
-								borderRadius: 8
-							}}
-						/>
-					</TouchableHighlight>
+					{this.renderPinOrGlass()}
 					<TouchableHighlight
 						onPress={() => {
 							this.props.setModalVisible(true);
