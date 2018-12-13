@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const primaryColor = '#1d262a';
-const secondaryColor = '#FFF';
+const secondaryColor = '#CCC';
 
 const animauxColor = '#7D1AFF';
 const environnementColor = '#FFBE1A';
