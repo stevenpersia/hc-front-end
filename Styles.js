@@ -28,7 +28,7 @@ export default StyleSheet.create({
   },
   /* CARD */
   card: {
-    height: 250,
+    height: 200,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -226,9 +226,15 @@ export default StyleSheet.create({
   fullWidth: fullW,
 
   /* SCREEN RESOLUTIONS & DIMENSIONS */
-  fullHeight: { height: fullH },
-  fullWidth: { width: fullW },
-  w100: { width: Dimensions.get("window").width - 60 },
+  fullHeight: {
+    height: fullH
+  },
+  fullWidth: {
+    width: fullW
+  },
+  w100: {
+    width: Dimensions.get("window").width - 60
+  },
   /* BORDER RADIUS SISILAFAMILLE TOVO */
   rounded: {
     borderRadius: 5

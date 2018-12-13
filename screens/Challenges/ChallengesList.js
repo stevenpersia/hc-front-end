@@ -21,6 +21,7 @@ import Filters from "../../components/Filters";
 import { Entypo } from "@expo/vector-icons";
 import Display from "react-native-display";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Carousel from "react-native-snap-carousel";
 
 const homePlace = {
 	description: "Adresse",
@@ -36,7 +37,7 @@ class ChallengesList extends React.Component {
 	};
 
 	state = {
-		step: 2,
+		step: 1,
 		modalVisible: false,
 		params: { distance: 60, name: "", latitude: 45, longitude: 2 },
 		filterHelpers: {
@@ -189,6 +190,17 @@ class ChallengesList extends React.Component {
 		});
 	};
 
+	// Show the cards
+	_renderCards({ item, index }) {
+		return (
+			<TouchableOpacity
+				onPress={() => this.props.navigation.navigate("Challenge")}
+			>
+				<ChallengeCard id={item._id} challenge={item} />
+			</TouchableOpacity>
+		);
+	}
+
 	// Show the filters
 	renderFilters() {
 		return (
@@ -307,7 +319,9 @@ class ChallengesList extends React.Component {
 							this.setState(
 								{
 									params: {
-										distance: 3000000
+										distance: 3000000,
+										latitude: 45,
+										longitude: 2
 									},
 									filterHelpers: {
 										Environnement: true,
@@ -392,7 +406,7 @@ class ChallengesList extends React.Component {
 					/>
 				</Display>
 				<View>
-					<FlatList
+					{/* <FlatList
 						style={{ paddingTop: 50 }}
 						data={this.state.Challenges}
 						keyExtractor={this._keyExtractor}
@@ -433,6 +447,15 @@ class ChallengesList extends React.Component {
 								);
 							}
 						}}
+					/> */}
+					<Carousel
+						ref={c => {
+							this._carousel = c;
+						}}
+						data={this.state.Challenges}
+						renderItem={this._renderCards}
+						sliderWidth={Dimensions.get("window").width}
+						itemWidth={Dimensions.get("window").width - 40}
 					/>
 				</View>
 			</View>
@@ -480,7 +503,19 @@ class ChallengesList extends React.Component {
 				>
 					{this.GooglePlacesInput()}
 				</Display>
-
+				<View style={{ position: "absolute", bottom: 40, zIndex: 2 }}>
+					<Carousel
+						ref={c => {
+							this._carousel = c;
+						}}
+						data={this.state.Challenges}
+						renderItem={this._renderCards}
+						sliderWidth={Dimensions.get("window").width}
+						itemWidth={Dimensions.get("window").width - 60}
+						enableSnap={true}
+						loop={true}
+					/>
+				</View>
 				<MapView
 					style={{
 						flex: 1,

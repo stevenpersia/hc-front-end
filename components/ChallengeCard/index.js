@@ -39,21 +39,21 @@ class ChallengeCard extends React.Component {
 		}
 		const detailsLeftChallengeCard = {
 			position: "absolute",
-			left: 8,
+			left: 10,
 			zIndex: 2
 		};
 		let detailsrightChallengeCard = {
 			zIndex: 2
 		};
 		if (this.props.variant) {
-			detailsLeftChallengeCard.bottom = 8;
+			detailsLeftChallengeCard.bottom = 10;
 		} else {
-			detailsLeftChallengeCard.top = 8;
+			detailsLeftChallengeCard.top = 10;
 			detailsrightChallengeCard = {
 				position: "absolute",
-				right: 8,
+				right: 10,
 				zIndex: 2,
-				top: 8
+				top: 10
 			};
 		}
 		return (
@@ -61,8 +61,8 @@ class ChallengeCard extends React.Component {
 				style={[
 					styles.card,
 					styles.bgBlack,
-					stylesLocal.customCSS,
-					{ overflow: "hidden" }
+
+					{ overflow: "hidden", width: "100%", borderRadius: 8 }
 				]}
 			>
 				<View style={detailsrightChallengeCard}>
@@ -90,7 +90,7 @@ class ChallengeCard extends React.Component {
 					</View>
 				) : (
 					<View
-						style={[{ position: "absolute", bottom: 8, right: 8, zIndex: 2 }]}
+						style={[{ position: "absolute", bottom: 10, right: 10, zIndex: 2 }]}
 					>
 						<ChallengeCardItem
 							icon="time"
@@ -111,8 +111,8 @@ class ChallengeCard extends React.Component {
 						position: "absolute",
 						top: 0,
 						left: 0,
-						height: 250,
-						width: fullW,
+						height: 200,
+						width: "100%",
 						zIndex: 0,
 						opacity: 0.7
 					}}
