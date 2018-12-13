@@ -79,9 +79,9 @@ class Profile extends React.Component {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => this.props.navigation.navigate('CreateChallenge')}
-					style={[styles.button, styles.secondaryButtonColor, styles.w100]}
+					style={[styles.buttonSecondary, styles.w100]}
 				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
+					<Text style={[styles.textCenter, styles.blackColor]}>
 						Créer un défi
 					</Text>
 				</TouchableOpacity>
@@ -93,7 +93,7 @@ class Profile extends React.Component {
 	renderList = () => {
 		const { participate, organizer, finished } = this.state.tabs;
 
-		if (participate === true) {
+		if (participate) {
 			if (this.state.challengesPlayerItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -111,7 +111,7 @@ class Profile extends React.Component {
 			}
 		}
 
-		if (organizer === true) {
+		if (organizer) {
 			if (this.state.challengesManagerItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -129,7 +129,7 @@ class Profile extends React.Component {
 			}
 		}
 
-		if (finished === true) {
+		if (finished) {
 			if (this.state.challengesFinishedItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -293,89 +293,77 @@ class Profile extends React.Component {
 		);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		// Find profile
-		axios
-			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/profile/5c11228a5bc6600016c06192',
-				{
-					headers: {
-						Authorization:
-							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
-					}
+		const response = await axios.get(
+			'https://human-challenge-back-end.herokuapp.com/api/profile/5c11228a5bc6600016c06192',
+			{
+				headers: {
+					Authorization:
+						'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
 				}
-			)
-			.then(response => {
-				// Grab all finished challenges
-				let challengesFinishedFound = [];
+			}
+		);
+		// Grab all finished challenges
+		let challengesFinishedFound = [];
 
-				// Grab all challenges who participate
-				let challengesPlayerFound = [];
-				for (let i = 0; i < response.data.challenges.player.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								response.data.challenges.player[i]._id
-							}`
-						)
-						.then(response => {
-							if (
-								format(response.data.date.endDate, 'x') >
-								format(new Date(), 'x')
-							) {
-								challengesPlayerFound.push(response.data);
-							} else {
-								challengesFinishedFound.push(response.data);
-							}
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
+		// Grab all challenges who participate
+		let challengesPlayerFound = [];
+		for (let i = 0; i < response.data.challenges.player.length; i++) {
+			const res = await axios.get(
+				`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+					response.data.challenges.player[i]._id
+				}`
+			);
+			if (format(res.data.date.endDate, 'x') > format(new Date(), 'x')) {
+				challengesPlayerFound.push(res.data);
+			} else {
+				challengesFinishedFound.push(res.data);
+			}
+		}
 
-				// Grab all challenges who organize
-				let challengesManagerFound = [];
-				for (let i = 0; i < response.data.challenges.manager.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								response.data.challenges.manager[i]._id
-							}`
-						)
-						.then(response => {
-							if (
-								format(response.data.date.endDate, 'x') >
-								format(new Date(), 'x')
-							) {
-								challengesManagerFound.push(response.data);
-							} else {
-								challengesFinishedFound.push(response.data);
-							}
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
+		// Grab all challenges who organize
+		let challengesManagerFound = [];
+		for (let i = 0; i < response.data.challenges.manager.length; i++) {
+			const res = await axios.get(
+				`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+					response.data.challenges.manager[i]._id
+				}`
+			);
 
-				this.setState({
-					user: {
-						account: {
-							username: response.data.account.username,
-							avatar: response.data.account.avatar[0].url
-						},
-						challenges: {
-							player: response.data.challenges.player,
-							manager: response.data.challenges.manager
-						}
+			if (format(res.data.date.endDate, 'x') > format(new Date(), 'x')) {
+				challengesManagerFound.push(res.data);
+			} else {
+				challengesFinishedFound.push(res.data);
+			}
+		}
+
+		this.setState(
+			{
+				user: {
+					account: {
+						username: response.data.account.username,
+						avatar: response.data.account.avatar[0].url
 					},
+					challenges: {
+						player: response.data.challenges.player,
+						manager: response.data.challenges.manager
+					}
+				},
+				challengesPlayerItems: challengesPlayerFound,
+				challengesManagerItems: challengesManagerFound,
+				challengesFinishedItems: challengesFinishedFound
+			},
+			() => {
+				console.log({
 					challengesPlayerItems: challengesPlayerFound,
 					challengesManagerItems: challengesManagerFound,
 					challengesFinishedItems: challengesFinishedFound
 				});
-			})
-			.catch(error => {
-				console.log(error);
-			});
+			}
+		);
+
+		console.log('à la bien couzéin');
 	}
 }
 
