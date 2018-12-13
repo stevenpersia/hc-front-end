@@ -3,12 +3,20 @@ import {
 	Text,
 	TouchableOpacity,
 	TextInput,
-	KeyboardAvoidingView
+	KeyboardAvoidingView,
+	ImageBackground,
+	View,
+	Dimensions,
+	StyleSheet
 } from 'react-native';
 import styles from '../../Styles';
 import axios from 'axios';
 
 class Login extends React.Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
 		phoneNumber: '',
 		password: '',
@@ -45,64 +53,100 @@ class Login extends React.Component {
 	render() {
 		const { phoneNumber, password } = this.state;
 		return (
-			<KeyboardAvoidingView
-				style={[styles.container, { justifyContent: 'center' }]}
-				behavior="padding"
-				enabled
+			<ImageBackground
+				source={require('../../assets/images/bg/02.jpg')}
+				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
-				<Text style={styles.h4}>Se connecter</Text>
-				<TextInput
-					style={styles.input}
-					placeholder="Téléphone"
-					keyboardType="numeric"
-					maxLength={10}
-					onChangeText={value => {
-						this.handleChange('phoneNumber', value);
-					}}
-					value={phoneNumber}
-				/>
-				<TextInput
-					style={styles.input}
-					placeholder="Mot de passe"
-					secureTextEntry={true}
-					onChangeText={value => {
-						this.handleChange('password', value);
-					}}
-					value={password}
-				/>
-				<Text style={[styles.error]}>
-					{this.state.error === true ? 'Téléphone / Mot de passe invalide' : ''}
-				</Text>
-				<TouchableOpacity
-					onPress={this.login}
-					style={[
-						styles.button,
-						styles.primaryButtonColor,
-						styles.marginV10,
-						styles.w100
-					]}
+				<KeyboardAvoidingView
+					style={[styles.container, { justifyContent: 'center' }]}
+					behavior="padding"
+					enabled
 				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
-						Se connecter
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => this.props.navigation.navigate('ForgotPassword')}
-					style={[styles.button, styles.secondaryButtonColor, styles.w100]}
-				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
-						Mot de passe oublié ?
-					</Text>
-				</TouchableOpacity>
-			</KeyboardAvoidingView>
+					<View style={[styles.padding30, styles.margin30]}>
+						<Text
+							style={[
+								styles.h4,
+								styles.textCenter,
+								styles.paddingV30,
+								styles.textBlack
+							]}
+						>
+							Se connecter
+						</Text>
+						<TextInput
+							style={customStyles.input}
+							placeholder="Téléphone"
+							placeholderTextColor="#1d262a"
+							keyboardType="numeric"
+							maxLength={10}
+							onChangeText={value => {
+								this.handleChange('phoneNumber', value);
+							}}
+							value={phoneNumber}
+						/>
+						<TextInput
+							style={customStyles.input}
+							placeholder="Mot de passe"
+							placeholderTextColor="#1d262a"
+							secureTextEntry={true}
+							onChangeText={value => {
+								this.handleChange('password', value);
+							}}
+							value={password}
+						/>
+						<Text style={[styles.textCenter]}>
+							{this.state.error === true
+								? 'Téléphone / Mot de passe invalide'
+								: ''}
+						</Text>
+						<TouchableOpacity
+							onPress={this.login}
+							style={[customStyles.button, styles.marginV10]}
+						>
+							<Text style={[styles.textCenter, styles.textWhite]}>
+								Se connecter
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => this.props.navigation.navigate('ForgotPassword')}
+							style={[customStyles.buttonSecondary]}
+						>
+							<Text style={[styles.textCenter, styles.textBlack]}>
+								Mot de passe oublié ?
+							</Text>
+						</TouchableOpacity>
+					</View>
+				</KeyboardAvoidingView>
+			</ImageBackground>
 		);
 	}
 }
 
-/*
 const customStyles = StyleSheet.create({
-	customCSS: {}
+	input: {
+		backgroundColor: '#FFF',
+		borderRadius: 3,
+		padding: 15,
+		width: Dimensions.get('window').width - 60,
+		margin: 10
+	},
+	button: {
+		backgroundColor: '#1d262a',
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		width: Dimensions.get('window').width - 60
+	},
+	buttonSecondary: {
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		borderWidth: 1,
+		borderColor: '#1d262a',
+		width: Dimensions.get('window').width - 60
+	}
 });
-*/
 
 export default Login;
