@@ -86,7 +86,7 @@ class ChallengesList extends React.Component {
 					// available options: https://developers.google.com/places/web-service/autocomplete
 					key: "AIzaSyDVe2qiHnbsUl7Jrnt8S_I02UnVcBtT_0U",
 					language: "fr", // language of the results
-					types: "(cities)" // default: 'geocode'
+					types: ["(address)", "(region)", "(cities)", "(geocode)"] // default: 'geocode'
 				}}
 				styles={{
 					container: {
