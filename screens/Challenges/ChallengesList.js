@@ -334,6 +334,8 @@ class ChallengesList extends React.Component {
 					</View>
 					<Filters
 						getFilters={this.getFilters}
+						latitude={this.state.params.latitude}
+						longitude={this.state.params.longitude}
 						distance={this.state.params.distance}
 						filterHelpers={this.state.filterHelpers}
 					/>
@@ -388,8 +390,8 @@ class ChallengesList extends React.Component {
 								{
 									params: {
 										distance: 3000000,
-										latitude: 45,
-										longitude: 2
+										latitude: 45.7725738,
+										longitude: 2.9644431
 									},
 									filterHelpers: {
 										Environnement: true,
