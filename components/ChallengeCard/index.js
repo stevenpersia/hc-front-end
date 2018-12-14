@@ -60,12 +60,13 @@ class ChallengeCard extends React.Component {
 			<View
 				style={[
 					styles.card,
-					styles.bgBlack,
 
 					{
 						overflow: "hidden",
 						width: this.props.map ? "100%" : Dimensions.get("window").width,
-						borderRadius: this.props.map ? 15 : 0
+						borderRadius: this.props.map ? 15 : 0,
+						height: this.props.map ? 200 : 250,
+						backgroundColor: this.props.color || "black"
 					}
 				]}
 			>
@@ -118,10 +119,10 @@ class ChallengeCard extends React.Component {
 						position: "absolute",
 						top: 0,
 						left: 0,
-						height: this.props.map ? 200 : 250,
+						height: this.props.map ? 198 : 250,
 						width: "100%",
 						zIndex: 0,
-						opacity: 0.7
+						opacity: this.props.map ? 0.95 : 0.7
 					}}
 					source={{
 						uri: challenge.media.images[0].url

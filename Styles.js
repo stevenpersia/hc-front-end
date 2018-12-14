@@ -28,7 +28,7 @@ export default StyleSheet.create({
 	},
 	/* CARD */
 	card: {
-		height: 250,
+
 		alignItems: 'center',
 		justifyContent: 'center'
 	},

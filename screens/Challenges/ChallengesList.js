@@ -261,15 +261,20 @@ class ChallengesList extends React.Component {
 	}
 
 	// Show the cards
-	_renderCards({ item, index }) {
+	_renderCards = ({ item, index }) => {
 		return (
 			<TouchableOpacity
 				onPress={() => this.props.navigation.navigate("Challenge")}
 			>
-				<ChallengeCard id={item._id} challenge={item} map />
+				<ChallengeCard
+					id={item._id}
+					challenge={item}
+					color={this.getCategoryColors(item.ref.category.name)}
+					map
+				/>
 			</TouchableOpacity>
 		);
-	}
+	};
 
 	// Show the filters
 	renderFilters() {
