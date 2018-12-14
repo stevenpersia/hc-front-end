@@ -4,6 +4,7 @@ import UserDetails from './containers/UserDetails';
 import ConfirmPhoneNumber from './containers/ConfirmPhoneNumber';
 import SmsActivation from './containers/SmsActivation';
 import LastStep from './containers/LastStep';
+import { AsyncStorage } from 'react-native';
 
 class Signup extends React.Component {
 	static navigationOptions = {
@@ -74,7 +75,6 @@ class Signup extends React.Component {
 	// Final register button with conditions
 	register = () => {
 		const { avatar, username, phoneNumber, password, email } = this.state;
-		console.log(username, phoneNumber, password, email, avatar);
 
 		axios
 			.post('https://human-challenge-back-end.herokuapp.com/api/signup/', {
@@ -94,6 +94,8 @@ class Signup extends React.Component {
 				files: [avatar]
 			})
 			.then(response => {
+				AsyncStorage.setItem('id', response.data._id);
+				AsyncStorage.setItem('token', response.data.security.token);
 				this.props.navigation.navigate('ChallengesMap');
 			})
 			.catch(err => {

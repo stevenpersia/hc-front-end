@@ -15,6 +15,7 @@ import {
 import styles from '../../Styles';
 import { ImagePicker, Camera, Permissions } from 'expo';
 import { Entypo } from '@expo/vector-icons';
+import { AsyncStorage } from 'react-native';
 
 class Settings extends React.Component {
 	static navigationOptions = {
@@ -35,7 +36,11 @@ class Settings extends React.Component {
 		image: 'WOW',
 		hasCameraPermission: null,
 		showCamera: false,
-		avatar: ''
+		avatar: '',
+		auth: {
+			id: '',
+			token: ''
+		}
 	};
 
 	async componentWillMount() {
@@ -48,6 +53,7 @@ class Settings extends React.Component {
 		this.setState({ [key]: value });
 	};
 
+	// Render picture
 	renderPicture = () => {
 		let { image, showCamera } = this.state;
 
@@ -94,7 +100,9 @@ class Settings extends React.Component {
 		const { username, phoneNumber, email, password, avatar } = this.state;
 		axios
 			.put(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/update/5c117fbd39ec4800168972ce',
+				`https://human-challenge-back-end.herokuapp.com/api/settings/update/${
+					this.state.auth.id
+				}`,
 				{
 					account: {
 						username: username,
@@ -112,13 +120,11 @@ class Settings extends React.Component {
 				},
 				{
 					headers: {
-						Authorization:
-							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
+						Authorization: this.state.auth.token
 					}
 				}
 			)
 			.then(response => {
-				console.log(response.data);
 				this.setState({
 					message: {
 						error: false,
@@ -138,38 +144,53 @@ class Settings extends React.Component {
 	};
 
 	// Log out
-	logout = () => {};
+	logout = () => {
+		AsyncStorage.multiRemove(['id', 'token'], err => {
+			this.setState(
+				{
+					auth: {
+						id: '',
+						token: ''
+					}
+				},
+				() => {
+					this.props.navigation.navigate('Authentication');
+				}
+			);
+		});
+	};
 
 	// Delete my account
 	delete = () => {
-		axios
-			.delete(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/remove/5c117fbd39ec4800168972ce',
-				{
-					headers: {
-						Authorization:
-							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
+		AsyncStorage.multiRemove(['id', 'token'], err => {
+			axios
+				.delete(
+					`https://human-challenge-back-end.herokuapp.com/api/settings/remove/${
+						this.state.auth.id
+					}`,
+					{
+						headers: {
+							Authorization: this.state.auth.token
+						}
 					}
-				}
-			)
-			.then(response => {
-				console.log(response);
-				this.props.navigation.navigate('Walkthrough');
-			})
-			.catch(error => {
-				console.log(error);
-				this.setState({
-					message: {
-						error: true,
-						success: false
-					}
+				)
+				.then(response => {
+					this.props.navigation.navigate('Authentication');
+				})
+				.catch(error => {
+					console.log(error);
+					this.setState({
+						message: {
+							error: true,
+							success: false
+						}
+					});
 				});
-			});
+		});
 	};
 
 	render() {
 		const { email, phoneNumber, password, username } = this.state;
-
 		return (
 			<ImageBackground
 				source={require('../../assets/images/bg/02.jpg')}
@@ -336,38 +357,49 @@ class Settings extends React.Component {
 	}
 
 	componentDidMount() {
-		axios
-			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/settings/5c117fbd39ec4800168972ce',
-				{
-					headers: {
-						Authorization:
-							'1qluNSDafeiiBdTN0HqtQXLehF4OhnYW1IX7TviSDZipc4cZhBCyolJxv9pqMLmG'
-					}
-				}
-			)
-			.then(response => {
-				console.log(response.data);
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
 
-				if (response.data.user.account.avatar.length > 0) {
-					this.setState({
-						phoneNumber: response.data.user.account.phoneNumber,
-						email: response.data.user.account.email,
-						username: response.data.user.account.username,
-						image: response.data.user.account.avatar[0].url,
-						avatar: response.data.user.account.avatar[0].url
-					});
-				} else {
-					this.setState({
-						phoneNumber: response.data.user.account.phoneNumber,
-						email: response.data.user.account.email,
-						username: response.data.user.account.username
-					});
+			this.setState(
+				{
+					auth: {
+						id,
+						token
+					}
+				},
+				() => {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/settings/${
+								this.state.auth.id
+							}`,
+							{
+								headers: {
+									Authorization: this.state.auth.token
+								}
+							}
+						)
+						.then(response => {
+							if (response.data.user.account.avatar.length > 0) {
+								this.setState({
+									phoneNumber: response.data.user.account.phoneNumber,
+									email: response.data.user.account.email,
+									username: response.data.user.account.username,
+									image: response.data.user.account.avatar[0].url,
+									avatar: response.data.user.account.avatar[0].url
+								});
+							} else {
+								this.setState({
+									phoneNumber: response.data.user.account.phoneNumber,
+									email: response.data.user.account.email,
+									username: response.data.user.account.username
+								});
+							}
+						});
 				}
-			})
-			.catch(error => {
-				console.log(error);
-			});
+			);
+		});
 	}
 
 	_pickImage = async () => {
