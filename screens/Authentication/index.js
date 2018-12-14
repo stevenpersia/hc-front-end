@@ -5,7 +5,8 @@ import {
 	View,
 	TouchableOpacity,
 	ImageBackground,
-	Image
+	Image,
+	StatusBar
 } from 'react-native';
 import styles from '../../Styles';
 import { Entypo } from '@expo/vector-icons';
@@ -22,6 +23,7 @@ class Authentication extends React.Component {
 				source={require('../../assets/images/bg/01.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<StatusBar hidden />
 				<TouchableOpacity
 					onPress={() =>
 						this.props.navigation.dispatch(DrawerActions.toggleDrawer())
