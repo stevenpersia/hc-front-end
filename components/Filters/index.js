@@ -78,6 +78,8 @@ class Filters extends React.Component {
 
 	allOfTheparams() {
 		return {
+			latitude: this.props.params.latitude,
+			longitude: this.props.params.longitude,
 			distance: this.state.distance,
 			duration: this.getDurationParam(),
 			category: this.getCategoryParam()
@@ -202,7 +204,7 @@ class Filters extends React.Component {
 							title={"Sur combien de Km souhaitez-vous faire la recherche"}
 							min={1}
 							max={150}
-							value={Number(this.props.distance)}
+							value={Number(this.props.distance) / 1000}
 							width={width}
 							height={40}
 							decimalPlaces={0}
@@ -213,12 +215,15 @@ class Filters extends React.Component {
 								"rgb(128,128,128)",
 								"rgb(0,0,0)"
 							]}
-							onValueChanged={value => this.setState({ distance: value })}
-							onPressIn={() => console.log("Pressed in")}
+							onValueChanged={value =>
+								this.setState({ distance: value * 1000 })
+							}
+							onPressIn={() => {}}
 							onPressOut={() => {
+								console.log("props ", this.props);
 								this.props.getFilters(this.allOfTheparams(), this.getHelpers());
 							}}
-							onDrag={() => console.log("Dragging")}
+							onDrag={() => {}}
 						/>
 					</View>
 				</View>

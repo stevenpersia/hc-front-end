@@ -10,7 +10,8 @@ import {
 	Dimensions,
 	Modal,
 	TouchableHighlight,
-	TextInput
+	TextInput,
+	StatusBar
 } from "react-native";
 import { MapView } from "expo";
 import styles from "../../Styles";
@@ -39,14 +40,15 @@ const socialColor = "#18DE22";
 const cultureColor = "#DF4FFF";
 class ChallengesList extends React.Component {
 	static navigationOptions = {
-		header: null
+		header: null,
+		StatusBar: "hidden"
 	};
 
 	state = {
 		step: 1,
 		modalVisible: false,
 		params: {
-			distance: 60,
+			distance: 50000,
 			name: "",
 			latitude: 45.7725738,
 			longitude: 2.9644431
@@ -329,6 +331,7 @@ class ChallengesList extends React.Component {
 					</View>
 					<Filters
 						getFilters={this.getFilters}
+						params={this.state.params}
 						distance={this.state.params.distance}
 						filterHelpers={this.state.filterHelpers}
 					/>
