@@ -13,10 +13,12 @@ import styles from '../../Styles';
 import axios from 'axios';
 import ChallengeCard from '../../components/ChallengeCard';
 import { format } from 'date-fns';
+import { AsyncStorage } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
 
 class Profile extends React.Component {
 	static navigationOptions = {
-		header: null
+		headerLeft: <Entypo name="chevron-left" size={25} color="black" />
 	};
 
 	state = {
@@ -37,7 +39,11 @@ class Profile extends React.Component {
 		},
 		challengesPlayerItems: [],
 		challengesManagerItems: [],
-		challengesFinishedItems: []
+		challengesFinishedItems: [],
+		auth: {
+			id: '',
+			token: ''
+		}
 	};
 
 	// Return this if no challenges
@@ -294,13 +300,26 @@ class Profile extends React.Component {
 	}
 
 	async componentDidMount() {
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
+
+			this.setState({
+				auth: {
+					id,
+					token
+				}
+			});
+		});
+
 		// Find profile
 		const response = await axios.get(
-			'https://human-challenge-back-end.herokuapp.com/api/profile/5c11228a5bc6600016c06192',
+			`https://human-challenge-back-end.herokuapp.com/api/profile/${
+				this.state.auth.id
+			}`,
 			{
 				headers: {
-					Authorization:
-						'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
+					Authorization: this.state.auth.token
 				}
 			}
 		);
@@ -338,32 +357,21 @@ class Profile extends React.Component {
 			}
 		}
 
-		this.setState(
-			{
-				user: {
-					account: {
-						username: response.data.account.username,
-						avatar: response.data.account.avatar[0].url
-					},
-					challenges: {
-						player: response.data.challenges.player,
-						manager: response.data.challenges.manager
-					}
+		this.setState({
+			user: {
+				account: {
+					username: response.data.account.username,
+					avatar: response.data.account.avatar[0].url
 				},
-				challengesPlayerItems: challengesPlayerFound,
-				challengesManagerItems: challengesManagerFound,
-				challengesFinishedItems: challengesFinishedFound
+				challenges: {
+					player: response.data.challenges.player,
+					manager: response.data.challenges.manager
+				}
 			},
-			() => {
-				console.log({
-					challengesPlayerItems: challengesPlayerFound,
-					challengesManagerItems: challengesManagerFound,
-					challengesFinishedItems: challengesFinishedFound
-				});
-			}
-		);
-
-		console.log('à la bien couzéin');
+			challengesPlayerItems: challengesPlayerFound,
+			challengesManagerItems: challengesManagerFound,
+			challengesFinishedItems: challengesFinishedFound
+		});
 	}
 }
 
@@ -377,7 +385,7 @@ const customStyles = StyleSheet.create({
 		paddingTop: 50
 	},
 	avatar: {
-		backgroundColor: '#DDD',
+		backgroundColor: '#1d262a',
 		width: 100,
 		height: 100,
 		borderRadius: 50,
