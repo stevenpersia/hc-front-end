@@ -300,16 +300,29 @@ class Profile extends React.Component {
 	}
 
 	async componentDidMount() {
-		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
-			const id = stores[0][1];
-			const token = stores[1][1];
+		// AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+		// 	const id = stores[0][1];
+		// 	const token = stores[1][1];
 
-			this.setState({
-				auth: {
-					id,
-					token
-				}
-			});
+		// 	this.setState({
+		// 		auth: {
+		// 			id,
+		// 			token
+		// 		}
+		// 	});
+		// });
+
+		const stores = await AsyncStorage.multiGet(['id', 'token']);
+		console.log('stores', stores);
+
+		const id = stores[0][1];
+		const token = stores[1][1];
+
+		await this.setState({
+			auth: {
+				id,
+				token
+			}
 		});
 
 		// Find profile
