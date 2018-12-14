@@ -5,6 +5,10 @@ import ChangePassword from './containers/ChangePassword';
 import LastStep from './containers/LastStep';
 
 class ForgotPassword extends React.Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
 		step: 1,
 		phoneNumber: '',

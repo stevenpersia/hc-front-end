@@ -6,14 +6,21 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
-	Dimensions
+	Dimensions,
+	ImageBackground
 } from 'react-native';
 import styles from '../../Styles';
 import axios from 'axios';
 import ChallengeCard from '../../components/ChallengeCard';
 import { format } from 'date-fns';
+import { AsyncStorage } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
 
 class Profile extends React.Component {
+	static navigationOptions = {
+		headerLeft: <Entypo name="chevron-left" size={25} color="black" />
+	};
+
 	state = {
 		user: {
 			account: {
@@ -32,7 +39,11 @@ class Profile extends React.Component {
 		},
 		challengesPlayerItems: [],
 		challengesManagerItems: [],
-		challengesFinishedItems: []
+		challengesFinishedItems: [],
+		auth: {
+			id: '',
+			token: ''
+		}
 	};
 
 	// Return this if no challenges
@@ -74,9 +85,9 @@ class Profile extends React.Component {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => this.props.navigation.navigate('CreateChallenge')}
-					style={[styles.button, styles.secondaryButtonColor, styles.w100]}
+					style={[styles.buttonSecondary, styles.w100]}
 				>
-					<Text style={[styles.textCenter, styles.textWhite]}>
+					<Text style={[styles.textCenter, styles.blackColor]}>
 						Créer un défi
 					</Text>
 				</TouchableOpacity>
@@ -88,7 +99,7 @@ class Profile extends React.Component {
 	renderList = () => {
 		const { participate, organizer, finished } = this.state.tabs;
 
-		if (participate === true) {
+		if (participate) {
 			if (this.state.challengesPlayerItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -106,7 +117,7 @@ class Profile extends React.Component {
 			}
 		}
 
-		if (organizer === true) {
+		if (organizer) {
 			if (this.state.challengesManagerItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -124,7 +135,7 @@ class Profile extends React.Component {
 			}
 		}
 
-		if (finished === true) {
+		if (finished) {
 			if (this.state.challengesFinishedItems.length === 0) {
 				return this.noChallenges();
 			} else {
@@ -181,153 +192,199 @@ class Profile extends React.Component {
 		const { player, manager } = this.state.user.challenges;
 
 		return (
-			<View style={[{ justifyContent: 'center', flex: 1 }]}>
-				<View
-					style={[
-						customStyles.avatarContainer,
-
-						{ justifyContent: 'center', textAlign: 'center', width: 'auto' }
-					]}
+			<View style={[{ justifyContent: 'center' }]}>
+				<ImageBackground
+					source={require('../../assets/images/bg/02.jpg')}
+					style={[styles.fullW, styles.fullH, { resizeMode: 'cover' }]}
 				>
-					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{player.length}</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							défis
-						</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							participés
-						</Text>
+					<View
+						style={[
+							customStyles.avatarContainer,
+
+							{ justifyContent: 'center', textAlign: 'center', width: 'auto' }
+						]}
+					>
+						<View style={{ width: 100 }}>
+							<Text style={[styles.h4, styles.textCenter, styles.blackColor]}>
+								{player.length}
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								défis
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								participés
+							</Text>
+						</View>
+						<View style={customStyles.avatar}>
+							<Image
+								style={{
+									width: 100,
+									height: 100,
+									borderRadius: 50,
+									borderWidth: 3,
+									borderColor: '#FFF'
+								}}
+								source={{ uri: avatar.toString() }}
+							/>
+						</View>
+						<View style={{ width: 100 }}>
+							<Text style={[styles.h4, styles.textCenter, styles.blackColor]}>
+								{manager.length}
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								défis
+							</Text>
+							<Text
+								style={[
+									styles.text,
+									styles.textCenter,
+									styles.uppercase,
+									styles.blackColor
+								]}
+							>
+								réalisés
+							</Text>
+						</View>
 					</View>
-					<View style={customStyles.avatar}>
-						<Image
-							style={{ width: 100, height: 100, borderRadius: 50 }}
-							source={{ uri: avatar.toString() }}
-						/>
+					<Text style={[styles.h4, styles.paddingV10, styles.textCenter]}>
+						{username}
+					</Text>
+					<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
+						<TouchableOpacity onPress={() => this.listParticipate()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								Je participe
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => this.listOrganizer()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								J'organise
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => this.listFinished()}>
+							<Text
+								style={[styles.textWhite, styles.uppercase, customStyles.tab]}
+							>
+								Terminés
+							</Text>
+						</TouchableOpacity>
 					</View>
-					<View style={{ width: 100 }}>
-						<Text style={[styles.h4, styles.textCenter]}>{manager.length}</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							défis
-						</Text>
-						<Text style={[styles.text, styles.textCenter, styles.uppercase]}>
-							réalisés
-						</Text>
-					</View>
-				</View>
-				<Text style={[styles.h4, styles.paddingV10, styles.textCenter]}>
-					{username}
-				</Text>
-				<View style={[styles.bgPrimaryColor, customStyles.tabs]}>
-					<TouchableOpacity onPress={() => this.listParticipate()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							Je participe
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => this.listOrganizer()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							J'organise
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => this.listFinished()}>
-						<Text
-							style={[styles.textWhite, styles.uppercase, customStyles.tab]}
-						>
-							Terminés
-						</Text>
-					</TouchableOpacity>
-				</View>
+				</ImageBackground>
 				{this.renderList()}
 			</View>
 		);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		// AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+		// 	const id = stores[0][1];
+		// 	const token = stores[1][1];
+
+		// 	this.setState({
+		// 		auth: {
+		// 			id,
+		// 			token
+		// 		}
+		// 	});
+		// });
+
+		const stores = await AsyncStorage.multiGet(['id', 'token']);
+		console.log('stores', stores);
+
+		const id = stores[0][1];
+		const token = stores[1][1];
+
+		await this.setState({
+			auth: {
+				id,
+				token
+			}
+		});
+
 		// Find profile
-		axios
-			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/profile/5c11228a5bc6600016c06192',
-				{
-					headers: {
-						Authorization:
-							'WgZNIDDBXk7kl97wzkNSWEKrvQ9MfOcOyMlsLzq1ShOHslvTqw5niR5amQciFxSv'
-					}
+		const response = await axios.get(
+			`https://human-challenge-back-end.herokuapp.com/api/profile/${
+				this.state.auth.id
+			}`,
+			{
+				headers: {
+					Authorization: this.state.auth.token
 				}
-			)
-			.then(response => {
-				// Grab all finished challenges
-				let challengesFinishedFound = [];
+			}
+		);
+		// Grab all finished challenges
+		let challengesFinishedFound = [];
 
-				// Grab all challenges who participate
-				let challengesPlayerFound = [];
-				for (let i = 0; i < response.data.challenges.player.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								response.data.challenges.player[i]._id
-							}`
-						)
-						.then(response => {
-							if (
-								format(response.data.date.endDate, 'x') >
-								format(new Date(), 'x')
-							) {
-								challengesPlayerFound.push(response.data);
-							} else {
-								challengesFinishedFound.push(response.data);
-							}
-						})
-						.catch(error => {
-							console.log(error);
-						});
+		// Grab all challenges who participate
+		let challengesPlayerFound = [];
+		for (let i = 0; i < response.data.challenges.player.length; i++) {
+			const res = await axios.get(
+				`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+					response.data.challenges.player[i]._id
+				}`
+			);
+			if (format(res.data.date.endDate, 'x') > format(new Date(), 'x')) {
+				challengesPlayerFound.push(res.data);
+			} else {
+				challengesFinishedFound.push(res.data);
+			}
+		}
+
+		// Grab all challenges who organize
+		let challengesManagerFound = [];
+		for (let i = 0; i < response.data.challenges.manager.length; i++) {
+			const res = await axios.get(
+				`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+					response.data.challenges.manager[i]._id
+				}`
+			);
+
+			if (format(res.data.date.endDate, 'x') > format(new Date(), 'x')) {
+				challengesManagerFound.push(res.data);
+			} else {
+				challengesFinishedFound.push(res.data);
+			}
+		}
+
+		this.setState({
+			user: {
+				account: {
+					username: response.data.account.username,
+					avatar: response.data.account.avatar[0].url
+				},
+				challenges: {
+					player: response.data.challenges.player,
+					manager: response.data.challenges.manager
 				}
-
-				// Grab all challenges who organize
-				let challengesManagerFound = [];
-				for (let i = 0; i < response.data.challenges.manager.length; i++) {
-					axios
-						.get(
-							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
-								response.data.challenges.manager[i]._id
-							}`
-						)
-						.then(response => {
-							if (
-								format(response.data.date.endDate, 'x') >
-								format(new Date(), 'x')
-							) {
-								challengesManagerFound.push(response.data);
-							} else {
-								challengesFinishedFound.push(response.data);
-							}
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
-
-				this.setState({
-					user: {
-						account: {
-							username: response.data.account.username,
-							avatar: response.data.account.avatar[0].url
-						},
-						challenges: {
-							player: response.data.challenges.player,
-							manager: response.data.challenges.manager
-						}
-					},
-					challengesPlayerItems: challengesPlayerFound,
-					challengesManagerItems: challengesManagerFound,
-					challengesFinishedItems: challengesFinishedFound
-				});
-			})
-			.catch(error => {
-				console.log(error);
-			});
+			},
+			challengesPlayerItems: challengesPlayerFound,
+			challengesManagerItems: challengesManagerFound,
+			challengesFinishedItems: challengesFinishedFound
+		});
 	}
 }
 
@@ -337,13 +394,14 @@ const customStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: Dimensions.get('window').width - 60,
-		marginTop: 20
+		marginTop: 20,
+		paddingTop: 50
 	},
 	avatar: {
-		backgroundColor: '#DDD',
+		backgroundColor: '#1d262a',
 		width: 100,
 		height: 100,
-		borderRadius: 100,
+		borderRadius: 50,
 		margin: 10
 	},
 	tabs: {

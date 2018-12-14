@@ -57,12 +57,12 @@ class IconList extends React.Component {
 
     for (let i = 0; i < this.test.length; i++) {
       result.push(
-        <Tooltip popover={<Text>{this.test[i].name}</Text>}>
+        // La clé key doit se trouvé dans le parent Tooltip :contient l'enfant Icon.
+        <Tooltip key={i} popover={<Text>{this.test[i].name}</Text>}>
           <Icon
             //   icon={icons[i].icon.url[0]}
             icon={this.test[i].icon.url}
             name={this.test[i].name}
-            key={i}
           />
         </Tooltip>
       );
