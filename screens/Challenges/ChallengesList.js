@@ -349,13 +349,6 @@ class ChallengesList extends React.Component {
 					}
 				]}
 			>
-				<ListBar
-					setModalVisible={this.setModalVisible}
-					toggleDisplay={this.toggleDisplay}
-					enable={this.props.enable}
-					setStep={this.setStep}
-					whereAmI={this.state.step}
-				/>
 				{this.renderFilters()}
 				<View
 					style={[
@@ -430,6 +423,13 @@ class ChallengesList extends React.Component {
 						</Text>
 					</TouchableOpacity>
 				</View>
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+					enable={this.props.enable}
+					setStep={this.setStep}
+					whereAmI={this.state.step}
+				/>
 			</View>
 		);
 	}
@@ -438,43 +438,8 @@ class ChallengesList extends React.Component {
 	renderList() {
 		return (
 			<View style={[styles.container]}>
-				<ListBar
-					setModalVisible={this.setModalVisible}
-					toggleDisplay={this.toggleDisplay}
-					enable={this.state.enable}
-					setStep={this.setStep}
-					whereAmI={this.state.step}
-				/>
 				{this.renderFilters()}
-				<Display
-					style={{ position: "absolute", top: 60, zIndex: 15 }}
-					enable={this.state.enable}
-					enterDuration={500}
-					exitDuration={250}
-					exit="fadeOutLeft"
-					enter="fadeInLeft"
-				>
-					<TextInput
-						placeholder="Nom du Challenge"
-						style={{
-							paddingLeft: 20,
-							backgroundColor: "white",
-							height: 40,
-							borderColor: "blue",
-							borderWidth: 1,
-							borderRadius: 20,
-							width: 300,
-							marginBottom: 10
-						}}
-						onChangeText={text =>
-							this.setState(
-								{ params: { ...this.state.params, name: text } },
-								() => this.getChallenges()
-							)
-						}
-						value={this.state.params.name}
-					/>
-				</Display>
+
 				<View>
 					<FlatList
 						data={this.state.Challenges}
@@ -519,6 +484,42 @@ class ChallengesList extends React.Component {
 						}}
 					/>
 				</View>
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+					enable={this.state.enable}
+					setStep={this.setStep}
+					whereAmI={this.state.step}
+				/>
+				<Display
+					style={{ position: "absolute", top: 60, zIndex: 15 }}
+					enable={this.state.enable}
+					enterDuration={500}
+					exitDuration={250}
+					exit="fadeOutLeft"
+					enter="fadeInLeft"
+				>
+					<TextInput
+						placeholder="Nom du Challenge"
+						style={{
+							paddingLeft: 20,
+							backgroundColor: "white",
+							height: 40,
+							borderColor: "blue",
+							borderWidth: 1,
+							borderRadius: 20,
+							width: 300,
+							marginBottom: 10
+						}}
+						onChangeText={text =>
+							this.setState(
+								{ params: { ...this.state.params, name: text } },
+								() => this.getChallenges()
+							)
+						}
+						value={this.state.params.name}
+					/>
+				</Display>
 			</View>
 		);
 	}
@@ -546,39 +547,7 @@ class ChallengesList extends React.Component {
 	renderCaseMap() {
 		return (
 			<View style={[styles.container, { flex: 1 }]}>
-				<ListBar
-					setModalVisible={this.setModalVisible}
-					toggleDisplay={this.toggleDisplay}
-					enable={this.state.enable}
-					setStep={this.setStep}
-					whereAmI={this.state.step}
-				/>
 				{this.renderFilters()}
-				<Display
-					style={{ position: "absolute", top: 60, zIndex: 15 }}
-					enable={this.state.enable}
-					enterDuration={500}
-					exitDuration={250}
-					exit="fadeOutLeft"
-					enter="fadeInLeft"
-				>
-					{this.GooglePlacesInput()}
-				</Display>
-				<View style={{ position: "absolute", bottom: 40, zIndex: 2 }}>
-					<Carousel
-						ref={c => {
-							this._carousel = c;
-						}}
-						data={this.state.Challenges}
-						renderItem={this._renderCards}
-						sliderWidth={Dimensions.get("window").width}
-						itemWidth={Dimensions.get("window").width - 60}
-						enableSnap={true}
-						loop={true}
-						inactiveSlideOpacity={0.4}
-						onSnapToItem={slideIndex => this.centerMapOnMarker(slideIndex)}
-					/>
-				</View>
 				<MapView
 					ref={component => (this._map = component)}
 					style={{
@@ -598,6 +567,38 @@ class ChallengesList extends React.Component {
 				>
 					{this.renderMarkers()}
 				</MapView>
+				<ListBar
+					setModalVisible={this.setModalVisible}
+					toggleDisplay={this.toggleDisplay}
+					enable={this.state.enable}
+					setStep={this.setStep}
+					whereAmI={this.state.step}
+				/>
+				<View style={{ position: "absolute", bottom: 40, zIndex: 2 }}>
+					<Carousel
+						ref={c => {
+							this._carousel = c;
+						}}
+						data={this.state.Challenges}
+						renderItem={this._renderCards}
+						sliderWidth={Dimensions.get("window").width}
+						itemWidth={Dimensions.get("window").width - 60}
+						enableSnap={true}
+						loop={true}
+						inactiveSlideOpacity={0.4}
+						onSnapToItem={slideIndex => this.centerMapOnMarker(slideIndex)}
+					/>
+				</View>
+				<Display
+					style={{ position: "absolute", top: 60, zIndex: 15 }}
+					enable={this.state.enable}
+					enterDuration={500}
+					exitDuration={250}
+					exit="fadeOutLeft"
+					enter="fadeInLeft"
+				>
+					{this.GooglePlacesInput()}
+				</Display>
 			</View>
 		);
 	}

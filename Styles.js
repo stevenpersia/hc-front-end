@@ -235,8 +235,6 @@ export default StyleSheet.create({
 	fullHeight: fullH,
 	fullWidth: fullW,
 
-	<<
-	<< << < HEAD
 	/* SCREEN RESOLUTIONS & DIMENSIONS */
 	fullHeight: {
 		height: fullH
@@ -267,40 +265,6 @@ export default StyleSheet.create({
 		borderBottomLeftRadius: 5,
 		borderBottomRightRadius: 5
 	},
-	===
-	=== =
-	/* SCREEN RESOLUTIONS & DIMENSIONS */
-	fullHeight: {
-		height: fullH
-	},
-	fullWidth: {
-		width: fullW
-	},
-	w100: {
-		width: Dimensions.get("window").width - 60
-	},
-	/* BORDER RADIUS SISILAFAMILLE TOVO */
-	rounded: {
-		borderRadius: 5
-	},
-	roundedTop: {
-		borderTopLeftRadius: 5,
-		borderTopRightRadius: 5
-	},
-	roundedLeft: {
-		borderTopLeftRadius: 5,
-		borderBottomLeftRadius: 5
-	},
-	roundedRight: {
-		borderTopRightRadius: 5,
-		borderBottomRightRadius: 5
-	},
-	roundedBottom: {
-		borderBottomLeftRadius: 5,
-		borderBottomRightRadius: 5
-	},
-	>>>
-	>>> > adding carroussel
 
 	/* PADDING 10 PX */
 	padding10: {
