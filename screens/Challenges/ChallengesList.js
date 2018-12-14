@@ -40,8 +40,7 @@ const socialColor = "#18DE22";
 const cultureColor = "#DF4FFF";
 class ChallengesList extends React.Component {
 	static navigationOptions = {
-		header: null,
-		StatusBar: "hidden"
+		header: null
 	};
 
 	state = {
@@ -235,6 +234,10 @@ class ChallengesList extends React.Component {
 		});
 	};
 
+	goToTheChallenge = () => {
+		this.props.navigation.navigate("Challenge");
+	};
+
 	// Show the markers
 	renderMarkers() {
 		const tab = [];
@@ -265,9 +268,7 @@ class ChallengesList extends React.Component {
 	// Show the cards
 	_renderCards({ item, index }) {
 		return (
-			<TouchableOpacity
-				onPress={() => this.props.navigation.navigate("Challenge")}
-			>
+			<TouchableOpacity key={index} onPress={() => this.goToTheChallenge()}>
 				<ChallengeCard id={item._id} challenge={item} map />
 			</TouchableOpacity>
 		);
@@ -493,9 +494,7 @@ class ChallengesList extends React.Component {
 									>
 										<TouchableOpacity
 											// Ajouter les props pour Anne et enlever le truc moche quand tu click
-											onPress={() =>
-												this.props.navigation.navigate("Challenge")
-											}
+											onPress={() => this.goToTheChallenge()}
 										>
 											<ChallengeCard id={item._id} challenge={item} />
 										</TouchableOpacity>
@@ -510,9 +509,7 @@ class ChallengesList extends React.Component {
 									>
 										<TouchableOpacity
 											// Ajouter les props pour Anne et enlever le truc moche quand tu click
-											onPress={() =>
-												this.props.navigation.navigate("Challenge")
-											}
+											onPress={() => this.goToTheChallenge()}
 										>
 											<ChallengeCard id={item._id} challenge={item} />
 										</TouchableOpacity>
@@ -573,12 +570,12 @@ class ChallengesList extends React.Component {
 							this._carousel = c;
 						}}
 						data={this.state.Challenges}
-						renderItem={this._renderCards}
 						sliderWidth={Dimensions.get("window").width}
 						itemWidth={Dimensions.get("window").width - 60}
 						enableSnap={true}
 						loop={true}
 						inactiveSlideOpacity={0.4}
+						renderItem={this._renderCards.bind(this)}
 						onSnapToItem={slideIndex => this.centerMapOnMarker(slideIndex)}
 					/>
 				</View>

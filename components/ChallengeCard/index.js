@@ -5,7 +5,8 @@ import {
 	View,
 	ActivityIndicator,
 	Image,
-	Dimensions
+	Dimensions,
+	TouchableOpacity
 } from "react-native";
 import styles from "../../Styles";
 import { format, distanceInWords } from "date-fns";
