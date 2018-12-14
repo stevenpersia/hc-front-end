@@ -159,6 +159,7 @@ const customStyles = StyleSheet.create({
 		width: Dimensions.get('window').width - 60
 	},
 	buttonSecondary: {
+		backgroundColor: '#FFF',
 		paddingVertical: 15,
 		paddingHorizontal: 30,
 		borderRadius: 3,
