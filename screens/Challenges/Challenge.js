@@ -1,30 +1,27 @@
 import React from "react";
 import {
-  TouchableOpacity,
   StyleSheet,
   Image,
   Text,
   View,
   ScrollView,
-  FlatList
+  TouchableOpacity
 } from "react-native";
 import axios from "axios";
 import styles from "../../Styles";
-
 import ChallengeCard from "../../components/ChallengeCard";
 import AvatarList from "../../components/AvatarList";
 import IconList from "../../components/IconList";
 import { Tooltip } from "react-native-elements";
+import ChallengesMap from "../Challenges/ChallengesMap";
+
+const userTest = "5c069853c6e471212ce8b71c";
 
 class Challenge extends React.Component {
+  // ... donner une valeur par défaut aux clés de response.data
   state = {
-    isLoading: true,
-    ref: {},
-    adress: "",
-    // ... donner une valeur par défaut aux clés de response.data
-    owner: {
-      challenges: { player: [], manager: [] }
-    }
+    step: 1,
+    isLoading: true
     //  ref.category.name
   };
 
@@ -34,26 +31,101 @@ class Challenge extends React.Component {
         "https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877"
       )
       .then(response => {
-        console.log("responsedata", response.data);
+        /* console.log("responsedata", response.data); */
         this.setState(
           {
             ...response.data,
             isLoading: false
           },
           () => {
-            console.log("challenge", this.state);
+            /* console.log("challenge", this.state); */
           }
         );
       });
   }
-  // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27//
-  //on a importer style, et on va chercher dedans ce dont on besoin//
+  // basculer la position du challenge en récupérant le UseriD//
+  // envoyer le token
+  toggleChallenge(userId) {
+    axios.put(
+      "https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877",
+      { "security.token": req.headers.authorization.replace("Bearer ", "") }
+    );
+    console.log(userId);
+  }
+  //Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
+  //Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
+  renderButton() {
+    const challengers = this.state.challengers;
+    const buttonText = "Rejoindre le défi";
+    if (challengers.indexOf(userTest) > -1) {
+      buttonText = "Quitter le défi";
+    }
+    return (
+      <TouchableOpacity onPress={() => this.toggleChallenge(userTest)}>
+        <Text style={styles.button}>{buttonText}</Text>
+      </TouchableOpacity>
+    );
+    /* console.log("challengers", challengers); */
+  }
+
+  /* renderButton = () => {
+    // if(user === player(participant) &&  New Date > EndDate ) {render }alors défi est terminé
+    // if(user === manager(créateur de défi) && New Date > EndDate) alors défi est terminé
+    // if(user === player && New Date < EndDate ) alors il peut annuler son défi
+    // if(user === manager && New Date < EndDate ) alors il peut annuler son défi
+    // if(user !== player & user !== manager )  alors user doit s inscrire sur la page Signup
+
+    const dateNow = new Date();
+    if (player === true && dateNow > EndDate) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text>Le Défi est terminé</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (player === true && dateNow < EndDate) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text>Participer au défi</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (manager === true && dateNow > EndDate) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text>Le Défi est terminé</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (manager === true && dateNow < EndDate) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text>Participer au défi</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (user !== player && user !== manager) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text>Le Défi est terminé</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  }; */
+  // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27 //
+  // on a importer le style, et on va chercher dedans ce dont on besoin //
   render() {
-    console.log("this.state.owner.organizer", this.state.owner.organizer);
+    // console.log("this.state.owner.organizer", this.state.owner.organizer);
     if (this.state.isLoading === true) {
       return <Text>En cours de chargement ... </Text>;
     }
-    console.log("Sofiane", this.state);
+    // console.log("Sofiane", this.state);
     return (
       <ScrollView>
         <View style={[styles.h4, styles.bold, styles.textBlack]}>
@@ -110,7 +182,6 @@ class Challenge extends React.Component {
             </View>
           </View>
         </View>
-
         <View style={customStyles.squareGeneral}>
           <Text style={[styles.h4, styles.bold, styles.textBlack]}>
             Organisateur
@@ -125,7 +196,7 @@ class Challenge extends React.Component {
             <View style={customStyles.secondElement}>
               <Text>{this.state.owner.organizer}</Text>
               <Text>
-                {this.state.owner.challenges.manager.length} défis réalisés
+                {this.state.owner.challenges.manager.length} défis crées
               </Text>
             </View>
           </View>
@@ -155,6 +226,16 @@ class Challenge extends React.Component {
           <Text style={[styles.h4, styles.bold, styles.textBlack, {}]}>
             Mots-Clés
           </Text>
+        </View>
+        <ChallengesMap loc={this.state.loc} id={this.state._id} />
+        <View>
+          {this.renderButton()}
+          {/* <TouchableOpacity onPress={() => {}} style={[styles.button]}>
+            
+            <Text style={[styles.textCenter, styles.textWhite]}>
+              Participer à un défi
+            </Text>
+            </TouchableOpacity> */}
         </View>
       </ScrollView>
     );
