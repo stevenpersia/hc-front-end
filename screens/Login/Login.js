@@ -12,6 +12,8 @@ import {
 import styles from '../../Styles';
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
+import { DrawerActions } from 'react-navigation-drawer';
+import { Entypo } from '@expo/vector-icons';
 
 class Login extends React.Component {
 	static navigationOptions = {
@@ -60,6 +62,14 @@ class Login extends React.Component {
 				source={require('../../assets/images/bg/02.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<TouchableOpacity
+					onPress={() =>
+						this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+					}
+					style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+				>
+					<Entypo name="list" size={30} color="black" />
+				</TouchableOpacity>
 				<KeyboardAvoidingView
 					style={[styles.container, { justifyContent: 'center' }]}
 					behavior="padding"
@@ -110,13 +120,20 @@ class Login extends React.Component {
 								Se connecter
 							</Text>
 						</TouchableOpacity>
+
 						<TouchableOpacity
 							onPress={() => this.props.navigation.navigate('ForgotPassword')}
-							style={[customStyles.buttonSecondary]}
+							style={[customStyles.buttonThird]}
 						>
 							<Text style={[styles.textCenter, styles.textBlack]}>
 								Mot de passe oublié ?
 							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => this.props.navigation.navigate('Signup')}
+							style={[customStyles.buttonThird, styles.marginV10, styles.w100]}
+						>
+							<Text style={[styles.textCenter]}>S'inscrire</Text>
 						</TouchableOpacity>
 					</View>
 				</KeyboardAvoidingView>
@@ -142,6 +159,13 @@ const customStyles = StyleSheet.create({
 		width: Dimensions.get('window').width - 60
 	},
 	buttonSecondary: {
+		paddingVertical: 15,
+		paddingHorizontal: 30,
+		borderRadius: 3,
+		margin: 10,
+		width: Dimensions.get('window').width - 60
+	},
+	buttonThird: {
 		paddingVertical: 15,
 		paddingHorizontal: 30,
 		borderRadius: 3,

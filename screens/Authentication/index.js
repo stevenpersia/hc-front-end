@@ -4,9 +4,12 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	ImageBackground
+	ImageBackground,
+	Image
 } from 'react-native';
 import styles from '../../Styles';
+import { Entypo } from '@expo/vector-icons';
+import { DrawerActions } from 'react-navigation-drawer';
 
 class Authentication extends React.Component {
 	static navigationOptions = {
@@ -19,6 +22,14 @@ class Authentication extends React.Component {
 				source={require('../../assets/images/bg/01.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<TouchableOpacity
+					onPress={() =>
+						this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+					}
+					style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+				>
+					<Entypo name="list" size={30} color="black" />
+				</TouchableOpacity>
 				<View
 					style={[
 						styles.container,
@@ -28,6 +39,21 @@ class Authentication extends React.Component {
 					behavior="padding"
 					enabled
 				>
+					<Image
+						source={require('../../assets/images/logo-hc.png')}
+						style={{ width: 180, height: 180 }}
+					/>
+					<Text
+						style={[
+							styles.h3,
+							styles.paddingTop10,
+							styles.textCenter,
+							styles.textWhite
+						]}
+					>
+						Human Challenge
+					</Text>
+
 					<Text
 						style={[
 							customStyles.text16,
@@ -66,6 +92,19 @@ class Authentication extends React.Component {
 						<Text style={[styles.textCenter]}>Se connecter</Text>
 					</TouchableOpacity>
 				</View>
+				<TouchableOpacity
+					onPress={() => this.props.navigation.navigate('ChallengesMap')}
+					style={{
+						position: 'absolute',
+						bottom: 30,
+						right: 25
+					}}
+				>
+					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+						<Text style={[styles.textWhite, customStyles.text16]}>Passer</Text>
+						<Entypo name="chevron-small-right" size={25} color="#FFF" />
+					</View>
+				</TouchableOpacity>
 			</ImageBackground>
 		);
 	}

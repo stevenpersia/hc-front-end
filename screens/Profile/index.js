@@ -15,10 +15,11 @@ import ChallengeCard from '../../components/ChallengeCard';
 import { format } from 'date-fns';
 import { AsyncStorage } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import { DrawerActions } from 'react-navigation-drawer';
 
 class Profile extends React.Component {
 	static navigationOptions = {
-		headerLeft: <Entypo name="chevron-left" size={25} color="black" />
+		header: null
 	};
 
 	state = {
@@ -197,6 +198,14 @@ class Profile extends React.Component {
 					source={require('../../assets/images/bg/02.jpg')}
 					style={[styles.fullW, styles.fullH, { resizeMode: 'cover' }]}
 				>
+					<TouchableOpacity
+						onPress={() =>
+							this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+						}
+						style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+					>
+						<Entypo name="list" size={30} color="black" />
+					</TouchableOpacity>
 					<View
 						style={[
 							customStyles.avatarContainer,
@@ -394,8 +403,7 @@ const customStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: Dimensions.get('window').width - 60,
-		marginTop: 20,
-		paddingTop: 50
+		marginTop: 10
 	},
 	avatar: {
 		backgroundColor: '#1d262a',
