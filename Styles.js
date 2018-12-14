@@ -1,4 +1,7 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import {
+	StyleSheet,
+	Dimensions
+} from 'react-native';
 
 const primaryColor = '#1d262a';
 const secondaryColor = '#CCC';
@@ -17,7 +20,6 @@ const fullW = Dimensions.get('window').width;
 const fullH = Dimensions.get('window').height;
 
 export default StyleSheet.create({
-<<<<<<< HEAD
 	/* GLOBAL */
 	container: {
 		flex: 1,
@@ -37,27 +39,6 @@ export default StyleSheet.create({
 	flexRowReverse: {
 		flexDirection: 'row-reverse'
 	},
-=======
-  /* GLOBAL */
-  container: {
-    flex: 1,
-    alignItems: "center"
-    /* justifyContent: "center" */
-  },
-  /* CARD */
-  card: {
-    height: 200,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  /* FLEX */
-  flexRow: {
-    flexDirection: "row"
-  },
-  flexRowReverse: {
-    flexDirection: "row-reverse"
-  },
->>>>>>> adding carroussel
 
 	/* TEXT COLORS */
 	textAnimauxColor: {
@@ -254,11 +235,18 @@ export default StyleSheet.create({
 	fullHeight: fullH,
 	fullWidth: fullW,
 
-<<<<<<< HEAD
+	<<
+	<< << < HEAD
 	/* SCREEN RESOLUTIONS & DIMENSIONS */
-	fullHeight: { height: fullH },
-	fullWidth: { width: fullW },
-	w100: { width: Dimensions.get('window').width - 60 },
+	fullHeight: {
+		height: fullH
+	},
+	fullWidth: {
+		width: fullW
+	},
+	w100: {
+		width: Dimensions.get('window').width - 60
+	},
 	/* BORDER RADIUS SISILAFAMILLE TOVO */
 	rounded: {
 		borderRadius: 5
@@ -279,38 +267,40 @@ export default StyleSheet.create({
 		borderBottomLeftRadius: 5,
 		borderBottomRightRadius: 5
 	},
-=======
-  /* SCREEN RESOLUTIONS & DIMENSIONS */
-  fullHeight: {
-    height: fullH
-  },
-  fullWidth: {
-    width: fullW
-  },
-  w100: {
-    width: Dimensions.get("window").width - 60
-  },
-  /* BORDER RADIUS SISILAFAMILLE TOVO */
-  rounded: {
-    borderRadius: 5
-  },
-  roundedTop: {
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5
-  },
-  roundedLeft: {
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5
-  },
-  roundedRight: {
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5
-  },
-  roundedBottom: {
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5
-  },
->>>>>>> adding carroussel
+	===
+	=== =
+	/* SCREEN RESOLUTIONS & DIMENSIONS */
+	fullHeight: {
+		height: fullH
+	},
+	fullWidth: {
+		width: fullW
+	},
+	w100: {
+		width: Dimensions.get("window").width - 60
+	},
+	/* BORDER RADIUS SISILAFAMILLE TOVO */
+	rounded: {
+		borderRadius: 5
+	},
+	roundedTop: {
+		borderTopLeftRadius: 5,
+		borderTopRightRadius: 5
+	},
+	roundedLeft: {
+		borderTopLeftRadius: 5,
+		borderBottomLeftRadius: 5
+	},
+	roundedRight: {
+		borderTopRightRadius: 5,
+		borderBottomRightRadius: 5
+	},
+	roundedBottom: {
+		borderBottomLeftRadius: 5,
+		borderBottomRightRadius: 5
+	},
+	>>>
+	>>> > adding carroussel
 
 	/* PADDING 10 PX */
 	padding10: {

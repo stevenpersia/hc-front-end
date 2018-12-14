@@ -22,6 +22,7 @@ import { Entypo } from "@expo/vector-icons";
 import Display from "react-native-display";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Carousel from "react-native-snap-carousel";
+import ChallengeCardCategory from "../../components/ChallengeCardCategory";
 
 const homePlace = {
 	description: "Adresse",
@@ -31,6 +32,11 @@ const workPlace = {
 	description: "Travail, si t'en a, sinon l'@ de tes parents",
 	geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }
 };
+
+const animauxColor = "#7D1AFF";
+const environnementColor = "#FFBE1A";
+const socialColor = "#18DE22";
+const cultureColor = "#DF4FFF";
 class ChallengesList extends React.Component {
 	static navigationOptions = {
 		header: null
@@ -61,11 +67,12 @@ class ChallengesList extends React.Component {
 		this.getChallenges();
 	}
 
+	// move to card
 	pickLocationHandler = (event, index) => {
-		const coords = event.coordinate;
 		this._carousel.snapToItem(index);
 	};
 
+	// move to marker
 	centerMapOnMarker(slideIndex) {
 		const markerLocation = this.state.Challenges[slideIndex].loc;
 		this._map.animateToCoordinate(
@@ -73,10 +80,20 @@ class ChallengesList extends React.Component {
 				latitude: markerLocation[1],
 				longitude: markerLocation[0]
 			},
-			200
+			400
 		);
 	}
 
+	getCategoryColors(category) {
+		let color = "";
+		category === "Environnement" && (color = environnementColor);
+		category === "Animaux" && (color = animauxColor);
+		category === "Social" && (color = socialColor);
+		category === "Culture" && (color = cultureColor);
+		return color;
+	}
+
+	// google autocomplete
 	GooglePlacesInput = () => {
 		return (
 			<GooglePlacesAutocomplete
@@ -231,8 +248,13 @@ class ChallengesList extends React.Component {
 					title={challenge.ref.name}
 					description={""}
 					onPress={e => this.pickLocationHandler(e.nativeEvent, i)}
-					pinColor="black"
-				/>
+				>
+					<ChallengeCardCategory
+						type={challenge.ref.category.name}
+						size={36}
+						color={this.getCategoryColors(challenge.ref.category.name)}
+					/>
+				</MapView.Marker>
 			);
 		});
 		return tab;
@@ -244,7 +266,7 @@ class ChallengesList extends React.Component {
 			<TouchableOpacity
 				onPress={() => this.props.navigation.navigate("Challenge")}
 			>
-				<ChallengeCard id={item._id} challenge={item} />
+				<ChallengeCard id={item._id} challenge={item} map />
 			</TouchableOpacity>
 		);
 	}
@@ -454,8 +476,7 @@ class ChallengesList extends React.Component {
 					/>
 				</Display>
 				<View>
-					{/* <FlatList
-						style={{ paddingTop: 50 }}
+					<FlatList
 						data={this.state.Challenges}
 						keyExtractor={this._keyExtractor}
 						renderItem={({ item, index }) => {
@@ -463,7 +484,8 @@ class ChallengesList extends React.Component {
 								return (
 									<View
 										style={{
-											marginBottom: 1
+											marginBottom: 1,
+											paddingTop: 50
 										}}
 									>
 										<TouchableOpacity
@@ -495,15 +517,6 @@ class ChallengesList extends React.Component {
 								);
 							}
 						}}
-					/> */}
-					<Carousel
-						ref={c => {
-							this._carousel = c;
-						}}
-						data={this.state.Challenges}
-						renderItem={this._renderCards}
-						sliderWidth={Dimensions.get("window").width}
-						itemWidth={Dimensions.get("window").width - 40}
 					/>
 				</View>
 			</View>

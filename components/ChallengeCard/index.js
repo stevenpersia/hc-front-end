@@ -39,21 +39,21 @@ class ChallengeCard extends React.Component {
 		}
 		const detailsLeftChallengeCard = {
 			position: "absolute",
-			left: 10,
+			left: 8,
 			zIndex: 2
 		};
 		let detailsrightChallengeCard = {
 			zIndex: 2
 		};
 		if (this.props.variant) {
-			detailsLeftChallengeCard.bottom = 10;
+			detailsLeftChallengeCard.bottom = 8;
 		} else {
-			detailsLeftChallengeCard.top = 10;
+			detailsLeftChallengeCard.top = 8;
 			detailsrightChallengeCard = {
 				position: "absolute",
-				right: 10,
+				right: 8,
 				zIndex: 2,
-				top: 10
+				top: 8
 			};
 		}
 		return (
@@ -64,13 +64,16 @@ class ChallengeCard extends React.Component {
 
 					{
 						overflow: "hidden",
-						width: "100%",
-						borderRadius: 8
+						width: this.props.map ? "100%" : Dimensions.get("window").width,
+						borderRadius: this.props.map ? 15 : 0
 					}
 				]}
 			>
 				<View style={detailsrightChallengeCard}>
-					<ChallengeCardCategory type={challenge.ref.category.name} />
+					<ChallengeCardCategory
+						type={challenge.ref.category.name}
+						color={this.props.color}
+					/>
 				</View>
 				<Text style={[styles.textWhite, styles.h4, { zIndex: 2 }]}>
 					{challenge.ref.name}
@@ -94,7 +97,7 @@ class ChallengeCard extends React.Component {
 					</View>
 				) : (
 					<View
-						style={[{ position: "absolute", bottom: 10, right: 10, zIndex: 2 }]}
+						style={[{ position: "absolute", bottom: 8, right: 8, zIndex: 2 }]}
 					>
 						<ChallengeCardItem
 							icon="time"
@@ -115,7 +118,7 @@ class ChallengeCard extends React.Component {
 						position: "absolute",
 						top: 0,
 						left: 0,
-						height: 200,
+						height: this.props.map ? 200 : 250,
 						width: "100%",
 						zIndex: 0,
 						opacity: 0.7
