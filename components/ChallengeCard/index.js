@@ -8,13 +8,7 @@ import {
 	Dimensions
 } from "react-native";
 import styles from "../../Styles";
-import {
-	format,
-	formatDistance,
-	formatRelative,
-	subDays,
-	distanceInWords
-} from "date-fns";
+import { format, distanceInWords } from "date-fns";
 var frLocale = require("date-fns/locale/fr");
 
 import ChallengeCardItem from "../ChallengeCardItem";
@@ -25,7 +19,6 @@ const fullW = Dimensions.get("window").width;
 class ChallengeCard extends React.Component {
 	render() {
 		const { challenge } = this.props;
-		console.log(this.props);
 		if (
 			challenge.ref === undefined ||
 			challenge.media.images[0] === undefined
@@ -67,13 +60,21 @@ class ChallengeCard extends React.Component {
 			<View
 				style={[
 					styles.card,
-					styles.bgBlack,
-					stylesLocal.customCSS,
-					{ overflow: "hidden" }
+
+					{
+						overflow: "hidden",
+						width: this.props.map ? "100%" : Dimensions.get("window").width,
+						borderRadius: this.props.map ? 15 : 0,
+						height: this.props.map ? 200 : 250,
+						backgroundColor: this.props.color || "black"
+					}
 				]}
 			>
 				<View style={detailsrightChallengeCard}>
-					<ChallengeCardCategory type={challenge.ref.category.name} />
+					<ChallengeCardCategory
+						type={challenge.ref.category.name}
+						color={this.props.color}
+					/>
 				</View>
 				<Text style={[styles.textWhite, styles.h4, { zIndex: 2 }]}>
 					{challenge.ref.name}
@@ -118,10 +119,10 @@ class ChallengeCard extends React.Component {
 						position: "absolute",
 						top: 0,
 						left: 0,
-						height: 250,
-						width: fullW,
+						height: this.props.map ? 198 : 250,
+						width: "100%",
 						zIndex: 0,
-						opacity: 0.7
+						opacity: this.props.map ? 0.95 : 0.7
 					}}
 					source={{
 						uri: challenge.media.images[0].url
