@@ -6,9 +6,18 @@ import {
 	MaterialIcons,
 	MaterialCommunityIcons
 } from '@expo/vector-icons';
+import { AsyncStorage } from 'react-native';
 
 class Menu extends React.Component {
+	state = {
+		auth: {
+			id: '',
+			token: ''
+		}
+	};
+
 	render() {
+		const { id, token } = this.state.auth;
 		return (
 			<View style={styles.container}>
 				<Image
@@ -57,6 +66,20 @@ class Menu extends React.Component {
 			</View>
 		);
 	}
+
+	componentDidMount() {
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
+
+			this.setState({
+				auth: {
+					id,
+					token
+				}
+			});
+		});
+	}
 }
 
 const customStyles = StyleSheet.create({
@@ -65,7 +88,7 @@ const customStyles = StyleSheet.create({
 		borderBottomColor: '#F2F2F2',
 		paddingVertical: 20,
 		width: '100%',
-		paddingLeft: 70,
+		paddingLeft: 50,
 		flexDirection: 'row',
 		alignItems: 'center'
 	},

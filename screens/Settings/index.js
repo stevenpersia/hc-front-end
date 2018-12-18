@@ -462,7 +462,8 @@ const customStyles = StyleSheet.create({
 		borderRadius: 75,
 		marginTop: 20,
 		borderColor: '#FFF',
-		borderWidth: 5
+		borderWidth: 5,
+		backgroundColor: '#1d262a'
 	},
 	input: {
 		backgroundColor: '#FFF',
