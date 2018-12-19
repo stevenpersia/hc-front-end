@@ -25,7 +25,7 @@ class Menu extends React.Component {
 					style={{ width: 170, height: 80, marginVertical: 30 }}
 				/>
 				<TouchableOpacity
-					onPress={() => this.props.navigate('ChallengesMap')}
+					onPress={() => this.props.navigate('ChallengesList')}
 					style={customStyles.li}
 				>
 					<MaterialCommunityIcons
@@ -36,21 +36,29 @@ class Menu extends React.Component {
 					<Text style={customStyles.litext}>Voir les défis</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => this.props.navigate('CreateChallenge')}
+					onPress={() =>
+						this.props.navigate(
+							id && token ? 'CreateChallenge' : 'Authentication'
+						)
+					}
 					style={customStyles.li}
 				>
 					<Entypo name="circle-with-plus" size={18} color="#1d262a" />
 					<Text style={customStyles.litext}>Créer un défi</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => this.props.navigate('Profile')}
+					onPress={() =>
+						this.props.navigate(id && token ? 'Profile' : 'Authentication')
+					}
 					style={customStyles.li}
 				>
 					<MaterialIcons name="account-circle" size={18} color="#1d262a" />
 					<Text style={customStyles.litext}>Mon profil</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => this.props.navigate('Settings')}
+					onPress={() =>
+						this.props.navigate(id && token ? 'Settings' : 'Authentication')
+					}
 					style={customStyles.li}
 				>
 					<MaterialIcons name="settings" size={18} color="#1d262a" />
