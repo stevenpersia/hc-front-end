@@ -12,126 +12,180 @@ import styles from "../../Styles";
 import ChallengeCard from "../../components/ChallengeCard";
 import AvatarList from "../../components/AvatarList";
 import IconList from "../../components/IconList";
+import { format } from "date-fns";
 import { Tooltip } from "react-native-elements";
 import ChallengesMap from "../Challenges/ChallengesMap";
-
-const userTest = "5c069853c6e471212ce8b71c";
+import { AsyncStorage } from "react-native";
 
 class Challenge extends React.Component {
   // ... donner une valeur par défaut aux clés de response.data
   state = {
     step: 1,
-    isLoading: true
-    //  ref.category.name
+    isLoading: true,
+    userParticipated: false,
+    auth: {
+      id: " ",
+      token: " "
+    },
+    finished: false,
+    users: {
+      challenges: {
+        player: " ",
+        manager: " "
+      }
+    }
   };
 
+  /* 49 : ---------------id du defi------------- */
+  /* 54 :  date de fin est supérieur a la date d'aujourd'hui */
+  /* 61 :le defi est terminé */
+  /* 66 : sinon on traverse le tableau de challengers  */
+  /* 69 : on renvoie le nombre de challengers identifiés   */
+  /* 68 :dans ce cas le user participe   */
   componentDidMount() {
+    AsyncStorage.multiGet(["id", "token"], (err, stores) => {
+      const id = stores[0][1];
+      const token = stores[1][1];
+
+      this.setState(
+        {
+          auth: {
+            id,
+            token
+          }
+        },
+        () => {
+          axios
+            .get(
+              "https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877"
+            )
+            .then(response => {
+              if (
+                format(response.data.date.endDate, "x") <
+                format(new Date(), "x")
+              ) {
+                this.setState({
+                  finished: true
+                });
+              } else {
+                for (let i = 0; i < response.data.challengers.length; i++) {
+                  if (response.data.challengers[i]._id === this.state.auth.id) {
+                    this.setState({
+                      userParticipated: true
+                    });
+                  }
+                }
+              }
+
+              this.setState({
+                ...response.data,
+                isLoading: false
+              });
+            });
+        }
+      );
+    });
+  }
+
+  handleParticipate = () => {
     axios
-      .get(
-        "https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877"
+      .put(
+        "https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877",
+        {},
+        {
+          headers: {
+            Authorization: this.state.auth.token
+          }
+        }
       )
       .then(response => {
-        /* console.log("responsedata", response.data); */
-        this.setState(
-          {
-            ...response.data,
-            isLoading: false
-          },
-          () => {
-            /* console.log("challenge", this.state); */
-          }
-        );
+        this.setState({
+          userParticipated: true
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
-  }
-  // basculer la position du challenge en récupérant le UseriD//
-  // envoyer le token
-  toggleChallenge(userId) {
-    axios.put(
-      "https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877",
-      { "security.token": req.headers.authorization.replace("Bearer ", "") }
-    );
-    console.log(userId);
-  }
-  //Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
-  //Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
+  };
+
+  handleCancel = () => {
+    axios
+      .delete(
+        "https://human-challenge-back-end.herokuapp.com/api/user/remove/5c07ab4fa5d7c100890b9877",
+        {
+          headers: {
+            Authorization: this.state.auth.token
+          }
+        }
+      )
+      .then(response => {
+        this.setState({
+          userParticipated: false
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  // Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
+  // Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
+  // On utilise utilise un état fini sans la possibilité de cliquer sur un bouton sinon on participe au defi qd user à participer sinon on annule sa participation//
   renderButton() {
-    const challengers = this.state.challengers;
-    const buttonText = "Rejoindre le défi";
-    if (challengers.indexOf(userTest) > -1) {
-      buttonText = "Quitter le défi";
+    if (this.state.finished === true) {
+      return (
+        <TouchableOpacity disabled>
+          <Text>Terminé</Text>
+        </TouchableOpacity>
+      );
     }
-    return (
-      <TouchableOpacity onPress={() => this.toggleChallenge(userTest)}>
-        <Text style={styles.button}>{buttonText}</Text>
-      </TouchableOpacity>
-    );
-    /* console.log("challengers", challengers); */
+
+    if (this.state.userParticipated === false) {
+      return (
+        <TouchableOpacity onPress={() => this.handleParticipate()}>
+          <Text>Participer au défi</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity onPress={() => this.handleCancel()}>
+          <Text>Annuler sa participation</Text>
+        </TouchableOpacity>
+      );
+    }
   }
 
-  /* renderButton = () => {
-    // if(user === player(participant) &&  New Date > EndDate ) {render }alors défi est terminé
-    // if(user === manager(créateur de défi) && New Date > EndDate) alors défi est terminé
-    // if(user === player && New Date < EndDate ) alors il peut annuler son défi
-    // if(user === manager && New Date < EndDate ) alors il peut annuler son défi
-    // if(user !== player & user !== manager )  alors user doit s inscrire sur la page Signup
+  renderTag = () => {
+    axios
+      .get(
+        "https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877"
+      )
 
-    const dateNow = new Date();
-    if (player === true && dateNow > EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (player === true && dateNow < EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Participer au défi</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (manager === true && dateNow > EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (manager === true && dateNow < EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Participer au défi</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (user !== player && user !== manager) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-  }; */
-  // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27 //
+      .then(response => {
+        if (userParticipated === false) {
+          response.data.ref.tags[0];
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   // on a importer le style, et on va chercher dedans ce dont on besoin //
   render() {
     // console.log("this.state.owner.organizer", this.state.owner.organizer);
     if (this.state.isLoading === true) {
       return <Text>En cours de chargement ... </Text>;
     }
-    // console.log("Sofiane", this.state);
+
     return (
       <ScrollView>
         <View style={[styles.h4, styles.bold, styles.textBlack]}>
           <ChallengeCard
-            id="5c07ab4fa5d7c100890b9877"
-            challenge={this.state}
+            id={this.state}
+            challenge={
+              this.state
+            } /* Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27 */
             variant
           />
           <View style={customStyles.squareGeneral}>
@@ -208,9 +262,9 @@ class Challenge extends React.Component {
               />
             </View>
             <View style={customStyles.fourthElement}>
-              <Text>{this.state.owner.account.username}</Text>
-              <Text>{this.state.owner.account.email}</Text>
-              <Text>{this.state.owner.account.phoneNumber}</Text>
+              <Text>{this.state.ref.contactName}</Text>
+              <Text>{this.state.ref.contactEmail}</Text>
+              <Text>{this.state.ref.contactPhone}</Text>
             </View>
           </View>
         </View>
@@ -226,17 +280,23 @@ class Challenge extends React.Component {
           <Text style={[styles.h4, styles.bold, styles.textBlack, {}]}>
             Mots-Clés
           </Text>
+          <View>
+            <TouchableOpacity disabled>
+              {<Text>{this.state.ref.tags[0]}</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity disabled>
+              {<Text>{this.state.ref.tags[1]}</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity disabled>
+              {<Text>{this.state.ref.tags[2]}</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity disabled>
+              {<Text>{this.state.ref.tags[3]}</Text>}
+            </TouchableOpacity>
+          </View>
         </View>
         <ChallengesMap loc={this.state.loc} id={this.state._id} />
-        <View>
-          {this.renderButton()}
-          {/* <TouchableOpacity onPress={() => {}} style={[styles.button]}>
-            
-            <Text style={[styles.textCenter, styles.textWhite]}>
-              Participer à un défi
-            </Text>
-            </TouchableOpacity> */}
-        </View>
+        <View>{this.renderButton()}</View>
       </ScrollView>
     );
   }
