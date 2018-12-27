@@ -44,7 +44,7 @@ class Login extends React.Component {
 			.then(response => {
 				AsyncStorage.setItem('id', response.data._id);
 				AsyncStorage.setItem('token', response.data.security.token);
-				this.props.navigation.navigate('ChallengesMap');
+				this.props.navigation.navigate('ChallengesList');
 			})
 			.catch(error => {
 				console.log(error);
