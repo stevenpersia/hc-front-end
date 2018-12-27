@@ -72,7 +72,7 @@ class Profile extends React.Component {
 					participer à un défi ?
 				</Text>
 				<TouchableOpacity
-					onPress={() => this.props.navigation.navigate('ChallengesMap')}
+					onPress={() => this.props.navigation.navigate('ChallengesList')}
 					style={[
 						styles.button,
 						styles.primaryButtonColor,
