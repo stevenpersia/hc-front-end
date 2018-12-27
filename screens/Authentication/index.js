@@ -11,8 +11,15 @@ import {
 import styles from '../../Styles';
 import { Entypo } from '@expo/vector-icons';
 import { DrawerActions } from 'react-navigation-drawer';
+import { AsyncStorage } from 'react-native';
 
 class Authentication extends React.Component {
+	state = {
+		auth: {
+			id: '',
+			token: ''
+		}
+	};
 	static navigationOptions = {
 		header: null
 	};
@@ -95,7 +102,7 @@ class Authentication extends React.Component {
 					</TouchableOpacity>
 				</View>
 				<TouchableOpacity
-					onPress={() => this.props.navigation.navigate('ChallengesMap')}
+					onPress={() => this.props.navigation.navigate('ChallengesList')}
 					style={{
 						position: 'absolute',
 						bottom: 30,
@@ -109,6 +116,27 @@ class Authentication extends React.Component {
 				</TouchableOpacity>
 			</ImageBackground>
 		);
+	}
+
+	componentDidMount() {
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
+
+			this.setState(
+				{
+					auth: {
+						id,
+						token
+					}
+				},
+				() => {
+					if (this.state.auth.id && this.state.auth.token) {
+						this.props.navigation.navigate('ChallengesList');
+					}
+				}
+			);
+		});
 	}
 }
 
