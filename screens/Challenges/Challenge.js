@@ -135,13 +135,27 @@ class Challenge extends React.Component {
 					</View>
 
 					<View style={[styles.w100, { marginTop: -60 }]}>
-						<Text style={[styles.bold, styles.textBlack, styles.paddingTop30]}>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
 							INFORMATIONS
 						</Text>
 						<Text style={[styles.textJustify, styles.textBlack]}>
 							{this.state.ref.description}
 						</Text>
-						<Text style={[styles.bold, styles.textBlack, styles.paddingTop30]}>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
 							ACTIONS
 						</Text>
 						<Text style={[styles.textJustify, styles.textBlack]}>
@@ -152,6 +166,7 @@ class Challenge extends React.Component {
 								styles.bold,
 								styles.textBlack,
 								styles.paddingTop30,
+								styles.paddingBottom10,
 								{ justifyContent: 'center' }
 							]}
 						>
@@ -160,7 +175,14 @@ class Challenge extends React.Component {
 						<View style={{ flexDirection: 'row' }}>
 							<IconList Prerequisites={this.state.ref.prerequisites} />
 						</View>
-						<Text style={[styles.bold, styles.textBlack, styles.paddingTop30]}>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
 							CONTACTER L'ORGANISATEUR
 						</Text>
 						<View
