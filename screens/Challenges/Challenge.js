@@ -13,7 +13,6 @@ import ChallengeCard from "../../components/ChallengeCard";
 import AvatarList from "../../components/AvatarList";
 import IconList from "../../components/IconList";
 import { format } from "date-fns";
-import { Tooltip } from "react-native-elements";
 import ChallengesMap from "../Challenges/ChallengesMap";
 import { AsyncStorage } from "react-native";
 
@@ -22,17 +21,15 @@ class Challenge extends React.Component {
   state = {
     step: 1,
     isLoading: true,
+    user: {
+      challenges: {
+        manager: " "
+      }
+    },
     userParticipated: false,
     auth: {
       id: " ",
       token: " "
-    },
-    finished: false,
-    users: {
-      challenges: {
-        player: " ",
-        manager: " "
-      }
     }
   };
 
@@ -170,10 +167,26 @@ class Challenge extends React.Component {
         console.log(error);
       });
   };
+  // -----------------identifier le nombre de challenge dans Manager from Users  -----------------------//
 
+  RenderChallengeCreated = () => {
+    axios
+      .get(
+        "https://human-challenge-back-end.herokuapp.com/api/user/5c0412b7a380ae141cba4919"
+      )
+      .then(response => {
+        if (userParticipated === true) {
+          {
+            response.data.user.challenges.length;
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   // on a importer le style, et on va chercher dedans ce dont on besoin //
   render() {
-    // console.log("this.state.owner.organizer", this.state.owner.organizer);
     if (this.state.isLoading === true) {
       return <Text>En cours de chargement ... </Text>;
     }
@@ -182,7 +195,7 @@ class Challenge extends React.Component {
       <ScrollView>
         <View style={[styles.h4, styles.bold, styles.textBlack]}>
           <ChallengeCard
-            id={this.state}
+            id="5c07ab4fa5d7c100890b9877"
             challenge={
               this.state
             } /* Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27 */
@@ -249,8 +262,8 @@ class Challenge extends React.Component {
             </View>
             <View style={customStyles.secondElement}>
               <Text>{this.state.owner.organizer}</Text>
-              <Text>
-                {this.state.owner.challenges.manager.length} défis crées
+              <Text style={[styles.h6, styles.textCenter, styles.blackColor]}>
+                {this.RenderChallengeCreated()} défis crées
               </Text>
             </View>
           </View>
@@ -321,7 +334,7 @@ const customStyles = StyleSheet.create({
   firstSquare: {
     flexDirection: "row",
     width: 250,
-    backgroundColor: "#88fc5a",
+    backgroundColor: "#76a495",
     marginTop: "8%",
     marginBottom: "3%"
   },
@@ -340,7 +353,7 @@ const customStyles = StyleSheet.create({
     alignItems: "center",
     width: 250,
     flexDirection: "row",
-    backgroundColor: "#88fc5a",
+    backgroundColor: "#76a495",
     marginTop: "1%",
     marginBottom: "10%"
   },
