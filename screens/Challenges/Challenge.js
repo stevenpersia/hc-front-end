@@ -157,9 +157,8 @@ class Challenge extends React.Component {
 						>
 							PRE-REQUIS
 						</Text>
-						<View>
-							<Text>Rendre le composant pré-requis dynamique.</Text>
-							{/*<IconList Prerequisites={this.state.ref.prerequisites} />*/}
+						<View style={{ flexDirection: 'row' }}>
+							<IconList Prerequisites={this.state.ref.prerequisites} />
 						</View>
 						<Text style={[styles.bold, styles.textBlack, styles.paddingTop30]}>
 							CONTACTER L'ORGANISATEUR
