@@ -13,77 +13,227 @@ import styles from '../../Styles';
 import ChallengeCard from '../../components/ChallengeCard';
 import AvatarList from '../../components/AvatarList';
 import IconList from '../../components/IconList';
-import { Tooltip } from 'react-native-elements';
-import ChallengesMap from '../Challenges/ChallengesMap';
 import { format } from 'date-fns';
-import { hidden } from 'ansi-colors';
+import ChallengesMap from '../Challenges/ChallengesMap';
+import { AsyncStorage } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-
-const userTest = '5c069853c6e471212ce8b71c';
 
 class Challenge extends React.Component {
 	// ... donner une valeur par défaut aux clés de response.data
 	state = {
 		step: 1,
-		isLoading: true
-		//  ref.category.name
+		isLoading: true,
+		user: {
+			challenges: {
+				manager: ' '
+			}
+		},
+		userParticipated: false,
+		auth: {
+			id: ' ',
+			token: ' '
+		}
 	};
 
+	/* 49 : ---------------id du defi------------- */
+	/* 54 :  date de fin est supérieur a la date d'aujourd'hui */
+	/* 61 :le defi est terminé */
+	/* 66 : sinon on traverse le tableau de challengers  */
+	/* 69 : on renvoie le nombre de challengers identifiés   */
+	/* 68 :dans ce cas le user participe   */
 	componentDidMount() {
-		axios
-			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877'
-			)
-			.then(response => {
-				/* console.log("responsedata", response.data); */
-				this.setState(
-					{
-						...response.data,
-						isLoading: false
-					},
-					() => {
-						/* console.log("challenge", this.state); */
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
+
+			this.setState(
+				{
+					auth: {
+						id,
+						token
 					}
-				);
-			});
-	}
-	// basculer la position du challenge en récupérant le UseriD//
-	// envoyer le token
-	toggleChallenge(userId) {
-		axios.put(
-			'https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877',
-			{ 'security.token': req.headers.authorization.replace('Bearer ', '') }
-		);
-		console.log(userId);
-	}
-	//Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
-	//Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
-	renderButton() {
-		const challengers = this.state.challengers;
-		const buttonText = 'PARTICIPER';
-		if (challengers.indexOf(userTest) > -1) {
-			buttonText = 'ANNULER';
-		}
-		return (
-			<TouchableOpacity
-				onPress={() => this.toggleChallenge(userTest)}
-				style={{ borderRadius: 7, backgroundColor: '#3A72E9', marginTop: 10 }}
-			>
-				<Text
-					style={{
-						color: '#FFF',
-						fontSize: 20,
-						fontWeight: 'bold',
-						padding: 20,
-						textAlign: 'center'
-					}}
-				>
-					{buttonText}
-				</Text>
-			</TouchableOpacity>
-		);
+				},
+				() => {
+					axios
+						.get(
+							'https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877'
+						)
+						.then(response => {
+							if (
+								format(response.data.date.endDate, 'x') <
+								format(new Date(), 'x')
+							) {
+								this.setState({
+									finished: true
+								});
+							} else {
+								for (let i = 0; i < response.data.challengers.length; i++) {
+									if (response.data.challengers[i]._id === this.state.auth.id) {
+										this.setState({
+											userParticipated: true
+										});
+									}
+								}
+							}
+
+							this.setState({
+								...response.data,
+								isLoading: false
+							});
+						});
+				}
+			);
+		});
 	}
 
+	handleParticipate = () => {
+		axios
+			.put(
+				'https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877',
+				{},
+				{
+					headers: {
+						Authorization: this.state.auth.token
+					}
+				}
+			)
+			.then(response => {
+				this.setState({
+					userParticipated: true
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
+	handleCancel = () => {
+		axios
+			.delete(
+				'https://human-challenge-back-end.herokuapp.com/api/user/remove/5c07ab4fa5d7c100890b9877',
+				{
+					headers: {
+						Authorization: this.state.auth.token
+					}
+				}
+			)
+			.then(response => {
+				this.setState({
+					userParticipated: false
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
+	// Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
+	// Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
+	// On utilise utilise un état fini sans la possibilité de cliquer sur un bouton sinon on participe au defi qd user à participer sinon on annule sa participation//
+	renderButton() {
+		if (this.state.finished === true) {
+			return (
+				<TouchableOpacity
+					style={{ borderRadius: 7, backgroundColor: '#181818', marginTop: 10 }}
+					disabled
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Terminé
+					</Text>
+				</TouchableOpacity>
+			);
+		}
+
+		if (this.state.userParticipated === false) {
+			return (
+				<TouchableOpacity
+					onPress={() => this.handleParticipate()}
+					style={{ borderRadius: 7, backgroundColor: '#3A72E9', marginTop: 10 }}
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Participer
+					</Text>
+				</TouchableOpacity>
+			);
+		} else {
+			return (
+				<TouchableOpacity
+					onPress={() => this.handleCancel()}
+					style={{
+						borderRadius: 7,
+						backgroundColor: '#853ae9',
+						marginTop: 10
+					}}
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Annuler
+					</Text>
+				</TouchableOpacity>
+			);
+		}
+	}
+
+	renderTag = () => {
+		axios
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+			)
+
+			.then(response => {
+				if (userParticipated === false) {
+					response.data.ref.tags[0];
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+	// -----------------identifier le nombre de challenge dans Manager from Users  -----------------------//
+
+	RenderChallengeCreated = () => {
+		axios
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+			)
+			.then(response => {
+				if (userParticipated === true) {
+					{
+						response.data.user.challenges.length;
+					}
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+	// on a importer le style, et on va chercher dedans ce dont on besoin //
 	render() {
 		if (this.state.isLoading === true) {
 			return <Text />;
@@ -94,7 +244,7 @@ class Challenge extends React.Component {
 
 		return (
 			<ScrollView style={{ resizeMode: 'cover' }}>
-				<View style={{ width: fullW, height: 380, overflow: hidden }}>
+				<View style={{ width: fullW, height: 380, overflow: 'hidden' }}>
 					<Image style={customStyles.featuredImage} source={{ uri: image }} />
 					<TouchableOpacity
 						style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
@@ -219,7 +369,6 @@ class Challenge extends React.Component {
 						</View>
 					</View>
 				</View>
-
 				<ChallengesMap loc={this.state.loc} id={this.state._id} />
 			</ScrollView>
 		);
