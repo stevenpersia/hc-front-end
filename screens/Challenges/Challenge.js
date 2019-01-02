@@ -1,301 +1,393 @@
-import React from "react";
+import React from 'react';
 import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity
-} from "react-native";
-import axios from "axios";
-import styles from "../../Styles";
-import ChallengeCard from "../../components/ChallengeCard";
-import AvatarList from "../../components/AvatarList";
-import IconList from "../../components/IconList";
-import { Tooltip } from "react-native-elements";
-import ChallengesMap from "../Challenges/ChallengesMap";
-
-const userTest = "5c069853c6e471212ce8b71c";
+	StyleSheet,
+	Image,
+	Text,
+	View,
+	ScrollView,
+	TouchableOpacity,
+	Dimensions
+} from 'react-native';
+import axios from 'axios';
+import styles from '../../Styles';
+import ChallengeCard from '../../components/ChallengeCard';
+import AvatarList from '../../components/AvatarList';
+import IconList from '../../components/IconList';
+import { format } from 'date-fns';
+import ChallengesMap from '../Challenges/ChallengesMap';
+import { AsyncStorage } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
 
 class Challenge extends React.Component {
-  // ... donner une valeur par défaut aux clés de response.data
-  state = {
-    step: 1,
-    isLoading: true
-    //  ref.category.name
-  };
+	// ... donner une valeur par défaut aux clés de response.data
+	state = {
+		step: 1,
+		isLoading: true,
+		user: {
+			challenges: {
+				manager: ' '
+			}
+		},
+		userParticipated: false,
+		auth: {
+			id: ' ',
+			token: ' '
+		}
+	};
 
-  componentDidMount() {
-    axios
-      .get(
-        "https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877"
-      )
-      .then(response => {
-        /* console.log("responsedata", response.data); */
-        this.setState(
-          {
-            ...response.data,
-            isLoading: false
-          },
-          () => {
-            /* console.log("challenge", this.state); */
-          }
-        );
-      });
-  }
-  // basculer la position du challenge en récupérant le UseriD//
-  // envoyer le token
-  toggleChallenge(userId) {
-    axios.put(
-      "https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877",
-      { "security.token": req.headers.authorization.replace("Bearer ", "") }
-    );
-    console.log(userId);
-  }
-  //Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
-  //Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
-  renderButton() {
-    const challengers = this.state.challengers;
-    const buttonText = "Rejoindre le défi";
-    if (challengers.indexOf(userTest) > -1) {
-      buttonText = "Quitter le défi";
-    }
-    return (
-      <TouchableOpacity onPress={() => this.toggleChallenge(userTest)}>
-        <Text style={styles.button}>{buttonText}</Text>
-      </TouchableOpacity>
-    );
-    /* console.log("challengers", challengers); */
-  }
+	/* 49 : ---------------id du defi------------- */
+	/* 54 :  date de fin est supérieur a la date d'aujourd'hui */
+	/* 61 :le defi est terminé */
+	/* 66 : sinon on traverse le tableau de challengers  */
+	/* 69 : on renvoie le nombre de challengers identifiés   */
+	/* 68 :dans ce cas le user participe   */
+	componentDidMount() {
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
 
-  /* renderButton = () => {
-    // if(user === player(participant) &&  New Date > EndDate ) {render }alors défi est terminé
-    // if(user === manager(créateur de défi) && New Date > EndDate) alors défi est terminé
-    // if(user === player && New Date < EndDate ) alors il peut annuler son défi
-    // if(user === manager && New Date < EndDate ) alors il peut annuler son défi
-    // if(user !== player & user !== manager )  alors user doit s inscrire sur la page Signup
+			this.setState(
+				{
+					auth: {
+						id,
+						token
+					}
+				},
+				() => {
+					axios
+						.get(
+							'https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877'
+						)
+						.then(response => {
+							if (
+								format(response.data.date.endDate, 'x') <
+								format(new Date(), 'x')
+							) {
+								this.setState({
+									finished: true
+								});
+							} else {
+								for (let i = 0; i < response.data.challengers.length; i++) {
+									if (response.data.challengers[i]._id === this.state.auth.id) {
+										this.setState({
+											userParticipated: true
+										});
+									}
+								}
+							}
 
-    const dateNow = new Date();
-    if (player === true && dateNow > EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (player === true && dateNow < EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Participer au défi</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (manager === true && dateNow > EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (manager === true && dateNow < EndDate) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Participer au défi</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (user !== player && user !== manager) {
-      return (
-        <View>
-          <TouchableOpacity>
-            <Text>Le Défi est terminé</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-  }; */
-  // Challenge CardCategory c'est l'enfant de la page Challenge : la props est défini ici a la ligne 27 //
-  // on a importer le style, et on va chercher dedans ce dont on besoin //
-  render() {
-    // console.log("this.state.owner.organizer", this.state.owner.organizer);
-    if (this.state.isLoading === true) {
-      return <Text>En cours de chargement ... </Text>;
-    }
-    // console.log("Sofiane", this.state);
-    return (
-      <ScrollView>
-        <View style={[styles.h4, styles.bold, styles.textBlack]}>
-          <ChallengeCard
-            id="5c07ab4fa5d7c100890b9877"
-            challenge={this.state}
-            variant
-          />
-          <View style={customStyles.squareGeneral}>
-            <Text style={[styles.h4, styles.bold, styles.textBlack]}>
-              Description
-            </Text>
-            <View style={[customStyles.squareComponent]}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  backgroundColor: "#e5f7e1",
-                  justifyContent: "center"
-                }}
-              >
-                {this.state.ref.description}
-              </Text>
-            </View>
-          </View>
-          <View style={customStyles.squareGeneral}>
-            <Text style={[styles.h4, styles.bold, styles.textBlack]}>
-              Actions
-            </Text>
-            <View style={[customStyles.squareComponent]}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  backgroundColor: "#e5f7e1",
-                  justifyContent: "center"
-                }}
-              >
-                {this.state.ref.action}
-              </Text>
-            </View>
-          </View>
-          <View style={customStyles.squareGeneral}>
-            <Text
-              style={[
-                styles.h4,
-                styles.bold,
-                styles.textBlack,
-                { justifyContent: "center" }
-              ]}
-            >
-              Prerequis
-            </Text>
-            <View style={[customStyles.squareComponent]}>
-              <IconList Prerequisites={this.state.ref.prerequisites} />
-            </View>
-          </View>
-        </View>
-        <View style={customStyles.squareGeneral}>
-          <Text style={[styles.h4, styles.bold, styles.textBlack]}>
-            Organisateur
-          </Text>
-          <View style={customStyles.firstSquare}>
-            <View style={customStyles.firstElement}>
-              <Image
-                style={{ width: 40, height: 40, borderRadius: 20 }}
-                source={{ uri: this.state.owner.account.avatar[0].url }}
-              />
-            </View>
-            <View style={customStyles.secondElement}>
-              <Text>{this.state.owner.organizer}</Text>
-              <Text>
-                {this.state.owner.challenges.manager.length} défis crées
-              </Text>
-            </View>
-          </View>
-          <View style={customStyles.secondSquare}>
-            <View style={customStyles.thirdElement}>
-              <Image
-                style={{ width: 40, height: 40, borderRadius: 20 }}
-                source={{ uri: this.state.owner.account.avatar[0].url }}
-              />
-            </View>
-            <View style={customStyles.fourthElement}>
-              <Text>{this.state.owner.account.username}</Text>
-              <Text>{this.state.owner.account.email}</Text>
-              <Text>{this.state.owner.account.phoneNumber}</Text>
-            </View>
-          </View>
-        </View>
-        <View style={customStyles.squareGeneral}>
-          <Text style={[styles.h4, styles.bold, styles.textBlack]}>
-            Participants
-          </Text>
-          <View style={[customStyles.squareComponent]}>
-            <AvatarList challengers={this.state.challengers} variant />
-          </View>
-        </View>
-        <View style={customStyles.squareGeneral}>
-          <Text style={[styles.h4, styles.bold, styles.textBlack, {}]}>
-            Mots-Clés
-          </Text>
-        </View>
-        <ChallengesMap loc={this.state.loc} id={this.state._id} />
-        <View>
-          {this.renderButton()}
-          {/* <TouchableOpacity onPress={() => {}} style={[styles.button]}>
-            
-            <Text style={[styles.textCenter, styles.textWhite]}>
-              Participer à un défi
-            </Text>
-            </TouchableOpacity> */}
-        </View>
-      </ScrollView>
-    );
-  }
+							this.setState({
+								...response.data,
+								isLoading: false
+							});
+						});
+				}
+			);
+		});
+	}
+
+	handleParticipate = () => {
+		axios
+			.put(
+				'https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877',
+				{},
+				{
+					headers: {
+						Authorization: this.state.auth.token
+					}
+				}
+			)
+			.then(response => {
+				this.setState({
+					userParticipated: true
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
+	handleCancel = () => {
+		axios
+			.delete(
+				'https://human-challenge-back-end.herokuapp.com/api/user/remove/5c07ab4fa5d7c100890b9877',
+				{
+					headers: {
+						Authorization: this.state.auth.token
+					}
+				}
+			)
+			.then(response => {
+				this.setState({
+					userParticipated: false
+				});
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
+	// Si l'id du UserTest est dans le tableau challenge on retourne le bouton défi
+	// Si l'iD du UserTest n'est pas dans le tableau challenge on retourne le bouton
+	// On utilise utilise un état fini sans la possibilité de cliquer sur un bouton sinon on participe au defi qd user à participer sinon on annule sa participation//
+	renderButton() {
+		if (this.state.finished === true) {
+			return (
+				<TouchableOpacity
+					style={{ borderRadius: 7, backgroundColor: '#181818', marginTop: 10 }}
+					disabled
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Terminé
+					</Text>
+				</TouchableOpacity>
+			);
+		}
+
+		if (this.state.userParticipated === false) {
+			return (
+				<TouchableOpacity
+					onPress={() => this.handleParticipate()}
+					style={{ borderRadius: 7, backgroundColor: '#3A72E9', marginTop: 10 }}
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Participer
+					</Text>
+				</TouchableOpacity>
+			);
+		} else {
+			return (
+				<TouchableOpacity
+					onPress={() => this.handleCancel()}
+					style={{
+						borderRadius: 7,
+						backgroundColor: '#853ae9',
+						marginTop: 10
+					}}
+				>
+					<Text
+						style={{
+							color: '#FFF',
+							fontSize: 20,
+							fontWeight: 'bold',
+							padding: 20,
+							textAlign: 'center',
+							width: 160
+						}}
+					>
+						Annuler
+					</Text>
+				</TouchableOpacity>
+			);
+		}
+	}
+
+	renderTag = () => {
+		axios
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+			)
+
+			.then(response => {
+				if (userParticipated === false) {
+					response.data.ref.tags[0];
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+	// -----------------identifier le nombre de challenge dans Manager from Users  -----------------------//
+
+	RenderChallengeCreated = () => {
+		axios
+			.get(
+				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+			)
+			.then(response => {
+				if (userParticipated === true) {
+					{
+						response.data.user.challenges.length;
+					}
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+	// on a importer le style, et on va chercher dedans ce dont on besoin //
+	render() {
+		if (this.state.isLoading === true) {
+			return <Text />;
+		}
+
+		let fullW = Dimensions.get('window').width;
+		let image = this.state.media.images[0].secure_url;
+
+		return (
+			<ScrollView style={{ resizeMode: 'cover' }}>
+				<View style={{ width: fullW, height: 380, overflow: 'hidden' }}>
+					<Image style={customStyles.featuredImage} source={{ uri: image }} />
+					<TouchableOpacity
+						style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+					>
+						<Entypo name="chevron-left" size={30} color="#FFF" />
+					</TouchableOpacity>
+					<View style={{ alignItems: 'center' }}>
+						<Text
+							style={[
+								styles.h4,
+								styles.bold,
+								styles.textWhite,
+								styles.textCenter,
+								styles.margin30,
+								{ lineHeight: 30 }
+							]}
+						>
+							{this.state.ref.name}
+						</Text>
+						<Text style={[styles.textWhite, styles.italic]}>
+							Du {format(this.state.date.beginDate, 'DD/MM/YYYY')} au{' '}
+							{format(this.state.date.endDate, 'DD/MM/YYYY')}
+						</Text>
+					</View>
+				</View>
+				<View style={customStyles.content}>
+					<View
+						style={{
+							position: 'absolute',
+							top: -140,
+							right: -35,
+							alignItems: 'center',
+							width: 180
+						}}
+					>
+						<AvatarList challengers={this.state.challengers} variant />
+						{this.renderButton()}
+					</View>
+
+					<View style={[styles.w100, { marginTop: -60 }]}>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
+							INFORMATIONS
+						</Text>
+						<Text style={[styles.textJustify, styles.textBlack]}>
+							{this.state.ref.description}
+						</Text>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
+							ACTIONS
+						</Text>
+						<Text style={[styles.textJustify, styles.textBlack]}>
+							{this.state.ref.action}
+						</Text>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10,
+								{ justifyContent: 'center' }
+							]}
+						>
+							PRE-REQUIS
+						</Text>
+						<View style={{ flexDirection: 'row' }}>
+							<IconList Prerequisites={this.state.ref.prerequisites} />
+						</View>
+						<Text
+							style={[
+								styles.bold,
+								styles.textBlack,
+								styles.paddingTop30,
+								styles.paddingBottom10
+							]}
+						>
+							CONTACTER L'ORGANISATEUR
+						</Text>
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'space-between',
+								alignItems: 'center'
+							}}
+						>
+							<Image
+								style={{ width: 40, height: 40, borderRadius: 20 }}
+								source={{ uri: this.state.owner.account.avatar[0].url }}
+							/>
+							<View>
+								<Text>
+									<Entypo name="globe" size={13} color="#1d262a" />{' '}
+									{this.state.owner.organizer}
+								</Text>
+								<Text>
+									<Entypo name="user" size={13} color="#1d262a" />{' '}
+									{this.state.owner.account.username}
+								</Text>
+							</View>
+							<View>
+								<Text>
+									<Entypo name="email" size={13} color="#1d262a" />{' '}
+									{this.state.owner.account.email}
+								</Text>
+								<Text>
+									<Entypo name="phone" size={13} color="#1d262a" />{' '}
+									{this.state.owner.account.phoneNumber}
+								</Text>
+							</View>
+						</View>
+					</View>
+				</View>
+				<ChallengesMap loc={this.state.loc} id={this.state._id} />
+			</ScrollView>
+		);
+	}
 }
 
 const customStyles = StyleSheet.create({
-  squareGeneral: {
-    display: "flex",
-    height: 250,
-    alignItems: "center",
-    backgroundColor: "#e5f7e1",
-    flexDirection: "column",
-    borderBottomWidth: 1
-  },
-  squareComponent: {
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    textAlign: "center"
-  },
-  firstSquare: {
-    flexDirection: "row",
-    width: 250,
-    backgroundColor: "#88fc5a",
-    marginTop: "8%",
-    marginBottom: "3%"
-  },
-  firstElement: {
-    alignItems: "center",
-    marginTop: "4%",
-    marginBottom: "5%",
-    marginLeft: "5%"
-  },
-  secondElement: {
-    alignItems: "center",
-    marginLeft: "20%",
-    marginTop: "4%"
-  },
-  secondSquare: {
-    alignItems: "center",
-    width: 250,
-    flexDirection: "row",
-    backgroundColor: "#88fc5a",
-    marginTop: "1%",
-    marginBottom: "10%"
-  },
-  thirdElement: {
-    alignItems: "center",
-    marginTop: "1%",
-    marginBottom: "5%",
-    marginLeft: "5%"
-  },
-  fourthElement: {
-    alignItems: "center",
-    marginLeft: "20%",
-    marginTop: "1%",
-    marginBottom: "5%"
-  }
+	content: {
+		width: Dimensions.get('window').width - 60,
+		padding: 30
+	},
+	featuredImage: {
+		width: Dimensions.get('window').width + 60,
+		height: 340,
+		marginLeft: -25,
+		marginTop: -30,
+		position: 'absolute',
+		transform: [{ rotate: '10deg' }]
+	}
 });
 
 export default Challenge;

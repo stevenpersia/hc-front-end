@@ -4,11 +4,22 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	ImageBackground
+	ImageBackground,
+	Image,
+	StatusBar
 } from 'react-native';
 import styles from '../../Styles';
+import { Entypo } from '@expo/vector-icons';
+import { DrawerActions } from 'react-navigation-drawer';
+import { AsyncStorage } from 'react-native';
 
 class Authentication extends React.Component {
+	state = {
+		auth: {
+			id: '',
+			token: ''
+		}
+	};
 	static navigationOptions = {
 		header: null
 	};
@@ -19,6 +30,15 @@ class Authentication extends React.Component {
 				source={require('../../assets/images/bg/01.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<StatusBar hidden />
+				<TouchableOpacity
+					onPress={() =>
+						this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+					}
+					style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+				>
+					<Entypo name="list" size={30} color="black" />
+				</TouchableOpacity>
 				<View
 					style={[
 						styles.container,
@@ -28,6 +48,21 @@ class Authentication extends React.Component {
 					behavior="padding"
 					enabled
 				>
+					<Image
+						source={require('../../assets/images/logo-hc.png')}
+						style={{ width: 180, height: 180 }}
+					/>
+					<Text
+						style={[
+							styles.h3,
+							styles.paddingTop10,
+							styles.textCenter,
+							styles.textWhite
+						]}
+					>
+						Human Challenge
+					</Text>
+
 					<Text
 						style={[
 							customStyles.text16,
@@ -66,8 +101,42 @@ class Authentication extends React.Component {
 						<Text style={[styles.textCenter]}>Se connecter</Text>
 					</TouchableOpacity>
 				</View>
+				<TouchableOpacity
+					onPress={() => this.props.navigation.navigate('ChallengesList')}
+					style={{
+						position: 'absolute',
+						bottom: 30,
+						right: 25
+					}}
+				>
+					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+						<Text style={[styles.textWhite, customStyles.text16]}>Passer</Text>
+						<Entypo name="chevron-small-right" size={25} color="#FFF" />
+					</View>
+				</TouchableOpacity>
 			</ImageBackground>
 		);
+	}
+
+	componentDidMount() {
+		AsyncStorage.multiGet(['id', 'token'], (err, stores) => {
+			const id = stores[0][1];
+			const token = stores[1][1];
+
+			this.setState(
+				{
+					auth: {
+						id,
+						token
+					}
+				},
+				() => {
+					if (this.state.auth.id && this.state.auth.token) {
+						this.props.navigation.navigate('ChallengesList');
+					}
+				}
+			);
+		});
 	}
 }
 

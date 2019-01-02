@@ -9,6 +9,7 @@ import {
 	StyleSheet
 } from 'react-native';
 import styles from '../../../Styles';
+import { Entypo } from '@expo/vector-icons';
 
 class LastStep extends React.Component {
 	static navigationOptions = {
@@ -21,6 +22,12 @@ class LastStep extends React.Component {
 				source={require('../../../assets/images/bg/02.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<TouchableOpacity
+					onPress={() => this.props.openMenu()}
+					style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+				>
+					<Entypo name="list" size={30} color="black" />
+				</TouchableOpacity>
 				<KeyboardAvoidingView
 					style={[styles.container, { justifyContent: 'center' }]}
 					behavior="padding"

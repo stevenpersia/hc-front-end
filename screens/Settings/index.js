@@ -16,6 +16,7 @@ import styles from '../../Styles';
 import { ImagePicker, Camera, Permissions } from 'expo';
 import { Entypo } from '@expo/vector-icons';
 import { AsyncStorage } from 'react-native';
+import { DrawerActions } from 'react-navigation-drawer';
 
 class Settings extends React.Component {
 	static navigationOptions = {
@@ -196,6 +197,14 @@ class Settings extends React.Component {
 				source={require('../../assets/images/bg/02.jpg')}
 				style={[styles.fullW, styles.fullH, { flex: 1, resizeMode: 'cover' }]}
 			>
+				<TouchableOpacity
+					onPress={() =>
+						this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+					}
+					style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+				>
+					<Entypo name="list" size={30} color="black" />
+				</TouchableOpacity>
 				<KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
 					<ScrollView>
 						<View
@@ -453,7 +462,8 @@ const customStyles = StyleSheet.create({
 		borderRadius: 75,
 		marginTop: 20,
 		borderColor: '#FFF',
-		borderWidth: 5
+		borderWidth: 5,
+		backgroundColor: '#1d262a'
 	},
 	input: {
 		backgroundColor: '#FFF',

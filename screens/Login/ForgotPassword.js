@@ -3,6 +3,7 @@ import axios from 'axios';
 import PhoneNumber from './containers/PhoneNumber';
 import ChangePassword from './containers/ChangePassword';
 import LastStep from './containers/LastStep';
+import { DrawerActions } from 'react-navigation-drawer';
 
 class ForgotPassword extends React.Component {
 	static navigationOptions = {
@@ -55,12 +56,14 @@ class ForgotPassword extends React.Component {
 		});
 	};
 
-	// Change password of account
-	changePassword = () => {};
-
 	// Return to login page
 	goToLoginPage = () => {
 		this.props.navigation.navigate('Login');
+	};
+
+	// Open Menu
+	openMenu = () => {
+		this.props.navigation.dispatch(DrawerActions.toggleDrawer());
 	};
 
 	render() {
@@ -71,6 +74,8 @@ class ForgotPassword extends React.Component {
 						nextStep={this.nextStep}
 						handleChange={this.handleChange}
 						handleSmsCodeSend={this.handleSmsCodeSend}
+						goToLoginPage={this.goToLoginPage}
+						openMenu={this.openMenu}
 						{...this.state}
 					/>
 				);
@@ -81,11 +86,17 @@ class ForgotPassword extends React.Component {
 						nextStep={this.nextStep}
 						handleChange={this.handleChange}
 						changePassword={this.changePassword}
+						openMenu={this.openMenu}
 						{...this.state}
 					/>
 				);
 			case 3:
-				return <LastStep goToLoginPage={this.goToLoginPage} />;
+				return (
+					<LastStep
+						goToLoginPage={this.goToLoginPage}
+						openMenu={this.openMenu}
+					/>
+				);
 		}
 	}
 }
