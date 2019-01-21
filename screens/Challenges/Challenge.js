@@ -32,7 +32,8 @@ class Challenge extends React.Component {
 		auth: {
 			id: ' ',
 			token: ' '
-		}
+		},
+		idItem: ''
 	};
 
 	/* 49 : ---------------id du defi------------- */
@@ -51,12 +52,15 @@ class Challenge extends React.Component {
 					auth: {
 						id,
 						token
-					}
+					},
+					idItem: this.props.navigation.getParam('id', 'NO-ID')
 				},
 				() => {
 					axios
 						.get(
-							'https://human-challenge-back-end.herokuapp.com/api/challenge/5c07ab4fa5d7c100890b9877'
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								this.state.idItem
+							}`
 						)
 						.then(response => {
 							if (
@@ -70,7 +74,8 @@ class Challenge extends React.Component {
 								for (let i = 0; i < response.data.challengers.length; i++) {
 									if (response.data.challengers[i]._id === this.state.auth.id) {
 										this.setState({
-											userParticipated: true
+											userParticipated: true,
+											finished: false
 										});
 									}
 								}
@@ -86,10 +91,54 @@ class Challenge extends React.Component {
 		});
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.navigation.getParam('id', 'NO-ID') !== prevState.idItem) {
+			this.setState(
+				{
+					idItem: this.props.navigation.getParam('id', 'NO-ID')
+				},
+				() => {
+					axios
+						.get(
+							`https://human-challenge-back-end.herokuapp.com/api/challenge/${
+								this.state.idItem
+							}`
+						)
+						.then(response => {
+							if (
+								format(response.data.date.endDate, 'x') <
+								format(new Date(), 'x')
+							) {
+								this.setState({
+									finished: true
+								});
+							} else {
+								for (let i = 0; i < response.data.challengers.length; i++) {
+									if (response.data.challengers[i]._id === this.state.auth.id) {
+										this.setState({
+											userParticipated: true,
+											finished: false
+										});
+									}
+								}
+							}
+
+							this.setState({
+								...response.data,
+								isLoading: false
+							});
+						});
+				}
+			);
+		}
+	}
+
 	handleParticipate = () => {
 		axios
 			.put(
-				'https://human-challenge-back-end.herokuapp.com/api/user/participate/5c07ab4fa5d7c100890b9877',
+				`https://human-challenge-back-end.herokuapp.com/api/user/participate/${
+					this.state.idItem
+				}`,
 				{},
 				{
 					headers: {
@@ -110,7 +159,9 @@ class Challenge extends React.Component {
 	handleCancel = () => {
 		axios
 			.delete(
-				'https://human-challenge-back-end.herokuapp.com/api/user/remove/5c07ab4fa5d7c100890b9877',
+				`https://human-challenge-back-end.herokuapp.com/api/user/remove/${
+					this.state.idItem
+				}`,
 				{
 					headers: {
 						Authorization: this.state.auth.token
@@ -203,7 +254,9 @@ class Challenge extends React.Component {
 	renderTag = () => {
 		axios
 			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+				`https://human-challenge-back-end.herokuapp.com/api/user/${
+					this.state.idItem
+				}`
 			)
 
 			.then(response => {
@@ -220,7 +273,9 @@ class Challenge extends React.Component {
 	RenderChallengeCreated = () => {
 		axios
 			.get(
-				'https://human-challenge-back-end.herokuapp.com/api/user/5c07ab4fa5d7c100890b9877'
+				`https://human-challenge-back-end.herokuapp.com/api/user/${
+					this.state.idItem
+				}`
 			)
 			.then(response => {
 				if (userParticipated === true) {
@@ -242,12 +297,14 @@ class Challenge extends React.Component {
 		let fullW = Dimensions.get('window').width;
 		let image = this.state.media.images[0].secure_url;
 
+		console.log(this.state);
 		return (
 			<ScrollView style={{ resizeMode: 'cover' }}>
 				<View style={{ width: fullW, height: 380, overflow: 'hidden' }}>
 					<Image style={customStyles.featuredImage} source={{ uri: image }} />
 					<TouchableOpacity
 						style={{ paddingTop: 20, paddingLeft: 20, width: 50 }}
+						onPress={() => this.props.navigation.goBack()}
 					>
 						<Entypo name="chevron-left" size={30} color="#FFF" />
 					</TouchableOpacity>
@@ -317,12 +374,12 @@ class Challenge extends React.Component {
 								styles.textBlack,
 								styles.paddingTop30,
 								styles.paddingBottom10,
-								{ justifyContent: 'center' }
+								{ justifyContent: 'center', display: 'none' }
 							]}
 						>
 							PRE-REQUIS
 						</Text>
-						<View style={{ flexDirection: 'row' }}>
+						<View style={{ flexDirection: 'row', display: 'none' }}>
 							<IconList Prerequisites={this.state.ref.prerequisites} />
 						</View>
 						<Text
