@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import styles from "../../Styles";
-import { Entypo } from "@expo/vector-icons";
-import LittleAvatar from "../LittleAvatar";
+import React from 'react';
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import styles from '../../Styles';
+import { Entypo } from '@expo/vector-icons';
+import LittleAvatar from '../LittleAvatar';
 
 class AvatarList extends React.Component {
 	renderAvatars(team) {
@@ -32,11 +32,9 @@ class AvatarList extends React.Component {
 		let testStyle = {
 			marginLeft: this.props.variant ? 0 : -25
 		};
-		if (this.props.variant) {
-			testStyle.width = "80%";
-			testStyle.justifyContent = "space-between";
-			testStyle.justifyContent = "space-around";
-		}
+		testStyle.width = 140;
+		testStyle.justifyContent = 'space-between';
+		testStyle.justifyContent = 'space-around';
 		return (
 			<View style={[styles.flexRowReverse, testStyle]}>
 				{this.renderAvatars(this.props.challengers)}

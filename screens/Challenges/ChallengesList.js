@@ -26,10 +26,10 @@ import ChallengeCardCategory from '../../components/ChallengeCardCategory';
 
 const homePlace = {
 	description: 'Adresse',
-	geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }
+	geometry: { location: { lat: 48.8523281, lng: 2.3720629 } }
 };
 const workPlace = {
-	description: "Travail, si t'en a, sinon l'@ de tes parents",
+	description: 'Travail',
 	geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }
 };
 
@@ -46,10 +46,10 @@ class ChallengesList extends React.Component {
 		step: 1,
 		modalVisible: false,
 		params: {
-			distance: 60,
+			distance: 6000,
 			name: '',
-			latitude: 45.7725738,
-			longitude: 2.9644431
+			latitude: 48.8523281,
+			longitude: 2.3720629
 		},
 		filterHelpers: {
 			Environnement: true,
@@ -253,6 +253,7 @@ class ChallengesList extends React.Component {
 						type={challenge.ref.category.name}
 						size={36}
 						color={this.getCategoryColors(challenge.ref.category.name)}
+						marker
 					/>
 				</MapView.Marker>
 			);

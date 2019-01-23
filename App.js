@@ -85,24 +85,6 @@ const AppNavigator = createDrawerNavigator(
 			navigationOptions: {
 				title: 'Mes réglages'
 			}
-		},
-		About: {
-			screen: AboutScreen,
-			navigationOptions: {
-				title: 'A propos'
-			}
-		},
-		Example: {
-			screen: ExampleScreen,
-			navigationOptions: {
-				title: 'Example Styles'
-			}
-		},
-		Walkthrough: {
-			screen: WalkthroughScreen,
-			navigationOptions: {
-				title: 'Walkthrough'
-			}
 		}
 	},
 	{
