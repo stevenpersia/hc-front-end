@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -6,16 +6,16 @@ import {
 	ActivityIndicator,
 	Image,
 	Dimensions
-} from "react-native";
-import styles from "../../Styles";
-import { format, distanceInWords } from "date-fns";
-var frLocale = require("date-fns/locale/fr");
+} from 'react-native';
+import styles from '../../Styles';
+import { format, distanceInWords } from 'date-fns';
+var frLocale = require('date-fns/locale/fr');
 
-import ChallengeCardItem from "../ChallengeCardItem";
-import ChallengeCardCategory from "../ChallengeCardCategory";
-import AvatarList from "../AvatarList";
+import ChallengeCardItem from '../ChallengeCardItem';
+import ChallengeCardCategory from '../ChallengeCardCategory';
+import AvatarList from '../AvatarList';
 
-const fullW = Dimensions.get("window").width;
+const fullW = Dimensions.get('window').width;
 class ChallengeCard extends React.Component {
 	render() {
 		const { challenge } = this.props;
@@ -29,7 +29,7 @@ class ChallengeCard extends React.Component {
 						([styles.container],
 						{
 							flex: 1,
-							justifyContent: "center"
+							justifyContent: 'center'
 						})
 					}
 				>
@@ -38,7 +38,7 @@ class ChallengeCard extends React.Component {
 			);
 		}
 		const detailsLeftChallengeCard = {
-			position: "absolute",
+			position: 'absolute',
 			left: 8,
 			zIndex: 2
 		};
@@ -50,7 +50,7 @@ class ChallengeCard extends React.Component {
 		} else {
 			detailsLeftChallengeCard.top = 8;
 			detailsrightChallengeCard = {
-				position: "absolute",
+				position: 'absolute',
 				right: 8,
 				zIndex: 2,
 				top: 8
@@ -60,13 +60,12 @@ class ChallengeCard extends React.Component {
 			<View
 				style={[
 					styles.card,
-
 					{
-						overflow: "hidden",
-						width: this.props.map ? "100%" : Dimensions.get("window").width,
+						overflow: 'hidden',
+						width: this.props.map ? '100%' : Dimensions.get('window').width,
 						borderRadius: this.props.map ? 15 : 0,
-						height: this.props.map ? 200 : 250,
-						backgroundColor: this.props.color || "black"
+						height: this.props.map ? 202 : 250,
+						backgroundColor: this.props.color || 'black'
 					}
 				]}
 			>
@@ -76,29 +75,36 @@ class ChallengeCard extends React.Component {
 						color={this.props.color}
 					/>
 				</View>
-				<Text style={[styles.textWhite, styles.h4, { zIndex: 2 }]}>
+				<Text
+					style={[
+						styles.textWhite,
+						styles.h4,
+						{
+							zIndex: 2,
+							width: Dimensions.get('window').width - 30,
+							textAlign: 'center'
+						}
+					]}
+				>
 					{challenge.ref.name}
-				</Text>
-				<Text style={[styles.textWhite, styles.text, { zIndex: 2 }]}>
-					{challenge.owner.account.username}
 				</Text>
 
 				<View style={detailsLeftChallengeCard}>
 					<ChallengeCardItem
 						icon="calendar"
-						text={format(challenge.date.beginDate, "dddd DD MMMM", {
+						text={format(challenge.date.beginDate, 'dddd DD MMMM', {
 							locale: frLocale
 						})}
 					/>
 					<ChallengeCardItem icon="pin" text={challenge.adress.city} />
 				</View>
 				{!this.props.variant ? (
-					<View style={[{ position: "absolute", bottom: 60, zIndex: 2 }]}>
+					<View style={[{ position: 'absolute', bottom: 25, zIndex: 2 }]}>
 						<AvatarList challengers={challenge.challengers} />
 					</View>
 				) : (
 					<View
-						style={[{ position: "absolute", bottom: 8, right: 8, zIndex: 2 }]}
+						style={[{ position: 'absolute', bottom: 8, right: 8, zIndex: 2 }]}
 					>
 						<ChallengeCardItem
 							icon="time"
@@ -116,11 +122,11 @@ class ChallengeCard extends React.Component {
 				<Image
 					resizeMode="cover"
 					style={{
-						position: "absolute",
+						position: 'absolute',
 						top: 0,
 						left: 0,
 						height: this.props.map ? 198 : 250,
-						width: "100%",
+						width: '100%',
 						zIndex: 0,
 						opacity: this.props.map ? 0.95 : 0.7
 					}}

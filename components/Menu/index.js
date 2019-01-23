@@ -64,13 +64,6 @@ class Menu extends React.Component {
 					<MaterialIcons name="settings" size={18} color="#1d262a" />
 					<Text style={customStyles.litext}>Mes réglages</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => this.props.navigate('Example')}
-					style={customStyles.li}
-				>
-					<Entypo name="list" size={18} color="#1d262a" />
-					<Text style={customStyles.litext}>Toutes les pages</Text>
-				</TouchableOpacity>
 			</View>
 		);
 	}
